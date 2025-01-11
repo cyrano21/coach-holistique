@@ -53,7 +53,7 @@ Comment puis-je vous aider aujourd'hui ?`;
     }
 
     // Réponse par défaut
-    return "Je peux vous aider à prendre rendez-vous, découvrir nos approches thérapeutiques ou répondre à vos questions. Que souhaitez-vous savoir ?";peutiques'.";
+    return "Je peux vous aider à prendre rendez-vous, découvrir nos approches thérapeutiques ou répondre à vos questions. Que souhaitez-vous savoir ?";
     }
 
     if (lowerInput.includes('méditation') || lowerInput.includes('meditation')) {
