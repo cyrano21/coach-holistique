@@ -1,12 +1,14 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { HTMLAttributes } from 'react';
+import { motion, MotionProps, Variant } from 'framer-motion';
 import { MethodesItem, methodesData } from '../data/methodesData';
 
 interface MethotherapiesProps {
   className?: string;
 }
+
+type ExtendedMotionProps = MotionProps & React.HTMLAttributes<HTMLElement>;
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -61,7 +63,7 @@ const ParallaxHeader = () => {
 const TimelineSection = () => {
   return (
     <motion.section 
-      className="py-20 px-4 md:px-8 lg:px-16 bg-gray-50 dark:bg-gray-900"
+      className="py-20 px-4 md:px-8 lg:px-16 bg-gradient-to-br from-blue-900/90 via-indigo-800/90 to-purple-900/90 text-white"
       id="nos-methodes"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
@@ -70,20 +72,20 @@ const TimelineSection = () => {
     >
       <div className="max-w-7xl mx-auto">
         <motion.p 
-          className="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-16 text-center max-w-2xl mx-auto leading-relaxed tracking-wide font-light"
+          className="text-lg md:text-xl text-gray-100 mb-16 text-center max-w-2xl mx-auto leading-relaxed tracking-wide font-light"
           initial={{ y: 20, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 font-semibold">
             Un parcours personnalisé
           </span>{" "}
           en plusieurs étapes pour prendre soin de vous, selon vos besoins et vos objectifs. Découvrez ci-dessous nos différentes méthodes, expliquées sous forme d'itinéraire.
         </motion.p>
 
         <motion.div 
-          className="relative"
+          className="relative bg-white/10 rounded-xl p-6 shadow-2xl border border-white/20"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -125,7 +127,17 @@ const TimelineItem = ({ item, index }: TimelineItemProps) => {
 
       <div className={`w-1/2 ${isEven ? 'pl-8' : 'pr-8'}`}>
         <motion.div 
-          className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-2"
+          className={`
+            bg-white dark:bg-gray-800 
+            shadow-lg rounded-xl p-6 
+            border border-gray-100 dark:border-gray-700 
+            hover:shadow-2xl 
+            transition-all duration-300 ease-in-out 
+            transform hover:-translate-y-2
+            ${index % 2 === 0 
+              ? 'bg-gradient-to-br from-blue-50 to-blue-100' 
+              : 'bg-gradient-to-br from-purple-50 to-purple-100'}
+          `}
           initial={{ opacity: 0, x: isEven ? 50 : -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 * index }}
@@ -171,7 +183,7 @@ const ParallaxFooter = () => {
         viewport={{ once: true }}
       >
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-          Commencez votre transformation dès aujourd'hui
+          Commencez votre transformation dès aujourd&apos;hui
         </h2>
         <p className="text-lg text-gray-200">
           Chaque méthode est conçue pour vous aider à atteindre un bien-être
