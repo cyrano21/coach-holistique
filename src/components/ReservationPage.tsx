@@ -26,7 +26,28 @@ const ReservationPage = () => {
       });
 
       if (response.ok) {
-        alert('Réservation envoyée avec succès !');
+        // Format the date for display
+        const formattedDate = new Date(formData.date).toLocaleDateString('fr-FR', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        const confirmationMessage = `
+          Merci pour votre réservation !
+          
+          Récapitulatif de votre rendez-vous :
+          - Nom : ${formData.name}
+          - Date : ${formattedDate}
+          - Heure : ${formData.time}
+          
+          Nous avons bien reçu votre demande et nous vous contacterons rapidement pour confirmer votre rendez-vous.
+          
+          À très bientôt !
+        `;
+
+        alert(confirmationMessage);
         setFormData({
           name: "",
           email: "",
