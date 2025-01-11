@@ -23,6 +23,41 @@ const AIGameDialog = () => {
   const generateResponse = async () => {
     try {
       setIsLoading(true);
+      
+      if (userInput.toLowerCase().includes('carte')) {
+        const gameSteps = [
+          {
+            title: "Préparation",
+            description: "Mélangez le jeu de cartes spirituelles et placez-le face cachée au centre.",
+            completed: false
+          },
+          {
+            title: "Méditation initiale",
+            description: "Prenez un moment de silence pour vous centrer et vous connecter à votre intuition.",
+            completed: false
+          },
+          {
+            title: "Tirage",
+            description: "Tirez une carte avec intention et mindfulness.",
+            completed: false
+          },
+          {
+            title: "Contemplation",
+            description: "Observez l'image et le message de la carte en silence pendant quelques instants.",
+            completed: false
+          },
+          {
+            title: "Réflexion",
+            description: "Notez les pensées et ressentis qui émergent suite à cette carte.",
+            completed: false
+          }
+        ];
+        setGameSteps(gameSteps);
+        setGameTitle("Oracle Spirituel");
+        setIsLoading(false);
+        return;
+      }
+
       const result = await hf.textGeneration({
         model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
         inputs: `Génère un mini-jeu spirituel méditatif basé sur: ${userInput}.`,
