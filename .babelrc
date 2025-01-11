@@ -1,12 +1,4 @@
 
 {
-  "presets": [
-    ["next/babel"],
-    ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
-  ],
-  "plugins": [
-    ["@babel/plugin-transform-runtime", {
-      "regenerator": true
-    }]
-  ]
+  "presets": ["next/babel"]
 }
