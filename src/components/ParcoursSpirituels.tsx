@@ -208,7 +208,7 @@ const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
       {!showScore ? (
         <>
           <h3 className="text-xl font-semibold mb-4">
-            Question {currentQuestion + 1}/{spiritualQuestions.length}
+            Question {currentQuestion + 1}/{questions.length}
           </h3>
           <p className="mb-4">{questions[currentQuestion].question}</p>
           <div className="space-y-2">
