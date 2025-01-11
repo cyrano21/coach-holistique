@@ -107,6 +107,8 @@ function Navbar() {
             { href: "/coaching-personnalise", text: "Coaching Personnalisé" },
             { href: "/parcours-spirituels", text: "Parcours Spirituels" },
             { href: "/outils-developpement", text: "Outils" },
+            { href: "/contact", text: "Contact" },
+            { href: "/reservation", text: "Réservation" }
           ].map((link, index) => (
             <Link
               key={link.href}
