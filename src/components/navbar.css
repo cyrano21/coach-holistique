@@ -77,3 +77,24 @@
 .nav-link:hover::after {
   transform: translateX(0);
 }
+
+/* Styles pour le menu mobile */
+@media (max-width: 768px) {
+  .mobile-menu-link {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .mobile-menu-link:active {
+    transform: translateY(0);
+  }
+}

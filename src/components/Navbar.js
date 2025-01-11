@@ -115,7 +115,7 @@ function Navbar() {
               onClick={() => setIsMenuOpen(false)}
               className={`transform transition-all duration-300 delay-${
                 index * 100
-              } ${isActive(link.href)} text-xl`}
+              } ${isActive(link.href)} text-xl py-2 px-4 rounded-lg hover:bg-purple-700 hover:text-white active:scale-95`}
             >
               {link.text}
             </Link>
