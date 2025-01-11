@@ -1,26 +1,19 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     domains: ['localhost'],
-    unoptimized: true  // If you're having issues with Image optimization
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
   },
-  webpack: (config, { isServer }) => {
-    config.module.rules.push({
-      test: /\.(png|jpe?g|gif|svg)$/i,
-      use: [
-        {
-          loader: 'file-loader',
-          options: {
-            publicPath: '/_next/static/images',
-            outputPath: `${isServer ? '../' : ''}static/images`,
-            name: '[name].[hash].[ext]',
-          },
-        },
-      ],
-    });
-
-    return config;
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['@mui/icons-material'],
+  },
+  swcMinify: true,
 };
 
 module.exports = nextConfig;

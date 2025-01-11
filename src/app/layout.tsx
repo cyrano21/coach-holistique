@@ -1,20 +1,22 @@
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 import type { Metadata } from "next";
+import dynamic from 'next/dynamic';
 import { Poppins, Playfair_Display } from "next/font/google";
 
-// Configuration de Poppins
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
+  display: 'swap',
 });
 
-// Configuration de Playfair Display
 const playfair = Playfair_Display({
   weight: ["400", "600", "700"],
   subsets: ["latin"],
-  variable: '--font-playfair', // Permet d'utiliser la police comme variable CSS
+  variable: '--font-playfair',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -29,7 +31,6 @@ export default function RootLayout({
 }): React.JSX.Element {
   return (
     <html lang="fr">
-      <head></head>
       <body className={`min-h-screen flex flex-col ${poppins.className} ${playfair.variable}`}>
         <Navbar />
         <main className="flex-grow">{children}</main>
