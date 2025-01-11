@@ -15,6 +15,8 @@ const ChatBot = () => {
   const [isListening, setIsListening] = useState(false); // Added state for voice input
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognition = useRef<webkitSpeechRecognition | null>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false); // Added state for speech synthesis
+  const utterance = useRef<SpeechSynthesisUtterance | null>(null);
 
 
   const scrollToBottom = () => {
@@ -28,7 +30,7 @@ const ChatBot = () => {
       recognition.current.continuous = false;
       recognition.current.interimResults = false;
       recognition.current.lang = 'fr-FR'; // Set language to French
-      
+
       recognition.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setInput(transcript);
@@ -46,6 +48,20 @@ const ChatBot = () => {
     }
   };
 
+  const speakText = (text: string) => {
+    if (!utterance.current) {
+      utterance.current = new SpeechSynthesisUtterance();
+    }
+    utterance.current.text = text;
+    utterance.current.lang = 'fr-FR';
+    speechSynthesis.speak(utterance.current);
+    setIsSpeaking(true);
+  };
+
+  const stopSpeaking = () => {
+    speechSynthesis.cancel();
+    setIsSpeaking(false);
+  };
 
   const getBotResponse = async (userInput: string) => {
     try {
@@ -103,6 +119,15 @@ const ChatBot = () => {
               <div key={idx} className={`mb-4 ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}>
                 <div className={`inline-block p-3 rounded-lg ${msg.sender === 'user' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
                   {msg.text}
+                  {msg.sender === 'bot' && (
+                    <button
+                      onClick={() => isSpeaking ? stopSpeaking() : speakText(msg.text)}
+                      className="ml-2 text-sm"
+                      title={isSpeaking ? "Arrêter" : "Écouter"}
+                    >
+                      {isSpeaking ? '🔇' : '🔊'}
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
