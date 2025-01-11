@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import AIGameDialog from './AIGameDialog';
 import { FaLeaf, FaMountain, FaHandHoldingHeart, FaYinYang } from 'react-icons/fa';
 
 type Question = {
@@ -418,6 +419,11 @@ const ParcoursSpirituels = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Section AI Dialog */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <AIGameDialog />
         </div>
 
         <div className="mt-12 bg-gray-800 rounded-xl p-8">
