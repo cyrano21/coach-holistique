@@ -745,7 +745,7 @@ const ParcoursSpirituels = () => {
                   fear.trim() && (
                     <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20">
                       <p className="text-white">
-                        Moi {name ? `"${name}"` : ""}, {generatePositiveAffirmation(fear)}
+                        Moi {name ? name : ""}, {generatePositiveAffirmation(fear)}
                       </p>
                     </div>
                   )
@@ -762,6 +762,9 @@ const ParcoursSpirituels = () => {
 const generatePositiveAffirmation = (fear: string): string => {
   const fearLower = fear.toLowerCase();
   if (fearLower.includes('peur')) {
+    if (fearLower.includes('mort')) {
+      return "j'accepte le cycle naturel de la vie et je me concentre sur chaque instant précieux du présent";
+    }
     if (fearLower.includes('animaux')) {
       return "je suis en harmonie avec les animaux et leur présence m'apporte de la joie";
     }
@@ -777,7 +780,7 @@ const generatePositiveAffirmation = (fear: string): string => {
     if (fearLower.includes('rejet')) {
       return "je suis aimé(e) et accepté(e) tel(le) que je suis";
     }
-    return `je transforme cette peur en force et je m'épanouis pleinement`;
+    return `je transforme cette peur en force intérieure`;
   }
   return `je suis confiant(e) et serein(e) face à toutes les situations`;
 };
