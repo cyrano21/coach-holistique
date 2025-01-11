@@ -3,6 +3,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { FaLightbulb, FaHandshake, FaChartLine, FaHeart, FaComments, FaPuzzlePiece } from "react-icons/fa";
 
 const CoachingPersonal = () => {
@@ -218,13 +219,15 @@ const CoachingPersonal = () => {
           <p className="text-xl text-gray-300 mb-12 leading-relaxed">
             Réservez votre séance découverte gratuite et commencez votre voyage vers une vie plus épanouie.
           </p>
-          <motion.button
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full text-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Réserver Ma Séance Découverte
-          </motion.button>
+          <Link href="/reservation">
+            <motion.button
+              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full text-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Réserver Ma Séance Découverte
+            </motion.button>
+          </Link>
         </motion.div>
       </section>
     </div>
