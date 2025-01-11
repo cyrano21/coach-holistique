@@ -45,7 +45,6 @@ const ParallaxHeader = () => {
 
   return (
     <motion.section
-      as="section"
       className="relative h-[500px] flex items-center justify-center bg-cover bg-center bg-fixed"
       style={{ backgroundImage: "url('/images/methodes/hero.jpg')" }}
       {...motionProps}
