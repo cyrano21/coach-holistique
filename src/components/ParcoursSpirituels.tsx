@@ -393,10 +393,12 @@ const NumerologyCalculator = () => {
 Nom: ${name}
 Chemin de vie: ${lifePathNumber}
 
-Format souhaité:
-1. Signification du nombre chemin de vie
-2. Forces et défis
-3. Conseils spirituels`;
+Format souhaité avec balises de couleur:
+[purple]1. Signification du nombre chemin de vie[/purple]
+[blue]2. Forces et défis[/blue]
+[green]3. Conseils spirituels[/green]
+
+Note: Utilise ces balises de couleur pour chaque section.`;
 
       const response = await hf.textGeneration({
         model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
@@ -452,8 +454,16 @@ Format souhaité:
         {result && (
           <div className="mt-6 p-6 bg-white/10 rounded-lg">
             <div className="prose prose-invert">
-              {result.split('\n').map((line, i) => (
-                <p key={i} className="text-white">{line}</p>
+              {result.split('\n').map((line, i) => {
+                  if (line.includes('[purple]')) {
+                    return <p key={i} className="text-purple-400 font-bold text-xl">{line.replace('[purple]', '').replace('[/purple]', '')}</p>
+                  } else if (line.includes('[blue]')) {
+                    return <p key={i} className="text-blue-400 font-bold text-xl">{line.replace('[blue]', '').replace('[/blue]', '')}</p>
+                  } else if (line.includes('[green]')) {
+                    return <p key={i} className="text-green-400 font-bold text-xl">{line.replace('[green]', '').replace('[/green]', '')}</p>
+                  }
+                  return <p key={i} className="text-white">{line}</p>
+                })
               ))}
             </div>
           </div>
