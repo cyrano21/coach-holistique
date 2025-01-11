@@ -9,6 +9,7 @@ interface Message {
 }
 
 const ChatBot = () => {
+  console.log("ChatBot component loaded");
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
