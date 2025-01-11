@@ -22,7 +22,6 @@ const nextConfig = {
     optimizeCss: true,
     optimizePackageImports: ['@mui/icons-material'],
   },
-  swcMinify: true,
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
