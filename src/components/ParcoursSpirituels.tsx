@@ -565,7 +565,136 @@ const ParcoursSpirituels = () => {
         <div className="mt-12 max-w-3xl mx-auto">
           <NumerologyCalculator />
         </div>
+
+        {/* Section Ennéagramme */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <EnneagramCalculator />
+        </div>
       </div>
+    </div>
+  );
+};
+
+const EnneagramCalculator: React.FC = () => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<number[]>([]);
+  const [result, setResult] = useState<string | null>(null);
+
+  const questions = [
+    "Je tends à être perfectionniste et critique envers moi-même.",
+    "J'aime aider les autres et je peux négliger mes propres besoins.",
+    "Je suis motivé par la réussite et la reconnaissance.",
+    "Je suis sensible et j'ai tendance à me retirer quand je suis stressé.",
+    "J'aime analyser et comprendre les choses en profondeur.",
+    "La sécurité et la loyauté sont très importantes pour moi.",
+    "Je suis spontané et j'aime vivre de nouvelles expériences.",
+    "Je prends naturellement les choses en main et j'aime diriger.",
+    "Je suis pacifique et j'évite les conflits."
+  ];
+
+  const enneagramTypes = {
+    1: {
+      title: "Le Perfectionniste",
+      description: "Rationnel, idéaliste, moral, perfectionniste et organisé."
+    },
+    2: {
+      title: "L'Aidant",
+      description: "Bienveillant, généreux, possessif et altruiste."
+    },
+    3: {
+      title: "Le Battant",
+      description: "Adaptable, ambitieux, orienté image et succès."
+    },
+    4: {
+      title: "L'Individualiste",
+      description: "Créatif, sensible, dramatique et introspectif."
+    },
+    5: {
+      title: "L'Observateur",
+      description: "Perspicace, innovant, isolé et analytique."
+    },
+    6: {
+      title: "Le Loyaliste",
+      description: "Engagé, orienté sécurité, anxieux et vigilant."
+    },
+    7: {
+      title: "L'Enthousiaste",
+      description: "Spontané, versatile, distrait et optimiste."
+    },
+    8: {
+      title: "Le Chef",
+      description: "Puissant, dominateur, confiant et décisif."
+    },
+    9: {
+      title: "Le Médiateur",
+      description: "Réceptif, rassurant, complaisant et apaisant."
+    }
+  };
+
+  const handleAnswer = (score: number) => {
+    const newAnswers = [...answers, score];
+    setAnswers(newAnswers);
+
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else {
+      // Calculer le type d'ennéagramme
+      const maxScore = Math.max(...newAnswers);
+      const type = newAnswers.indexOf(maxScore) + 1;
+      setResult(JSON.stringify(enneagramTypes[type as keyof typeof enneagramTypes]));
+    }
+  };
+
+  const resetQuiz = () => {
+    setCurrentQuestion(0);
+    setAnswers([]);
+    setResult(null);
+  };
+
+  return (
+    <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
+      <h3 className="text-2xl font-bold text-white mb-6">Test d'Ennéagramme</h3>
+
+      {!result ? (
+        <div className="space-y-6">
+          <p className="text-white mb-4">Question {currentQuestion + 1}/{questions.length}</p>
+          <p className="text-white text-lg mb-6">{questions[currentQuestion]}</p>
+          
+          <div className="grid grid-cols-5 gap-4">
+            {[1, 2, 3, 4, 5].map((score) => (
+              <button
+                key={score}
+                onClick={() => handleAnswer(score)}
+                className="py-3 px-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg
+                         hover:from-purple-600 hover:to-indigo-600 transition-all duration-200"
+              >
+                {score}
+              </button>
+            ))}
+          </div>
+          <p className="text-white text-sm text-center mt-4">
+            1 = Pas du tout d'accord, 5 = Totalement d'accord
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {result && (
+            <div className="text-white">
+              <h4 className="text-xl font-semibold mb-4">
+                {JSON.parse(result).title}
+              </h4>
+              <p className="mb-6">{JSON.parse(result).description}</p>
+            </div>
+          )}
+          <button
+            onClick={resetQuiz}
+            className="w-full py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg font-medium
+                     hover:from-red-600 hover:to-pink-600 transition-all duration-200"
+          >
+            Recommencer le test
+          </button>
+        </div>
+      )}
     </div>
   );
 };
