@@ -432,6 +432,99 @@ const ParcoursSpirituels = () => {
           ) : (
             <div className="text-center">
               <h3 className="text-2xl font-bold mb-4 text-gray-100">
+
+const NumerologyCalculator = () => {
+  const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [result, setResult] = useState<string | null>(null);
+
+  const calculateLifePath = (date: string) => {
+    const numbers = date.split('-').join('').split('').map(Number);
+    const sum = numbers.reduce((a, b) => a + b, 0);
+    if (sum <= 9) return sum;
+    return parseInt(sum.toString().split('').reduce((a, b) => (parseInt(a) + parseInt(b)).toString()));
+  };
+
+  const generateNumerologyReading = async () => {
+    if (!name || !birthDate) return;
+    
+    const lifePathNumber = calculateLifePath(birthDate);
+    
+    try {
+      const prompt = `Génère une interprétation numérologique détaillée et personnalisée pour:
+Nom: ${name}
+Chemin de vie: ${lifePathNumber}
+
+Format souhaité:
+1. Signification du nombre chemin de vie
+2. Forces et défis
+3. Conseils spirituels`;
+
+      const result = await hf.textGeneration({
+        model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
+        inputs: prompt,
+        parameters: {
+          max_new_tokens: 500,
+          temperature: 0.7,
+          top_p: 0.9,
+        }
+      });
+
+      setResult(result.generated_text);
+    } catch (error) {
+      console.error('Error:', error);
+      setResult("Une erreur est survenue lors de la génération de l'interprétation.");
+    }
+  };
+
+  return (
+    <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
+      <h3 className="text-2xl font-bold text-white mb-6">Calcul Numérologique</h3>
+      
+      <div className="space-y-4">
+        <div>
+          <label className="block text-white mb-2">Votre nom complet</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
+            placeholder="Ex: Jean Dupont"
+          />
+        </div>
+        
+        <div>
+          <label className="block text-white mb-2">Date de naissance</label>
+          <input
+            type="date"
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
+            className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
+          />
+        </div>
+
+        <button
+          onClick={generateNumerologyReading}
+          className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg font-medium
+                   hover:from-purple-600 hover:to-indigo-600 transition-all duration-200"
+        >
+          Calculer mon profil numérologique
+        </button>
+
+        {result && (
+          <div className="mt-6 p-6 bg-white/10 rounded-lg">
+            <div className="prose prose-invert">
+              {result.split('\n').map((line, i) => (
+                <p key={i} className="text-white">{line}</p>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
                 Sélectionnez un parcours
               </h3>
               <p className="text-gray-200">
@@ -439,6 +532,11 @@ const ParcoursSpirituels = () => {
               </p>
             </div>
           )}
+        </div>
+
+        {/* Section Numérologie */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <NumerologyCalculator />
         </div>
       </div>
     </div>
