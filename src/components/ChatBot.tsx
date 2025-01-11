@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -25,38 +24,29 @@ const ChatBot = () => {
 
   const getBotResponse = async (userInput: string) => {
     const lowerInput = userInput.toLowerCase();
-    
+
     if (lowerInput.includes('bonjour') || lowerInput.includes('salut')) {
       return "Bonjour! Comment puis-je vous aider aujourd'hui?";
     }
-    
+
     if (lowerInput.includes('therapie') || lowerInput.includes('thérapie')) {
-      return "Nous proposons différentes approches thérapeutiques comme l'analyse transactionnelle, l'EFT, et la thérapie humaniste. Quelle approche vous intéresse ?";
-    }
-    
-    if (lowerInput.includes('prix') || lowerInput.includes('tarif')) {
-      return "Les tarifs varient selon le type de séance et l'approche choisie. Je vous invite à consulter la page de réservation pour plus de détails.";
+      return "Nous proposons différentes approches thérapeutiques. Que souhaitez-vous savoir ?";
     }
 
-    if (lowerInput.includes('rendez-vous') || lowerInput.includes('reservation')) {
-      return "Vous pouvez prendre rendez-vous directement depuis notre page de réservation. Souhaitez-vous que je vous y dirige ?";
-    }
-
-    return "Je suis là pour vous aider. N'hésitez pas à me poser des questions sur nos approches thérapeutiques, les séances, ou la prise de rendez-vous.";
+    return "Je suis là pour vous aider. N'hésitez pas à me poser des questions.";
   };
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
 
     setMessages(prev => [...prev, { text: input, sender: 'user' }]);
-    
+
     const response = await getBotResponse(input);
-    
+    setInput('');
+
     setTimeout(() => {
       setMessages(prev => [...prev, { text: response, sender: 'bot' }]);
     }, 500);
-
-    setInput('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -67,38 +57,27 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-[99999] pointer-events-auto">
+    <div className="fixed bottom-0 right-0 m-4" style={{ zIndex: 9999 }}>
       {isOpen ? (
-        <div className="bg-white rounded-lg shadow-2xl w-96 h-[500px] flex flex-col">
+        <div className="bg-white rounded-lg shadow-2xl w-96">
           <div className="bg-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
             <h3 className="font-semibold">Assistant virtuel</h3>
             <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">
               <FaTimes />
             </button>
           </div>
-          
-          <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+
+          <div className="h-96 overflow-y-auto p-4 bg-gray-50">
             {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`mb-4 ${
-                  msg.sender === 'user' ? 'text-right' : 'text-left'
-                }`}
-              >
-                <div
-                  className={`inline-block p-3 rounded-lg max-w-[80%] ${
-                    msg.sender === 'user'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-200 text-gray-800'
-                  }`}
-                >
+              <div key={idx} className={`mb-4 ${msg.sender === 'user' ? 'text-right' : 'text-left'}`}>
+                <div className={`inline-block p-3 rounded-lg ${msg.sender === 'user' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
                   {msg.text}
                 </div>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
-          
+
           <div className="p-4 border-t">
             <div className="flex gap-2">
               <input
@@ -121,7 +100,8 @@ const ChatBot = () => {
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-purple-600 text-white p-4 rounded-full shadow-2xl hover:bg-purple-700 transition-all duration-300 hover:scale-110 animate-bounce"
+          className="bg-purple-600 text-white p-4 rounded-full shadow-2xl hover:bg-purple-700 transition-all duration-300 animate-bounce"
+          style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
         >
           <FaComments size={24} />
         </button>

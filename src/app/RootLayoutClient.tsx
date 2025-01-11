@@ -15,11 +15,11 @@ export default function RootLayoutClient({
   }, []);
 
   return (
-    <>
-      <div className="relative">
-        {children}
+    <div className="relative">
+      {children}
+      <div style={{ position: 'relative', zIndex: 9999 }}>
+        <ChatBot />
       </div>
-      <ChatBot />
-    </>
+    </div>
   );
 }
