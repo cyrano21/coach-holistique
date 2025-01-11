@@ -6,10 +6,32 @@ import { HfInference } from '@huggingface/inference';
 
 const hf = new HfInference(process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY);
 
+interface Card {
+  id: number;
+  title: string;
+  description: string;
+  energy: string;
+}
+
 const AIGameDialog = () => {
   const [userInput, setUserInput] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [cards, setCards] = useState<Card[]>([]);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+
+  const spiritualCards: Card[] = [
+    { id: 1, title: "Sagesse", description: "La capacité de voir au-delà des apparences", energy: "Lumière dorée" },
+    { id: 2, title: "Intuition", description: "L'écoute de la voix intérieure", energy: "Violet profond" },
+    { id: 3, title: "Guérison", description: "Le pouvoir de transformation", energy: "Vert émeraude" },
+    { id: 4, title: "Protection", description: "La force du bouclier spirituel", energy: "Bleu indigo" },
+    // Ajoutez plus de cartes selon vos besoins
+  ];
+
+  const drawCard = () => {
+    const randomCard = spiritualCards[Math.floor(Math.random() * spiritualCards.length)];
+    setSelectedCard(randomCard);
+  };
 
   const generateResponse = async () => {
     try {
@@ -43,6 +65,26 @@ const AIGameDialog = () => {
           className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
           rows={4}
         />
+        
+        {userInput.toLowerCase().includes('carte') && (
+          <div className="mt-6">
+            <button
+              onClick={drawCard}
+              className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg font-medium
+                       hover:from-purple-600 hover:to-indigo-600 transition-all duration-200"
+            >
+              Tirer une carte
+            </button>
+            
+            {selectedCard && (
+              <div className="mt-4 p-6 bg-white/10 rounded-lg text-white">
+                <h3 className="text-xl font-bold mb-2">{selectedCard.title}</h3>
+                <p className="mb-2">{selectedCard.description}</p>
+                <p className="text-sm opacity-80">Énergie: {selectedCard.energy}</p>
+              </div>
+            )}
+          </div>
+        )}
         <button
           onClick={generateResponse}
           disabled={isLoading}
