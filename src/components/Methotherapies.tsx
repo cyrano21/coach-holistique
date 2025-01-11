@@ -56,7 +56,7 @@ const ParallaxHeader = () => {
         whileInView={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.8 }}
       >
-        Méthodes Thérapeutiques
+        M&eacute;thodes Th&eacute;rapeutiques
       </motion.h1>
     </motion.section>
   );

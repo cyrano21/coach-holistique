@@ -1,7 +1,7 @@
 
 interface McpToolArgs {
   prompt?: string;
-  [key: string]: any;
+  [key: string]: string | undefined;
 }
 
 export async function callMcpTool(serverName: string, toolName: string, args: McpToolArgs) {
