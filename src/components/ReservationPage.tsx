@@ -212,21 +212,21 @@ const ReservationPage = () => {
 
       {/* Modal de confirmation */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md mx-4 relative">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-gradient-to-br from-white via-purple-50 to-indigo-50 rounded-xl p-8 max-w-md mx-4 relative shadow-2xl border border-purple-100 transform animate-modalSlideIn">
             <button 
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors duration-200"
             >
               ×
             </button>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Confirmation</h2>
-            <div className="text-gray-600 whitespace-pre-line">
+            <h2 className="text-2xl font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-6">Confirmation</h2>
+            <div className="text-gray-700 whitespace-pre-line leading-relaxed">
               {confirmationMessage}
             </div>
             <button
               onClick={() => setShowModal(false)}
-              className="mt-6 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-4 rounded-lg"
+              className="mt-8 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium transform hover:scale-[1.02] transition-all duration-200 hover:shadow-lg"
             >
               Fermer
             </button>
