@@ -22,28 +22,56 @@ type GameType = {
   };
 };
 
-const spiritualQuestions: Question[] = [
-  {
-    question: "Quelle est la principale pratique du bouddhisme ?",
-    options: ["La méditation", "La danse", "Le chant", "Le jeûne"],
-    correctAnswer: 0
-  },
-  {
-    question: "Quel est le concept central du taoïsme ?",
-    options: ["Le karma", "L'équilibre", "La réincarnation", "La prière"],
-    correctAnswer: 1
-  },
-  {
-    question: "Qu'est-ce que la pleine conscience ?",
-    options: [
-      "Une technique de respiration",
-      "Une forme de méditation",
-      "Une présence consciente au moment présent",
-      "Une pratique de yoga"
-    ],
-    correctAnswer: 2
-  }
-];
+const quizzesByTheme = {
+  comparatives: [
+    {
+      question: "Quelle est la principale pratique du bouddhisme ?",
+      options: ["La méditation", "La danse", "Le chant", "Le jeûne"],
+      correctAnswer: 0
+    },
+    {
+      question: "Quel est le concept central du taoïsme ?",
+      options: ["Le karma", "L'équilibre", "La réincarnation", "La prière"],
+      correctAnswer: 1
+    }
+  ],
+  meditation: [
+    {
+      question: "Qu'est-ce que la pleine conscience ?",
+      options: ["Une technique de respiration", "Une forme de méditation", "Une présence consciente au moment présent", "Une pratique de yoga"],
+      correctAnswer: 2
+    },
+    {
+      question: "Quelle est la durée recommandée pour débuter la méditation ?",
+      options: ["1 heure", "5-10 minutes", "30 minutes", "2 heures"],
+      correctAnswer: 1
+    }
+  ],
+  connexion: [
+    {
+      question: "Qu'est-ce que l'intelligence émotionnelle ?",
+      options: ["La capacité à supprimer ses émotions", "La capacité à reconnaître et gérer ses émotions", "La capacité à éviter les conflits", "La capacité à rester neutre"],
+      correctAnswer: 1
+    },
+    {
+      question: "Comment développer son empathie ?",
+      options: ["En ignorant les autres", "En écoutant activement", "En donnant des conseils non sollicités", "En restant distant"],
+      correctAnswer: 1
+    }
+  ],
+  energetique: [
+    {
+      question: "Combien y a-t-il de chakras principaux ?",
+      options: ["5", "6", "7", "8"],
+      correctAnswer: 2
+    },
+    {
+      question: "Quelle est la couleur du chakra du cœur ?",
+      options: ["Rouge", "Bleu", "Vert", "Violet"],
+      correctAnswer: 2
+    }
+  ]
+};
 
 const emotionalQuestions = [
   "Comment vous sentez-vous aujourd'hui ?",
@@ -82,7 +110,7 @@ const spiritualPaths = [
         paragraphText: "text-white/80",
         buttonBg: "bg-green-600 hover:bg-green-500"
       },
-      component: () => <SpiritualQuiz />
+      component: () => <SpiritualQuiz theme="comparatives" />
     }
   },
   {
@@ -105,7 +133,7 @@ const spiritualPaths = [
         paragraphText: "text-white/80",
         buttonBg: "bg-blue-600 hover:bg-blue-500"
       },
-      component: () => <MeditationTimer />
+      component: () => <SpiritualQuiz theme="meditation" />
     }
   },
   {
@@ -128,7 +156,7 @@ const spiritualPaths = [
         paragraphText: "text-white/80",
         buttonBg: "bg-purple-600 hover:bg-purple-500"
       },
-      component: () => <EmotionalExploration />
+      component: () => <SpiritualQuiz theme="connexion" />
     }
   },
   {
@@ -151,22 +179,24 @@ const spiritualPaths = [
         paragraphText: "text-white/80",
         buttonBg: "bg-red-600 hover:bg-red-500"
       },
-      component: () => <ChakraBalance />
+      component: () => <SpiritualQuiz theme="energetique" />
     }
   }
 ];
 
-const SpiritualQuiz = () => {
+const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
 
+  const questions = quizzesByTheme[theme];
+
   const handleAnswerClick = (selectedAnswer: number) => {
-    if (selectedAnswer === spiritualQuestions[currentQuestion].correctAnswer) {
+    if (selectedAnswer === questions[currentQuestion].correctAnswer) {
       setScore(score + 1);
     }
 
-    if (currentQuestion < spiritualQuestions.length - 1) {
+    if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       setShowScore(true);
@@ -180,9 +210,9 @@ const SpiritualQuiz = () => {
           <h3 className="text-xl font-semibold mb-4">
             Question {currentQuestion + 1}/{spiritualQuestions.length}
           </h3>
-          <p className="mb-4">{spiritualQuestions[currentQuestion].question}</p>
+          <p className="mb-4">{questions[currentQuestion].question}</p>
           <div className="space-y-2">
-            {spiritualQuestions[currentQuestion].options.map((option, index) => (
+            {questions[currentQuestion].options.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleAnswerClick(index)}
