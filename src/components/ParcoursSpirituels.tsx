@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import AIGameDialog from './AIGameDialog';
+import AIChat from './AIChat';
 import { FaLeaf, FaMountain, FaHandHoldingHeart, FaYinYang } from 'react-icons/fa';
 import { HfInference } from '@huggingface/inference';
 
@@ -681,6 +682,11 @@ const ParcoursSpirituels = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Section AI Chat */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <AIChat />
         </div>
 
         {/* Section AI Dialog */}
