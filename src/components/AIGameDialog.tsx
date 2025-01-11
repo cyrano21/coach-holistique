@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { HfInference } from '@huggingface/inference';
 import { motion } from 'framer-motion';
 
-const hf = new HfInference(process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY);
+const hf = new HfInference(process.env.NEXT_PUBLIC_HF_TOKEN || '');
 
 interface GameStep {
   title: string;
