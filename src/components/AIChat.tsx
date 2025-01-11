@@ -1,8 +1,6 @@
-
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import React, { useState } from 'react';
 
 interface Message {
   text: string;
@@ -12,68 +10,36 @@ interface Message {
 const AIChat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
-  const [isRecording, setIsRecording] = useState(false);
-  const [audioUrl, setAudioUrl] = useState('');
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<BlobPart[]>([]);
-
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition();
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
-      
-      mediaRecorderRef.current.ondataavailable = (e) => {
-        chunksRef.current.push(e.data);
-      };
-
-      mediaRecorderRef.current.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: 'audio/wav' });
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        chunksRef.current = [];
-      };
-
-      mediaRecorderRef.current.start();
-      setIsRecording(true);
-    } catch (err) {
-      console.error('Error accessing microphone:', err);
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-    }
-  };
 
   const handleSendMessage = async () => {
-    if (!inputText.trim() && !transcript) return;
+    if (!inputText.trim()) return;
 
-    const messageText = transcript || inputText;
-    setMessages(prev => [...prev, { text: messageText, sender: 'user' }]);
-    
-    try {
-      // Here you would typically make an API call to your AI service
-      const aiResponse = `Response to: ${messageText}`;
+    // Add user message
+    setMessages(prev => [...prev, { text: inputText, sender: 'user' }]);
+
+    // Simple AI response
+    const aiResponse = `Je vous comprends. ${inputText.length > 20 ? 
+      "Pouvez-vous m'en dire plus ?" : 
+      "Comment puis-je vous aider davantage ?"}`;
+
+    setTimeout(() => {
       setMessages(prev => [...prev, { text: aiResponse, sender: 'ai' }]);
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
+    }, 500);
 
     setInputText('');
-    resetTranscript();
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white/10 backdrop-blur-md rounded-xl shadow-xl">
+      <h3 className="text-xl font-semibold text-white mb-4">Chat Spirituel</h3>
+
       <div className="h-96 overflow-y-auto mb-4 p-4 bg-black/20 rounded-lg">
         {messages.map((message, index) => (
           <div
@@ -95,39 +61,22 @@ const AIChat: React.FC = () => {
         ))}
       </div>
 
-      <div className="flex items-center gap-2">
-        <input
-          type="text"
+      <div className="flex gap-2">
+        <textarea
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          className="flex-1 p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
-          placeholder="Type your message..."
+          onKeyPress={handleKeyPress}
+          className="flex-1 p-3 rounded-lg bg-white/10 text-white placeholder-gray-300 resize-none"
+          placeholder="Tapez votre message..."
+          rows={1}
         />
-        
-        {browserSupportsSpeechRecognition && (
-          <button
-            onClick={listening ? SpeechRecognition.stopListening : SpeechRecognition.startListening}
-            className={`p-3 rounded-lg ${
-              listening ? 'bg-red-500' : 'bg-blue-500'
-            } text-white`}
-          >
-            {listening ? 'Stop' : 'Start'} Voice
-          </button>
-        )}
-        
         <button
           onClick={handleSendMessage}
-          className="p-3 rounded-lg bg-purple-500 text-white"
+          className="px-6 py-3 rounded-lg bg-purple-500 text-white hover:bg-purple-600 transition-colors"
         >
-          Send
+          Envoyer
         </button>
       </div>
-
-      {transcript && (
-        <div className="mt-2 text-gray-300">
-          <p>Transcript: {transcript}</p>
-        </div>
-      )}
     </div>
   );
 };
