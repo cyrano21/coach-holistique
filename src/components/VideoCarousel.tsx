@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 import Image from 'next/image';
+import { FaPlay } from 'react-icons/fa';
 
 interface Video {
   id: string;
@@ -15,8 +16,16 @@ interface VideoCarouselProps {
   onVideoSelect: (video: Video) => void;
 }
 
+// Extended motion props to include mouse events and onClick
+type ExtendedMotionProps = HTMLMotionProps<'div'> & {
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  onClick?: () => void;
+};
+
 export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos, onVideoSelect }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => 
@@ -57,7 +66,18 @@ export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos, onVideoSel
           fontSize: '2rem',
           cursor: 'pointer',
           color: 'white',
-          zIndex: 10
+          zIndex: 10,
+          transition: 'transform 0.2s',
+          transform: 'scale(1)',
+          opacity: 0.7
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.2)';
+          e.currentTarget.style.opacity = '1';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.opacity = '0.7';
         }}
       >
         ←
@@ -73,8 +93,9 @@ export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos, onVideoSel
       }}>
         {visibleVideos.map((video, index) => {
           const isCenter = index === 1;
+          const isHovered = hoveredIndex === index;
           
-          const motionProps: HTMLMotionProps<'div'> & { onClick?: () => void } = {
+          const motionProps: ExtendedMotionProps = {
             initial: { 
               opacity: isCenter ? 1 : 0.5, 
               scale: isCenter ? 1 : 0.8 
@@ -89,11 +110,19 @@ export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos, onVideoSel
               cursor: 'pointer',
               borderRadius: '1rem',
               overflow: 'hidden',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
-              transform: isCenter ? 'scale(1)' : 'scale(0.9)'
+              boxShadow: isHovered 
+                ? '0 15px 30px rgba(0,0,0,0.3)' 
+                : '0 10px 25px rgba(0,0,0,0.2)',
+              transform: isCenter 
+                ? (isHovered ? 'scale(1.05)' : 'scale(1)') 
+                : (isHovered ? 'scale(0.95)' : 'scale(0.9)'),
+              position: 'relative',
+              transition: 'all 0.3s ease'
             },
             whileTap: isCenter ? { scale: 0.95 } : {},
-            onClick: () => onVideoSelect(video)
+            onClick: () => onVideoSelect(video),
+            onMouseEnter: () => setHoveredIndex(index),
+            onMouseLeave: () => setHoveredIndex(null)
           };
           
           return (
@@ -101,42 +130,79 @@ export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos, onVideoSel
               key={`video-${video.id}-${index}`}
               {...motionProps}
             >
-              <Image
-                key={`image-${video.id}-${index}`}
-                src={video.thumbnailUrl}
-                alt={video.title}
-                width={400}
-                height={225}
-                priority={isCenter}
-                quality={80}
-                style={{
-                  width: '100%',
-                  height: '225px',
-                  objectFit: 'cover'
-                }}
-              />
+              <div style={{
+                position: 'relative',
+                width: '100%',
+                height: '225px',
+                overflow: 'hidden'
+              }}>
+                <Image
+                  key={`image-${video.id}-${index}`}
+                  src={video.thumbnailUrl}
+                  alt={video.title}
+                  fill
+                  priority={isCenter}
+                  quality={80}
+                  style={{
+                    objectFit: 'cover',
+                    transition: 'transform 0.3s ease',
+                    transform: isHovered ? 'scale(1.1)' : 'scale(1)'
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  borderRadius: '50%',
+                  width: isHovered ? '80px' : '70px',
+                  height: isHovered ? '80px' : '70px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  zIndex: 10,
+                  transition: 'all 0.3s ease',
+                  opacity: isHovered ? 0.8 : 0.5
+                }}>
+                  <FaPlay 
+                    color="white" 
+                    size={isHovered ? 35 : 30} 
+                    style={{ 
+                      marginLeft: '5px',  // Slight offset to center the play icon
+                      filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))',
+                      transition: 'all 0.3s ease'
+                    }} 
+                  />
+                </div>
+              </div>
               <div style={{
                 padding: '1rem',
                 background: 'white',
-                textAlign: 'center'
+                textAlign: 'center',
+                transition: 'background-color 0.3s ease'
               }}>
                 <h3 style={{ 
                   fontSize: '1.25rem', 
                   fontWeight: 'bold',
-                  marginBottom: '0.5rem'
+                  marginBottom: '0.5rem',
+                  color: isHovered ? '#3A5A8A' : '#4A4E69',
+                  transition: 'color 0.3s ease'
                 }}>
                   {video.title}
                 </h3>
                 <p
                   style={{
-                    color: '#4A4E69', // Deep muted purple
+                    color: isHovered ? '#5A6B8C' : '#4A4E69', // Deep muted purple
                     fontSize: '0.9rem',
                     fontWeight: '400',
                     lineHeight: '1.5',
                     textAlign: 'center',
                     marginTop: '0.5rem',
                     padding: '0.5rem',
-                    backgroundColor: 'rgba(255,255,255,0.8)', // Soft white background
+                    backgroundColor: isHovered 
+                      ? 'rgba(58,90,138,0.1)' 
+                      : 'rgba(255,255,255,0.8)', // Soft white background
                     borderRadius: '8px',
                     boxShadow: '0 2px 4px rgba(0,0,0,0.1)', // Subtle shadow
                     maxWidth: '100%',
@@ -144,7 +210,8 @@ export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos, onVideoSel
                     textOverflow: 'ellipsis',
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical'
+                    WebkitBoxOrient: 'vertical',
+                    transition: 'all 0.3s ease'
                   }}
                 >
                   {video.description}
@@ -164,7 +231,18 @@ export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos, onVideoSel
           fontSize: '2rem',
           cursor: 'pointer',
           color: 'white',
-          zIndex: 10
+          zIndex: 10,
+          transition: 'transform 0.2s',
+          transform: 'scale(1)',
+          opacity: 0.7
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.2)';
+          e.currentTarget.style.opacity = '1';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.opacity = '0.7';
         }}
       >
         →

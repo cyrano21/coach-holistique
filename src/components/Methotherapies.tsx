@@ -1,8 +1,12 @@
 'use client';
 
 import React from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants, HTMLMotionProps } from 'framer-motion';
 import { MethodesItem, methodesData } from '../data/methodesData';
+
+interface ExtendedMotionProps extends HTMLMotionProps<'div'> {
+  className?: string;
+}
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -32,14 +36,18 @@ const Methotherapies = () => {
 };
 
 const ParallaxHeader = () => {
+  const motionProps: HTMLMotionProps<'section'> = {
+    initial: { opacity: 0 },
+    whileInView: { opacity: 1 },
+    transition: { duration: 1 },
+    viewport: { once: true }
+  };
+
   return (
     <motion.section
-      class="relative h-[500px] flex items-center justify-center bg-cover bg-center bg-fixed"
+      className="relative h-[500px] flex items-center justify-center bg-cover bg-center bg-fixed"
       style={{ backgroundImage: "url('/images/methodes/hero.jpg')" }}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-      viewport={{ once: true }}
+      {...motionProps}
     >
       <div className="absolute inset-0 bg-black/50" />
       <motion.h1 
@@ -55,14 +63,18 @@ const ParallaxHeader = () => {
 };
 
 const TimelineSection = () => {
+  const motionProps: HTMLMotionProps<'section'> = {
+    initial: { opacity: 0 },
+    whileInView: { opacity: 1 },
+    transition: { duration: 0.8 },
+    viewport: { once: true }
+  };
+
   return (
     <motion.section 
       className="py-20 px-4 md:px-8 lg:px-16 bg-gradient-to-br from-blue-900/90 via-indigo-800/90 to-purple-900/90 text-white"
       id="nos-methodes"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
+      {...motionProps}
     >
       <div className="max-w-7xl mx-auto">
         <motion.p 
@@ -106,10 +118,14 @@ interface TimelineItemProps {
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ item, index }) => {
   const isEven = index % 2 === 0;
+  const motionProps: ExtendedMotionProps = {
+    variants: itemVariants,
+    className: `flex items-center w-full relative ${isEven ? 'flex-row-reverse' : ''}`
+  };
+
   return (
     <motion.div 
-      className={`flex items-center w-full relative ${isEven ? 'flex-row-reverse' : ''}`}
-      variants={itemVariants}
+      {...motionProps}
     >
       {/* Branche horizontale */}
       <div 
@@ -159,14 +175,18 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item, index }) => {
 };
 
 const ParallaxFooter = () => {
+  const motionProps: HTMLMotionProps<'section'> = {
+    initial: { opacity: 0 },
+    whileInView: { opacity: 1 },
+    transition: { duration: 1 },
+    viewport: { once: true }
+  };
+
   return (
     <motion.section
       className="relative h-[400px] flex items-center justify-center bg-cover bg-center bg-fixed"
       style={{ backgroundImage: "url('/images/methodes/footer.jpg')" }}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-      viewport={{ once: true }}
+      {...motionProps}
     >
       <div className="absolute inset-0 bg-black/50" />
       <motion.div 

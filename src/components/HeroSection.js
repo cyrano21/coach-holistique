@@ -33,7 +33,7 @@ function HeroSection() {
                 textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)",
                 WebkitBackgroundClip: "text",
                 backgroundClip: "text",
-                color: "transparent",
+                color: "white",
                 backgroundImage:
                   "linear-gradient(to right, #FFD700, #FDB931, #F0B90B)",
                 backgroundSize: "200% auto",
@@ -41,7 +41,7 @@ function HeroSection() {
               data-aos="zoom-in"
               data-aos-delay="200"
             >
-              Rêvez en Grand, Vivez en Lumière
+              Rêvez en Grand Vivez en Lumière
             </h1>
           </div>
 
