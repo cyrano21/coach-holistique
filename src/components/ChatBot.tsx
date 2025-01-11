@@ -46,7 +46,11 @@ const ChatBot = () => {
       return "Nous proposons plusieurs approches thérapeutiques comme l'EFT, l'analyse transactionnelle, et la thérapie humaniste. Quelle approche souhaitez-vous explorer ?";
     }
 
-    return "Je peux vous parler de nos approches thérapeutiques, du coaching personnalisé, ou vous aider à prendre rendez-vous. Que souhaitez-vous savoir ?";
+    if (lowerInput.includes('rendez-vous') || lowerInput.includes('rdv') || lowerInput.includes('reservation')) {
+      return "Pour prendre rendez-vous, vous pouvez cliquer sur le bouton 'Réserver' dans le menu ou visiter directement la page de réservation. Vous pourrez y choisir le créneau qui vous convient le mieux. Souhaitez-vous que je vous guide vers la page de réservation ?";
+    }
+
+    return "Je suis l'assistant virtuel de ce site, spécialisé dans le coaching holistique. Je peux vous renseigner sur nos services, nos approches thérapeutiques, ou vous aider à prendre rendez-vous. Comment puis-je vous aider ?";
   };
 
   const handleSubmit = async () => {
