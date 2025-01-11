@@ -11,7 +11,14 @@ export default function RootLayoutClient({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    AOS.init();
+    if (typeof window !== 'undefined') {
+      AOS.init({
+        once: true,
+        disable: 'phone',
+        duration: 700,
+        easing: 'ease-out-cubic',
+      });
+    }
   }, []);
 
   return (

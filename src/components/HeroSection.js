@@ -22,7 +22,7 @@ function HeroSection() {
 
       <div
         className="relative max-w-5xl mx-auto px-6 md:px-12 text-center"
-        data-aos="fade-up"
+       
       >
         <div className="text-white space-y-8">
           {/* Titre avec dégradé doré et fond blanc transparent + animations */}
@@ -38,8 +38,7 @@ function HeroSection() {
                   "linear-gradient(to right, #FFD700, #FDB931, #F0B90B)",
                 backgroundSize: "200% auto",
               }}
-              data-aos="zoom-in"
-              data-aos-delay="200"
+             
             >
               Rêvez en Grand Vivez en Lumière
             </h1>
@@ -48,8 +47,7 @@ function HeroSection() {
           {/* Paragraphe plus lisible avec animation de fade */}
           <p
             className="text-lg md:text-2xl text-gray-100 leading-relaxed italic font-medium animate-pulse-slow"
-            data-aos="fade-up"
-            data-aos-delay="400"
+            
             style={{ textShadow: "1px 1px 3px rgba(0, 0, 0, 0.7)" }}
           >
             Plongez dans l&apos;univers où chaque rêve devient une possibilité, où
@@ -61,15 +59,13 @@ function HeroSection() {
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
             <button
               className="bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white px-10 py-4 rounded-full shadow-lg hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105 font-bold uppercase tracking-wider animate-bounce-slow"
-              data-aos="fade-right"
-              data-aos-delay="600"
+             
             >
               Explorer l&apos;Inconnu
             </button>
             <button
               className="border-2 border-white text-white px-10 py-4 rounded-full hover:bg-white hover:text-blue-900 transition-all duration-300 transform hover:scale-105 font-bold uppercase tracking-wider animate-pulse"
-              data-aos="fade-left"
-              data-aos-delay="800"
+             
             >
               Rejoindre l&apos;Aventure
             </button>
