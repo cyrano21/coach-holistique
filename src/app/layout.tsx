@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
-import "animate.css";
 import type { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
 
@@ -29,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }): React.JSX.Element {
   return (
-    <html>
+    <html lang="fr">
       <head></head>
       <body className={`min-h-screen flex flex-col ${poppins.className} ${playfair.variable}`}>
         <Navbar />

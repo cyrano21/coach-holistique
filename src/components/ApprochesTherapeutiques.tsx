@@ -3,7 +3,7 @@ import styles from "./approches-therapeutiques.module.css";
 import {
   approchesFirstRow,
   approchesSecondRow,
-  videoSources,
+  approchesData
 } from "../data/approchesData";
 import VideoSection from "./VideoSection";
 
@@ -16,7 +16,7 @@ const ApprochesTherapeutiques = () => {
 
       <section className={styles["video-section"]} id="videos">
         <h2 className="gradient-title texth2">Découvrez nos approches en vidéo</h2>
-        <VideoSection videos={videoSources} />
+        <VideoSection videos={approchesData.videos} />
       </section>
 
       <section className={styles["parallax-methodes"]}>

@@ -9,8 +9,11 @@ export interface Approche {
 }
 
 export interface VideoSource {
-    src : string;
-    title : string;
+    id: string;
+    title: string;
+    description: string;
+    thumbnailUrl: string;
+    videoUrl: string;
 }
 
 export const approchesFirstRow : Approche[] = [
@@ -94,19 +97,45 @@ export const approchesSecondRow : Approche[] = [
     }
 ];
 
-export const videoSources : VideoSource[] = [
+export const videoSources: VideoSource[] = [
     {
-        src: "https://www.youtube.com/embed/V3Fpng7AZwM",
-        title: "Introduction à l'Analyse Transactionnelle"
-    }, {
-        src: "https://www.youtube.com/embed/N3RqUYfvevY",
-        title: "Introduction à la PNL"
-    }, {
-        src: "https://www.youtube.com/embed/L8TQZxpd_Vo",
-        title: "Introduction à la Sophrologie"
+        id: '1',
+        title: 'Introduction à l\'Analyse Transactionnelle',
+        description: 'Comprendre les bases de l\'Analyse Transactionnelle',
+        thumbnailUrl: '/images/videos/at-thumbnail.jpg',
+        videoUrl: '/videos/at-introduction.mp4'
+    },
+    {
+        id: '2',
+        title: 'PNL : Techniques de Communication',
+        description: 'Découvrez les techniques de la Programmation Neuro-Linguistique',
+        thumbnailUrl: '/images/videos/pnl-thumbnail.jpg',
+        videoUrl: '/videos/pnl-communication.mp4'
     }
 ];
 
 export const approchesData = {
-  videos: videoSources
+  videos: [
+    {
+      id: '1',
+      title: 'Méditation Guidée',
+      description: 'Technique de relaxation profonde pour réduire le stress',
+      thumbnailUrl: '/images/videos/meditation-thumbnail.jpg',
+      videoUrl: 'https://www.youtube.com/embed/Tpf4iii8YSo'
+    },
+    {
+      id: '2', 
+      title: 'Respiration Consciente',
+      description: 'Exercices de respiration pour améliorer votre bien-être',
+      thumbnailUrl: '/images/videos/respiration-thumbnail.jpg',
+      videoUrl: 'https://www.youtube.com/embed/wTUdQ0VY9OY'
+    },
+    {
+      id: '3',
+      title: 'Développement Personnel',
+      description: 'Stratégies pour développer votre potentiel',
+      thumbnailUrl: '/images/videos/developpement-thumbnail.jpg',
+      videoUrl: 'https://www.youtube.com/embed/qvMj8-kNIqM'
+    }
+  ]
 };

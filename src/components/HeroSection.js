@@ -52,9 +52,9 @@ function HeroSection() {
             data-aos-delay="400"
             style={{ textShadow: "1px 1px 3px rgba(0, 0, 0, 0.7)" }}
           >
-            Plongez dans l'univers où chaque rêve devient une possibilité, où
-            chaque pas vous rapproche de l'extraordinaire. <br />
-            Votre voyage commence ici, là où le cœur guide et l'esprit crée des
+            Plongez dans l&apos;univers où chaque rêve devient une possibilité, où
+            chaque pas vous rapproche de l&apos;extraordinaire. <br />
+            Votre voyage commence ici, là où le cœur guide et l&apos;esprit crée des
             merveilles.
           </p>
 
@@ -64,14 +64,14 @@ function HeroSection() {
               data-aos="fade-right"
               data-aos-delay="600"
             >
-              Explorer l'Inconnu
+              Explorer l&apos;Inconnu
             </button>
             <button
               className="border-2 border-white text-white px-10 py-4 rounded-full hover:bg-white hover:text-blue-900 transition-all duration-300 transform hover:scale-105 font-bold uppercase tracking-wider animate-pulse"
               data-aos="fade-left"
               data-aos-delay="800"
             >
-              Rejoindre l'Aventure
+              Rejoindre l&apos;Aventure
             </button>
           </div>
         </div>

@@ -1,16 +1,10 @@
 'use client';
 
-import React, { HTMLAttributes } from 'react';
-import { motion, MotionProps, Variant } from 'framer-motion';
+import React from 'react';
+import { motion, Variants } from 'framer-motion';
 import { MethodesItem, methodesData } from '../data/methodesData';
 
-interface MethotherapiesProps {
-  className?: string;
-}
-
-type ExtendedMotionProps = MotionProps & React.HTMLAttributes<HTMLElement>;
-
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: { 
     opacity: 1,
@@ -18,7 +12,7 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { y: 20, opacity: 0 },
   visible: { 
     y: 0,
@@ -27,9 +21,9 @@ const itemVariants = {
   }
 };
 
-const Methotherapies: React.FC<MethotherapiesProps> = ({ className = '' }) => {
+const Methotherapies = () => {
   return (
-    <div className={`${className} bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800`}>
+    <div className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <ParallaxHeader />
       <TimelineSection />
       <ParallaxFooter />
@@ -39,8 +33,8 @@ const Methotherapies: React.FC<MethotherapiesProps> = ({ className = '' }) => {
 
 const ParallaxHeader = () => {
   return (
-    <motion.section 
-      className="relative h-[500px] flex items-center justify-center bg-cover bg-center bg-fixed"
+    <motion.section
+      class="relative h-[500px] flex items-center justify-center bg-cover bg-center bg-fixed"
       style={{ backgroundImage: "url('/images/methodes/hero.jpg')" }}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
@@ -110,7 +104,7 @@ interface TimelineItemProps {
   index: number;
 }
 
-const TimelineItem = ({ item, index }: TimelineItemProps) => {
+const TimelineItem: React.FC<TimelineItemProps> = ({ item, index }) => {
   const isEven = index % 2 === 0;
   return (
     <motion.div 
