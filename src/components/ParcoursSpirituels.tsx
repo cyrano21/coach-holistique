@@ -1,9 +1,11 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
 import AIGameDialog from './AIGameDialog';
 import { FaLeaf, FaMountain, FaHandHoldingHeart, FaYinYang } from 'react-icons/fa';
+import { HfInference } from '@huggingface/inference';
+
+const hf = new HfInference(process.env.NEXT_PUBLIC_HF_TOKEN);
 
 type Question = {
   question: string;
@@ -228,7 +230,7 @@ const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
         <div className="text-center">
           <h3 className="text-2xl font-bold mb-4">Quiz terminé !</h3>
           <p className="text-xl">
-            Votre score : {score}/{spiritualQuestions.length}
+            Votre score : {score}/{spiritualPaths.length}
           </p>
         </div>
       )}
@@ -369,70 +371,6 @@ const ChakraBalance = () => {
   );
 };
 
-const ParcoursSpirituels = () => {
-  const [activeCard, setActiveCard] = useState<number | null>(null);
-  const [selectedGame, setSelectedGame] = useState<GameType | null>(null);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
-      <div className="container mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-center text-white mb-12 animate__animated animate__fadeInDown">
-          Parcours Spirituels
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {spiritualPaths.map((path) => (
-            <div 
-              key={path.id}
-              className={`
-                relative group transform transition-all duration-500 
-                ${activeCard === path.id ? 'scale-105 rotate-3 z-50' : 'hover:scale-105 hover:rotate-3'}
-                bg-gradient-to-br ${path.color} 
-                rounded-2xl shadow-2xl overflow-hidden
-                cursor-pointer
-              `}
-              onMouseEnter={() => setActiveCard(path.id)}
-              onMouseLeave={() => setActiveCard(null)}
-            >
-              <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity"></div>
-              
-              <div className="relative p-6 text-white">
-                <div className="flex items-center mb-4">
-                  <path.icon className="w-12 h-12 mr-4 text-white/80 group-hover:text-white transition-colors" />
-                  <h3 className="text-2xl font-bold">{path.title}</h3>
-                </div>
-                
-                <p className="text-sm text-white/80 mb-4">{path.description}</p>
-                
-                <ul className="space-y-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  {path.details.map((detail, index) => (
-                    <li 
-                      key={index} 
-                      className="flex items-center text-white/90 hover:text-yellow-300 transition-colors duration-300"
-                      onClick={() => setSelectedGame(path.game)}
-                    >
-                      <span className="mr-2">•</span>
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Section AI Dialog */}
-        <div className="mt-12 max-w-3xl mx-auto">
-          <AIGameDialog />
-        </div>
-
-        <div className="mt-12 bg-gray-800 rounded-xl p-8">
-          {selectedGame ? (
-            selectedGame.component()
-          ) : (
-            <div className="text-center">
-              <h3 className="text-2xl font-bold mb-4 text-gray-100">
-
 const NumerologyCalculator = () => {
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
@@ -447,9 +385,9 @@ const NumerologyCalculator = () => {
 
   const generateNumerologyReading = async () => {
     if (!name || !birthDate) return;
-    
+
     const lifePathNumber = calculateLifePath(birthDate);
-    
+
     try {
       const prompt = `Génère une interprétation numérologique détaillée et personnalisée pour:
 Nom: ${name}
@@ -460,7 +398,7 @@ Format souhaité:
 2. Forces et défis
 3. Conseils spirituels`;
 
-      const result = await hf.textGeneration({
+      const response = await hf.textGeneration({
         model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
         inputs: prompt,
         parameters: {
@@ -470,7 +408,7 @@ Format souhaité:
         }
       });
 
-      setResult(result.generated_text);
+      setResult(response.generated_text);
     } catch (error) {
       console.error('Error:', error);
       setResult("Une erreur est survenue lors de la génération de l'interprétation.");
@@ -480,7 +418,7 @@ Format souhaité:
   return (
     <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
       <h3 className="text-2xl font-bold text-white mb-6">Calcul Numérologique</h3>
-      
+
       <div className="space-y-4">
         <div>
           <label className="block text-white mb-2">Votre nom complet</label>
@@ -492,7 +430,7 @@ Format souhaité:
             placeholder="Ex: Jean Dupont"
           />
         </div>
-        
+
         <div>
           <label className="block text-white mb-2">Date de naissance</label>
           <input
@@ -525,6 +463,69 @@ Format souhaité:
   );
 };
 
+const ParcoursSpirituels = () => {
+  const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [selectedGame, setSelectedGame] = useState<GameType | null>(null);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
+      <div className="container mx-auto">
+        <h2 className="text-4xl md:text-5xl font-bold text-center text-white mb-12 animate__animated animate__fadeInDown">
+          Parcours Spirituels
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {spiritualPaths.map((path) => (
+            <div 
+              key={path.id}
+              className={`
+                relative group transform transition-all duration-500 
+                ${activeCard === path.id ? 'scale-105 rotate-3 z-50' : 'hover:scale-105 hover:rotate-3'}
+                bg-gradient-to-br ${path.color} 
+                rounded-2xl shadow-2xl overflow-hidden
+                cursor-pointer
+              `}
+              onMouseEnter={() => setActiveCard(path.id)}
+              onMouseLeave={() => setActiveCard(null)}
+            >
+              <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity"></div>
+
+              <div className="relative p-6 text-white">
+                <div className="flex items-center mb-4">
+                  <path.icon className="w-12 h-12 mr-4 text-white/80 group-hover:text-white transition-colors" />
+                  <h3 className="text-2xl font-bold">{path.title}</h3>
+                </div>
+
+                <p className="text-sm text-white/80 mb-4">{path.description}</p>
+
+                <ul className="space-y-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  {path.details.map((detail, index) => (
+                    <li 
+                      key={index} 
+                      className="flex items-center text-white/90 hover:text-yellow-300 transition-colors duration-300"
+                      onClick={() => setSelectedGame(path.game)}
+                    >
+                      <span className="mr-2">•</span>
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Section AI Dialog */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <AIGameDialog />
+        </div>
+
+        <div className="mt-12 bg-gray-800 rounded-xl p-8">
+          {selectedGame ? (
+            selectedGame.component()
+          ) : (
+            <div className="text-center">
+              <h3 className="text-2xl font-bold mb-4 text-gray-100">
                 Sélectionnez un parcours
               </h3>
               <p className="text-gray-200">
