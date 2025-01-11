@@ -13,6 +13,8 @@ const ReservationPage = () => {
     time: "",
     message: "",
   });
+  const [showModal, setShowModal] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,10 +36,7 @@ const ReservationPage = () => {
           day: 'numeric'
         });
 
-        const [showModal, setShowModal] = useState(false);
-        const [confirmationMessage, setConfirmationMessage] = useState('');
-
-        // Dans le reste du composant, avant return
+        setShowModal(true);
         setConfirmationMessage(`
           Merci pour votre réservation !
           
