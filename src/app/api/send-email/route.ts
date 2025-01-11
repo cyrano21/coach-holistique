@@ -18,15 +18,19 @@ export async function POST(req: Request) {
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // This should be an App Password
+        pass: process.env.EMAIL_PASS,
       },
     });
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: 'minduse04@gmail.com',
-      subject: `Nouvelle réservation de ${body.name}`,
-      text: `
+    // Determine email type and set subject/content accordingly
+    const isReservation = 'date' in body;
+    
+    const subject = isReservation 
+      ? `Nouvelle réservation de ${body.name}`
+      : `Nouveau message de ${body.firstName} ${body.lastName}`;
+
+    const text = isReservation 
+      ? `
         Nouvelle réservation:
         
         Nom: ${body.name}
@@ -36,6 +40,19 @@ export async function POST(req: Request) {
         Heure souhaitée: ${body.time}
         Message: ${body.message}
       `
+      : `
+        Nouveau message:
+        
+        Nom: ${body.firstName} ${body.lastName}
+        Email: ${body.email}
+        Message: ${body.message}
+      `;
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: 'minduse04@gmail.com',
+      subject,
+      text
     };
 
     await transporter.sendMail(mailOptions);
