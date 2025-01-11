@@ -1,4 +1,2 @@
 
-{
-  "presets": ["next/babel"]
-}
+// Using SWC instead of Babel
