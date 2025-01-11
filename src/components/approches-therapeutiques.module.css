@@ -1,0 +1,482 @@
+
+
+/* Image principale (Hero) */
+.approches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.hero-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Carte d'approche */
+.approche-item {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.approche-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, #007bff, #00c7ff);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.approche-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.approche-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+/* Section vidéo */
+.video-section {
+  margin-bottom: 40px;
+  padding: 20px;
+}
+
+.video-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Liste de bénéfices */
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefit-item {
+  margin-bottom: 10px;
+}
+
+.benefit-item::before {
+  content: "\\2022";
+  font-weight: bold;
+  display: inline-block;
+  width: 20px;
+  margin-left: -20px;
+}
+
+/* Parallax */
+.parallax {
+  position: relative;
+  width: 100%;
+  height: 70vh; /* Ajustez selon vos besoins */
+  background-image: url("https://images.pexels.com/photos/1250655/pexels-photo-1250655.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.parallax-approches {
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("https://images.pexels.com/photos/1236701/pexels-photo-1236701.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.parallax-image {
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("/images/approches/meditation.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.parallax-text {
+  padding: 40px;
+  color: #fff;
+  text-align: center;
+  max-width: 800px;
+  border-radius: 10px;
+}
+
+.parallax-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+/* Parallax méthodes */
+.parallax-methodes {
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("/images/approches/hero/therapie-systemique-hero.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  padding: 40px 20px;
+  margin-bottom: 20px;
+}
+
+
+
+.parallax-methodes-content {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6); /* Fond semi-transparent */
+  border-radius: 10px;
+  padding: 30px;
+  width: 100%; /* S'adapte sur les petits écrans */
+  margin: 0 auto;
+}
+
+/* Styles des titres */
+
+
+@keyframes titleGlow {
+  0%, 100% {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+  }
+}
+
+
+/* Grille des méthodes */
+.methodes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Forcer 2 colonnes */
+  gap: 30px;
+  padding: 40px 20px;
+  margin: 0 auto;
+}
+/* Cartes des méthodes */
+.methode-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.methode-text{}
+
+.methode-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #2193b0, #6dd5ed);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+/* Suite des styles pour les cartes et animations */
+.methode-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.methode-card:hover::after {
+  transform: scaleX(1);
+}
+
+.methode-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.methode-description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+
+.gradient-title {
+  font-size: 2.5rem;
+  font-family: "Playfair Display", serif; /* Typographie élégante */
+  font-weight: bold;
+  color: white; /* Contraste avec le fond */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8); /* Meilleure lisibilité */
+  background: rgba(0, 0, 0, 0.4); /* Fond semi-transparent */
+  padding: 20px;
+  border-radius: 8px;
+  animation: fadeIn 1.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gradient-title::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(120deg, #ffffff, #e6f3ff, #ffffff);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 10px;
+  z-index: -1;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  opacity: 0.9;
+  animation: bgEntry 1.2s ease-out forwards;
+  transform: scale(0.95);
+}
+
+/* Animations */
+@keyframes titleEntry {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bgEntry {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes titleFloat {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+
+
+
+@media screen and (max-width: 1060px) {
+
+ 
+
+  .approches-container{
+   
+  }
+
+}
+
+@media screen and (max-width: 1060px) {
+  .methodes-grid {
+    grid-template-columns: repeat(2, 1fr); /* Forcer 2 colonnes */
+    gap: 20px; /* Réduction des espacements */
+    padding: 20px; /* Réduire les marges */
+    justify-content: center; /* Centre le contenu */
+    width: 100%;
+  }
+  .methode-card{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-content: center;
+   }
+
+  .methode-card img {
+    max-width: 100%; /* Assure que les images s'ajustent */
+    height: auto; /* Conserve le ratio d'aspect */
+  }
+  .methode-content{
+min-width: 100%;
+}
+
+.methode-content h3{
+  font-size: 0.70rem;
+}
+
+.methode-content p{
+  font-size: 0.65rem;
+}
+
+@media screen and (max-width: 1040px) {
+  .methodes-grid {
+    grid-template-columns: repeat(2, 1fr); /* Toujours 2 colonnes */
+    gap: 20px;
+    align-items: center;
+  }
+}
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .gradient-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    padding: 15px 20px;
+    margin: 10px 0;
+    letter-spacing: 2px;
+  }
+  .approches-grid {
+    grid-template-columns: 1fr;
+  }
+  .methodes-grid {
+    grid-template-columns: 1fr; /* Une seule colonne */
+    gap: 15px;
+  }
+
+  .methode-card {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .methode-card img {
+    max-width: 100%; /* Ajuste les images pour mieux s'adapter */
+    margin: 0 auto; /* Centre les images */
+  }
+  .approche-image {
+    max-width: 100%;
+    height: auto;
+  }
+  .methode-content{
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+flex-wrap: wrap;
+   
+    }
+    
+    .methode-content h3{
+      font-size: 0.70rem;
+    }
+    
+    .methode-content p{
+      font-size: 0.65rem;
+    }
+}
+
+
+@media screen and (max-width: 480px) {
+  .gradient-title {
+    font-size: clamp(1.5rem, 3vw, 1.8rem);
+    padding: 10px 15px;
+    letter-spacing: 1px;
+  }
+  .methodes-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+/* Container pour éviter la superposition */
+.section-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  overflow: hidden; /* Empêche le débordement */
+}
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Navigation */
+.nav-pills {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 30px 0;
+}
+
+.nav-link {
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: transparent;
+  color: #333;
+  transition: all 0.3s ease;
+  border: 2px solid #ddd;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: linear-gradient(90deg, #2193b0, #6dd5ed);
+  color: white;
+  border-color: transparent;
+}
+

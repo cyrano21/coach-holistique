@@ -1,0 +1,22 @@
+.approches-therapeutiques-section {
+  border: 1px solid red;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.approches-therapeutiques-section h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.approches-therapeutiques-section ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  color: #555;
+}
+

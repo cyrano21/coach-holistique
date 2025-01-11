@@ -1,0 +1,87 @@
+/* Texte introductif avec mise en valeur */
+.timelineIntro {
+  max-width: 700px;
+  margin: 0 auto 50px;
+  text-align: center;
+  color: #666;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.highlight-text {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Section Parallax Header */
+.parallax-header {
+  background-image: url("/images/methodes/methodes-header.jpg");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+}
+
+.header-title {
+  font-size: 3rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+/* Section Parallax Footer */
+.parallax-footer {
+  background-image: url("/images/methodes/methodes-footer.jpg");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+}
+
+.footer-content {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 700px;
+}
+
+.footer-content h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.footer-content p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #ddd;
+}
+
+.footer-content .highlight-text {
+  font-weight: bold;
+  color: #ffbf00;
+}
+
+/* Responsivité */
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 2rem;
+  }
+
+  .footer-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .footer-content p {
+    font-size: 1rem;
+  }
+}

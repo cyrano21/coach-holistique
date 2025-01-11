@@ -1,0 +1,196 @@
+/* Styles généraux */
+body {
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Section Hero */
+.hero {
+  position: relative;
+  height: 60vh;
+  background-image: url('/images/outils/hero.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(139, 92, 246, 0.8), transparent);
+  animation: fadeIn 2s ease-in-out;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  animation: zoomIn 2s ease-in-out;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  animation: fadeInLeft 3s ease-in-out;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.hero button {
+  margin-top: 2rem;
+  background-color: white;
+  color: #9b59b6;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: bold;
+  animation: pulse 3s ease-in-out;
+}
+
+.hero button:hover {
+  background-color: #e0bfff;
+}
+
+/* Grille des outils */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2.5rem;
+  padding: 2rem;
+}
+
+.grid-item {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.grid-item:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.grid-item h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.grid-item p {
+  color: #737373;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+/* Section Méthodes Thérapeutiques */
+.method-section {
+  padding: 3rem 0;
+}
+
+.method-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.method-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  space-y-4: 1rem;
+}
+
+.method-text h3 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.method-text p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.method-text ul {
+  list-style: disc;
+  list-style-position: inside;
+  space-y-2: 0.5rem;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.method-text a {
+  margin-top: 1rem;
+  background-color: #fff3cd;
+  color: #9b59b6;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.method-text a:hover {
+  background-color: #fff7e6;
+  transform: scale(1.05);
+}
+
+.method-image img {
+  border-radius: 1.875rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.5);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}

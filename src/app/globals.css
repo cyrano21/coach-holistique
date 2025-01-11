@@ -2,20 +2,282 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ---------------------------
+   TYPOGRAPHIE MODERNE
+   --------------------------- */
+
+/* Corps du texte global */
+:global(body) {
+  font-family: 'Poppins', sans-serif;
+  color: #444;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Container général */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Section principale */
+.approches-section {
+  position: relative;
+  width: 100%;
+  background: #f9f9f9;
+  padding: 60px 0;
+}
+
+/* Titres h1 */
+h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  color: #222;
+  text-align: center;
+}
+
+/* Titres h2 */
+h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 15px;
+  color: #222;
+  text-align: center;
+}
+
+/* Titres h3 */
+h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  color: #333;
+  text-align: center;
+}
+
+/* Petite barre décorative sous h3 */
+h3::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: #007bff;
+  margin: 8px auto 0;
+}
+
+/* Paragraphes */
+p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 15px;
+  color: #555;
+  text-align: justify;
+}
+
+
+/* Animation d'entrée du titre */
+.gradient-title {
+  /* Typographie */
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color:#dbd81d;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0.5, 1.0);
+  
+ 
+  /* Structure */
+  position: relative;
+  z-index: 2;
+  padding: 20px 40px;
+  margin: 0;
+  text-align: center;
+  
+  /* Animation */
+  animation: titleEntry 1s ease-out forwards, titleFloat 3s ease-in-out infinite;
+  opacity: 1;
+}
+
+/* Pseudo-élément ::before pour effet autour du texte */
+.gradient-title::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #156F59, #e6f3ff, #156F59, #e6f3ff, #156F59); /* Dégradé autour */
+  border-radius: 10px;
+  z-index: -1;
+  opacity: 0.5;
+  
+  /* Animation */
+  animation: bgEntry 1.2s ease-out forwards;
+  transform: scale(0.95);
+}
+
+.texth2::before{
+  background: linear-gradient(120deg, #030303, #e6f3ff, #0c0c0c, #e6f3ff, #070707); /* Dégradé autour */
+}
+
+.texth3::before{
+  background: linear-gradient(120deg, #7E656C, #e6f3ff, #7E656C, #e6f3ff, #7E656C); /* Dégradé autour */
+}
+
+.texth3,.texth2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+}
+
+
+
+
+/* Animation d'entrée du titre */
+@keyframes titleEntry {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Animation d'entrée du fond */
+@keyframes bgEntry {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
 }
+
+/* Animation de flottement permanent */
+@keyframes titleFloat {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Animation du gradient */
+@keyframes titleGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .parallax{
+    height: 40vh;
+  }
+  .texth1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: 2px;
+    padding: 15px 25px;
+  }
+
+  .texth3, .texth2{
+    font-size: clamp(1rem, 4vw, 2rem);
+  }
+
+}
+
+
+@keyframes shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes gradient-xy {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-shimmer {
+  animation: shimmer 8s linear infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 6s ease-in-out 2s infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.animate-twinkle-delayed {
+  animation: twinkle 3s ease-in-out 1.5s infinite;
+}
+
+.animate-shine {
+  animation: shine 8s linear infinite;
+}
+
+.animate-gradient-xy {
+  animation: gradient-xy 15s ease infinite;
+  background-size: 400% 400%;
+}
+
+.animate-bounce-slow {
+  animation: bounce 3s infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
