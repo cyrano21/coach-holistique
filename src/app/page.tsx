@@ -1,10 +1,12 @@
 "use client";
 
 import { approchesData } from "../data/approchesData";
-import HeroSection from "../components/HeroSection";
-import Services from "../components/Services";
-import VideoSection from "../components/VideoSection";
-import Testimonials from "../components/Testimonials";
+import dynamic from 'next/dynamic';
+
+const VideoSection = dynamic(() => import("../components/VideoSection"), { ssr: false });
+const HeroSection = dynamic(() => import("../components/HeroSection"), { ssr: true });
+const Services = dynamic(() => import("../components/Services"), { ssr: true });
+const Testimonials = dynamic(() => import("../components/Testimonials"), { ssr: true });
 
 export default function HomePage() {
   console.log("Approches data in HomePage:", approchesData);
