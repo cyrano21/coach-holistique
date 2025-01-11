@@ -19,7 +19,7 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false, // Disable CSS optimization temporarily
     optimizePackageImports: ['@mui/icons-material'],
   },
   poweredByHeader: false,
