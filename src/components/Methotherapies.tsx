@@ -36,7 +36,7 @@ const Methotherapies = () => {
 };
 
 const ParallaxHeader = () => {
-  const motionProps: HTMLMotionProps<'section'> = {
+  const motionProps: HTMLMotionProps<"div"> = {
     initial: { opacity: 0 },
     whileInView: { opacity: 1 },
     transition: { duration: 1 },
