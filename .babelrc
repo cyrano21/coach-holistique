@@ -1,14 +1,12 @@
 
 {
   "presets": [
-    ["@babel/preset-env", { "targets": { "node": "current" } }],
-    "@babel/preset-react"
+    ["next/babel"],
+    ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
   ],
   "plugins": [
     ["@babel/plugin-transform-runtime", {
-      "regenerator": true,
-      "helpers": true,
-      "useESModules": false
+      "regenerator": true
     }]
   ]
 }
