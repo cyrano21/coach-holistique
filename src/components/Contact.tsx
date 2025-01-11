@@ -38,11 +38,33 @@ const Contact = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      // Traitement du formulaire
-      console.log("Formulaire envoyé :", formData);
+      try {
+        const response = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          alert('Message envoyé avec succès !');
+          setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            message: ""
+          });
+        } else {
+          alert('Erreur lors de l\'envoi du message');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Erreur lors de l\'envoi du message');
+      }
     }
   };
 
