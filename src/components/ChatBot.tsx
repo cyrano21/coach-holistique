@@ -24,41 +24,24 @@ const ChatBot = () => {
   }, [messages]);
 
   const getBotResponse = async (userInput: string) => {
-    const lowerInput = userInput.toLowerCase();
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: `Tu es un assistant spécialisé en coaching holistique, méditation et développement personnel. 
+          Réponds de manière empathique et professionnelle à la question suivante: ${userInput}`
+        }),
+      });
 
-    // Rendez-vous et réservations
-    if (lowerInput.includes('rendez-vous') || lowerInput.includes('rdv') || lowerInput.includes('réserver')) {
-      return `Pour prendre rendez-vous, vous avez deux options :
-
-1. Utilisez notre formulaire de réservation en ligne en cliquant sur "Réserver" dans le menu ou en visitant directement la page Réservation.
-
-2. Contactez-nous via le formulaire de contact dans la section Contact.
-
-Je peux vous rediriger vers l'une de ces pages. Que préférez-vous ?`;
+      const data = await response.json();
+      return data.response;
+    } catch (error) {
+      console.error('Erreur chat:', error);
+      return "Désolé, je rencontre des difficultés techniques. Pouvez-vous reformuler votre question ?";
     }
-
-    // Présentation du chatbot
-    if (lowerInput.includes('qui es') || lowerInput.includes('qui êtes') || lowerInput.includes('présente toi')) {
-      return `Je suis l'assistant virtuel spécialisé en coaching holistique. Je peux vous aider à :
-- Prendre rendez-vous
-- Découvrir nos approches thérapeutiques
-- En savoir plus sur nos services
-- Répondre à vos questions
-
-Comment puis-je vous aider aujourd'hui ?`;
-    }
-
-    // Questions sur les approches thérapeutiques
-    if (lowerInput.includes('eft') || lowerInput.includes('emotional freedom')) {
-      return "L'EFT (Emotional Freedom Techniques) est une approche qui combine la stimulation de points d'acupuncture et le travail émotionnel. Cette technique aide à libérer les blocages émotionnels et réduire le stress. Souhaitez-vous prendre rendez-vous pour une séance ?";
-    }
-
-    if (lowerInput.includes('méditation') || lowerInput.includes('meditation')) {
-      return "Nous proposons différentes techniques de méditation pour développer la pleine conscience et réduire le stress. Vous pouvez découvrir nos vidéos de méditation guidée dans la section 'Vidéos' de la page d'accueil ou explorer nos programmes de méditation dans 'Outils de Développement'.";
-    }
-
-    // Réponse par défaut
-    return "Je peux vous aider à prendre rendez-vous, découvrir nos approches thérapeutiques ou répondre à vos questions. Que souhaitez-vous savoir ?";
   };
 
   const handleSubmit = async () => {
