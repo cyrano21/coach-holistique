@@ -1,8 +1,14 @@
+
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaLeaf, FaMountain, FaHandHoldingHeart, FaYinYang } from 'react-icons/fa';
 
+type Question = {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+};
 
 type GameType = {
   title: string;
@@ -15,6 +21,45 @@ type GameType = {
     buttonBg: string;
   };
 };
+
+const spiritualQuestions: Question[] = [
+  {
+    question: "Quelle est la principale pratique du bouddhisme ?",
+    options: ["La méditation", "La danse", "Le chant", "Le jeûne"],
+    correctAnswer: 0
+  },
+  {
+    question: "Quel est le concept central du taoïsme ?",
+    options: ["Le karma", "L'équilibre", "La réincarnation", "La prière"],
+    correctAnswer: 1
+  },
+  {
+    question: "Qu'est-ce que la pleine conscience ?",
+    options: [
+      "Une technique de respiration",
+      "Une forme de méditation",
+      "Une présence consciente au moment présent",
+      "Une pratique de yoga"
+    ],
+    correctAnswer: 2
+  }
+];
+
+const emotionalQuestions = [
+  "Comment vous sentez-vous aujourd'hui ?",
+  "Quelle est votre plus grande source de joie ?",
+  "Qu'est-ce qui vous préoccupe le plus ?"
+];
+
+const chakras = [
+  { name: "Racine", color: "red" },
+  { name: "Sacral", color: "orange" },
+  { name: "Plexus solaire", color: "yellow" },
+  { name: "Cœur", color: "green" },
+  { name: "Gorge", color: "blue" },
+  { name: "Troisième œil", color: "indigo" },
+  { name: "Couronne", color: "purple" }
+];
 
 const spiritualPaths = [
   {
@@ -37,25 +82,7 @@ const spiritualPaths = [
         paragraphText: "text-white/80",
         buttonBg: "bg-green-600 hover:bg-green-500"
       },
-      component: () => (
-        <div className={`bg-gradient-to-br ${spiritualPaths[0].game.color.background} p-8 rounded-xl`}>
-          <h2 className={`text-3xl font-bold mb-4 ${spiritualPaths[0].game.color.titleText}`}>
-            {spiritualPaths[0].game.title}
-          </h2>
-          <p className={`mb-6 ${spiritualPaths[0].game.color.paragraphText}`}>
-            {spiritualPaths[0].game.description}
-          </p>
-          <button 
-            className={`
-              px-6 py-3 rounded-lg transition-colors duration-300 
-              ${spiritualPaths[0].game.color.buttonBg} 
-              text-white hover:opacity-90
-            `}
-          >
-            Commencer le Quiz
-          </button>
-        </div>
-      )
+      component: () => <SpiritualQuiz />
     }
   },
   {
@@ -78,25 +105,7 @@ const spiritualPaths = [
         paragraphText: "text-white/80",
         buttonBg: "bg-blue-600 hover:bg-blue-500"
       },
-      component: () => (
-        <div className={`bg-gradient-to-br ${spiritualPaths[1].game.color.background} p-8 rounded-xl`}>
-          <h2 className={`text-3xl font-bold mb-4 ${spiritualPaths[1].game.color.titleText}`}>
-            {spiritualPaths[1].game.title}
-          </h2>
-          <p className={`mb-6 ${spiritualPaths[1].game.color.paragraphText}`}>
-            {spiritualPaths[1].game.description}
-          </p>
-          <button 
-            className={`
-              px-6 py-3 rounded-lg transition-colors duration-300 
-              ${spiritualPaths[1].game.color.buttonBg} 
-              text-white hover:opacity-90
-            `}
-          >
-            Commencer la Séance
-          </button>
-        </div>
-      )
+      component: () => <MeditationTimer />
     }
   },
   {
@@ -119,25 +128,7 @@ const spiritualPaths = [
         paragraphText: "text-white/80",
         buttonBg: "bg-purple-600 hover:bg-purple-500"
       },
-      component: () => (
-        <div className={`bg-gradient-to-br ${spiritualPaths[2].game.color.background} p-8 rounded-xl`}>
-          <h2 className={`text-3xl font-bold mb-4 ${spiritualPaths[2].game.color.titleText}`}>
-            {spiritualPaths[2].game.title}
-          </h2>
-          <p className={`mb-6 ${spiritualPaths[2].game.color.paragraphText}`}>
-            {spiritualPaths[2].game.description}
-          </p>
-          <button 
-            className={`
-              px-6 py-3 rounded-lg transition-colors duration-300 
-              ${spiritualPaths[2].game.color.buttonBg} 
-              text-white hover:opacity-90
-            `}
-          >
-            Démarrer l&lsquo;Exploration
-          </button>
-        </div>
-      )
+      component: () => <EmotionalExploration />
     }
   },
   {
@@ -160,36 +151,196 @@ const spiritualPaths = [
         paragraphText: "text-white/80",
         buttonBg: "bg-red-600 hover:bg-red-500"
       },
-      component: () => (
-        <div className={`bg-gradient-to-br ${spiritualPaths[3].game.color.background} p-8 rounded-xl`}>
-          <h2 className={`text-3xl font-bold mb-4 ${spiritualPaths[3].game.color.titleText}`}>
-            {spiritualPaths[3].game.title}
-          </h2>
-          <p className={`mb-6 ${spiritualPaths[3].game.color.paragraphText}`}>
-            {spiritualPaths[3].game.description}
-          </p>
-          <button 
-            className={`
-              px-6 py-3 rounded-lg transition-colors duration-300 
-              ${spiritualPaths[3].game.color.buttonBg} 
-              text-white hover:opacity-90
-            `}
-          >
-            Commencer l&lsquo;Harmonisation
-          </button>
-        </div>
-      )
+      component: () => <ChakraBalance />
     }
   }
 ];
 
+const SpiritualQuiz = () => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showScore, setShowScore] = useState(false);
+
+  const handleAnswerClick = (selectedAnswer: number) => {
+    if (selectedAnswer === spiritualQuestions[currentQuestion].correctAnswer) {
+      setScore(score + 1);
+    }
+
+    if (currentQuestion < spiritualQuestions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else {
+      setShowScore(true);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {!showScore ? (
+        <>
+          <h3 className="text-xl font-semibold mb-4">
+            Question {currentQuestion + 1}/{spiritualQuestions.length}
+          </h3>
+          <p className="mb-4">{spiritualQuestions[currentQuestion].question}</p>
+          <div className="space-y-2">
+            {spiritualQuestions[currentQuestion].options.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => handleAnswerClick(index)}
+                className="w-full p-3 text-left rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="text-center">
+          <h3 className="text-2xl font-bold mb-4">Quiz terminé !</h3>
+          <p className="text-xl">
+            Votre score : {score}/{spiritualQuestions.length}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const MeditationTimer = () => {
+  const [time, setTime] = useState(300); // 5 minutes
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isActive && time > 0) {
+      interval = setInterval(() => {
+        setTime((time) => time - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isActive, time]);
+
+  const toggleTimer = () => {
+    setIsActive(!isActive);
+  };
+
+  const resetTimer = () => {
+    setIsActive(false);
+    setTime(300);
+  };
+
+  return (
+    <div className="text-center space-y-6">
+      <div className="text-4xl font-bold">
+        {Math.floor(time / 60)}:{(time % 60).toString().padStart(2, '0')}
+      </div>
+      <div className="space-x-4">
+        <button
+          onClick={toggleTimer}
+          className="px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20"
+        >
+          {isActive ? 'Pause' : 'Démarrer'}
+        </button>
+        <button
+          onClick={resetTimer}
+          className="px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20"
+        >
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const EmotionalExploration = () => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [answer, setAnswer] = useState('');
+
+  const handleSubmit = () => {
+    if (answer.trim()) {
+      setAnswers([...answers, answer]);
+      setAnswer('');
+      if (currentQuestion < emotionalQuestions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+      }
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {currentQuestion < emotionalQuestions.length ? (
+        <>
+          <h3 className="text-xl font-semibold mb-4">
+            {emotionalQuestions[currentQuestion]}
+          </h3>
+          <textarea
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            className="w-full p-3 rounded-lg bg-white/10 text-white"
+            rows={4}
+          />
+          <button
+            onClick={handleSubmit}
+            className="px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20"
+          >
+            Suivant
+          </button>
+        </>
+      ) : (
+        <div className="text-center">
+          <h3 className="text-2xl font-bold mb-4">Merci pour vos réponses</h3>
+          <p className="text-lg">Vos réflexions ont été enregistrées.</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ChakraBalance = () => {
+  const [selectedChakra, setSelectedChakra] = useState<number | null>(null);
+  const [isBalancing, setIsBalancing] = useState(false);
+
+  const handleChakraClick = (index: number) => {
+    setSelectedChakra(index);
+    setIsBalancing(true);
+    setTimeout(() => {
+      setIsBalancing(false);
+    }, 3000);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-4">
+        {chakras.map((chakra, index) => (
+          <div
+            key={index}
+            onClick={() => handleChakraClick(index)}
+            className={`
+              p-4 rounded-lg cursor-pointer transition-all duration-300
+              ${isBalancing && selectedChakra === index ? 'animate-pulse' : ''}
+            `}
+            style={{ backgroundColor: chakra.color + '40' }}
+          >
+            <h3 className="text-lg font-semibold">{chakra.name}</h3>
+          </div>
+        ))}
+      </div>
+      {selectedChakra !== null && (
+        <div className="text-center">
+          <p>
+            {isBalancing
+              ? `Harmonisation du chakra ${chakras[selectedChakra].name} en cours...`
+              : `Le chakra ${chakras[selectedChakra].name} est harmonisé`}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ParcoursSpirituels = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [selectedGame, setSelectedGame] = useState<GameType | null>(null);
-
-  const handleDetailClick = (game: GameType) => {
-    setSelectedGame(game);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
@@ -198,16 +349,13 @@ const ParcoursSpirituels = () => {
           Parcours Spirituels
         </h2>
 
-        {/* Section Cartes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {spiritualPaths.map((path) => (
             <div 
               key={path.id}
               className={`
                 relative group transform transition-all duration-500 
-                ${activeCard === path.id 
-                  ? 'scale-105 rotate-3 z-50' 
-                  : 'hover:scale-105 hover:rotate-3'}
+                ${activeCard === path.id ? 'scale-105 rotate-3 z-50' : 'hover:scale-105 hover:rotate-3'}
                 bg-gradient-to-br ${path.color} 
                 rounded-2xl shadow-2xl overflow-hidden
                 cursor-pointer
@@ -225,14 +373,14 @@ const ParcoursSpirituels = () => {
                 
                 <p className="text-sm text-white/80 mb-4">{path.description}</p>
                 
-                <ul className="space-y-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-twinkle group-hover:animate-none">
+                <ul className="space-y-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   {path.details.map((detail, index) => (
                     <li 
                       key={index} 
-                      className="flex items-center text-white/90 group-hover:text-yellow-300 group-hover:bg-yellow-900/20 transition-colors duration-300 bg-white/10 px-2 py-1 rounded-md cursor-pointer"
-                      onClick={() => handleDetailClick(path.game)}
+                      className="flex items-center text-white/90 hover:text-yellow-300 transition-colors duration-300"
+                      onClick={() => setSelectedGame(path.game)}
                     >
-                      <span className="mr-2 text-white/70">•</span>
+                      <span className="mr-2">•</span>
                       {detail}
                     </li>
                   ))}
@@ -242,33 +390,17 @@ const ParcoursSpirituels = () => {
           ))}
         </div>
 
-        {/* Section Jeu */}
-        <div className="mt-12 bg-gray-800 rounded-xl p-8 min-h-[400px]">
+        <div className="mt-12 bg-gray-800 rounded-xl p-8">
           {selectedGame ? (
-            <div className={`bg-gradient-to-br ${selectedGame.color.background} p-8 rounded-xl`}>
-              <h2 className={`text-3xl font-bold mb-4 ${selectedGame.color.titleText}`}>
-                {selectedGame.title}
-              </h2>
-              <p className={`mb-6 ${selectedGame.color.paragraphText}`}>
-                {selectedGame.description}
-              </p>
-              <button 
-                className={`
-                  px-6 py-3 rounded-lg transition-colors duration-300 
-                  ${selectedGame.color.buttonBg} 
-                  text-white hover:opacity-90
-                `}
-              >
-                {selectedGame.title === "Quiz des Traditions Spirituelles" ? "Commencer le Quiz" : 
-                 selectedGame.title === "Atelier de Méditation Guidée" ? "Commencer la Séance" : 
-                 selectedGame.title === "Exploration de l'Intelligence Émotionnelle" ? "Démarrer l'Exploration" : 
-                 "Commencer l'Harmonisation"}
-              </button>
-            </div>
+            selectedGame.component()
           ) : (
             <div className="text-center">
-              <h3 className="text-2xl font-bold mb-4 text-gray-100">Sélectionnez un parcours</h3>
-              <p className="text-gray-200">Cliquez sur un détail pour découvrir un jeu ou une activité interactive.</p>
+              <h3 className="text-2xl font-bold mb-4 text-gray-100">
+                Sélectionnez un parcours
+              </h3>
+              <p className="text-gray-200">
+                Cliquez sur un détail pour découvrir un jeu ou une activité interactive.
+              </p>
             </div>
           )}
         </div>
