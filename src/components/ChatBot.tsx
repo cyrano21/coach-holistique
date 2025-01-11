@@ -27,14 +27,26 @@ const ChatBot = () => {
     const lowerInput = userInput.toLowerCase();
 
     if (lowerInput.includes('bonjour') || lowerInput.includes('salut')) {
-      return "Bonjour! Comment puis-je vous aider aujourd'hui?";
+      return "Bonjour! Je suis l'assistant virtuel du site. Comment puis-je vous aider aujourd'hui?";
+    }
+
+    if (lowerInput.includes('qui es tu') || lowerInput.includes('qui êtes vous')) {
+      return "Je suis l'assistant virtuel de ce site de coaching holistique. Je suis programmé pour vous guider à travers nos différents services et répondre à vos questions sur nos approches thérapeutiques.";
+    }
+
+    if (lowerInput.includes('auteur') || lowerInput.includes('créateur')) {
+      return "Ce site a été créé par une coach holistique professionnelle qui propose des approches thérapeutiques variées comme l'EFT, la méditation, et l'analyse transactionnelle. Souhaitez-vous en savoir plus sur une approche particulière ?";
+    }
+
+    if (lowerInput.includes('que sais tu') || lowerInput.includes('capabilities')) {
+      return "Je peux vous renseigner sur nos différentes approches thérapeutiques, les séances de coaching, les outils de développement personnel, et vous aider à prendre rendez-vous. Quel sujet vous intéresse ?";
     }
 
     if (lowerInput.includes('therapie') || lowerInput.includes('thérapie')) {
-      return "Nous proposons différentes approches thérapeutiques. Que souhaitez-vous savoir ?";
+      return "Nous proposons plusieurs approches thérapeutiques comme l'EFT, l'analyse transactionnelle, et la thérapie humaniste. Quelle approche souhaitez-vous explorer ?";
     }
 
-    return "Je suis là pour vous aider. N'hésitez pas à me poser des questions.";
+    return "Je peux vous parler de nos approches thérapeutiques, du coaching personnalisé, ou vous aider à prendre rendez-vous. Que souhaitez-vous savoir ?";
   };
 
   const handleSubmit = async () => {
