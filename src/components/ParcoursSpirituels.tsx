@@ -766,7 +766,7 @@ const ParcoursSpirituels = () => {
                   fear.trim() && (
                     <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20">
                       <p className="text-white">
-                        Moi {name ? name : ""}, face à ma peur {fear.toLowerCase()}, {generatePositiveAffirmation(fear)}
+                        Moi {name ? name : ""}, {generatePositiveAffirmation(fear)}
                       </p>
                     </div>
                   )
