@@ -489,94 +489,6 @@ Note: Utilise ces balises de couleur pour chaque section.`;
   );
 };
 
-const ParcoursSpirituels = () => {
-  const [activeCard, setActiveCard] = useState<number | null>(null);
-  const [selectedGame, setSelectedGame] = useState<GameType | null>(null);
-  const [fears, setFears] = useState<string[]>(['']);
-  const [name, setName] = useState('');
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
-      <div className="container mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-center text-white mb-12 animate__animated animate__fadeInDown">
-          Parcours Spirituels
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {spiritualPaths.map((path) => (
-            <div 
-              key={path.id}
-              className={`
-                relative group transform transition-all duration-500 
-                ${activeCard === path.id ? 'scale-105 rotate-3 z-50' : 'hover:scale-105 hover:rotate-3'}
-                bg-gradient-to-br ${path.color} 
-                rounded-2xl shadow-2xl overflow-hidden
-                cursor-pointer
-              `}
-              onMouseEnter={() => setActiveCard(path.id)}
-              onMouseLeave={() => setActiveCard(null)}
-            >
-              <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity"></div>
-
-              <div className="relative p-6 text-white">
-                <div className="flex items-center mb-4">
-                  <path.icon className="w-12 h-12 mr-4 text-white/80 group-hover:text-white transition-colors" />
-                  <h3 className="text-2xl font-bold">{path.title}</h3>
-                </div>
-
-                <p className="text-sm text-white/80 mb-4">{path.description}</p>
-
-                <ul className="space-y-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  {path.details.map((detail, index) => (
-                    <li 
-                      key={index} 
-                      className="flex items-center text-white/90 hover:text-yellow-300 transition-colors duration-300"
-                      onClick={() => setSelectedGame(path.game)}
-                    >
-                      <span className="mr-2">•</span>
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Section AI Dialog */}
-        <div className="mt-12 max-w-3xl mx-auto">
-          <AIGameDialog />
-        </div>
-
-        <div className="mt-12 bg-gray-800 rounded-xl p-8">
-          {selectedGame ? (
-            selectedGame.component()
-          ) : (
-            <div className="text-center">
-              <h3 className="text-2xl font-bold mb-4 text-gray-100">
-                Sélectionnez un parcours
-              </h3>
-              <p className="text-gray-200">
-                Cliquez sur un détail pour découvrir un jeu ou une activité interactive.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Section Numérologie */}
-        <div className="mt-12 max-w-3xl mx-auto">
-          <NumerologyCalculator />
-        </div>
-
-        {/* Section Ennéagramme */}
-        <div className="mt-12 max-w-3xl mx-auto">
-          <EnneagramCalculator />
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const EnneagramCalculator: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
@@ -719,6 +631,9 @@ const ParcoursSpirituels = () => {
   const [selectedGame, setSelectedGame] = useState<GameType | null>(null);
   const [fears, setFears] = useState<string[]>(['']);
   const [name, setName] = useState('');
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<number[]>([]);
+  const [result, setResult] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
@@ -797,7 +712,6 @@ const ParcoursSpirituels = () => {
         <div className="mt-12 max-w-3xl mx-auto">
           <EnneagramCalculator />
         </div>
-
 
         {/* Section Transformation des Peurs */}
         <div className="mt-12 bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
