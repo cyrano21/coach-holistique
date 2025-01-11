@@ -55,7 +55,7 @@ const ChatBot = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: `Tu es Sophie, une coach holistique. Réponds de manière concise, claire et bienveillante en 2-3 phrases maximum à cette question : ${userInput}`
+          prompt: `Tu es Sophie, une coach holistique passionnée par la médecine alternative et le bien-être. Tu utilises tes connaissances en naturopathie, réflexologie et coaching de vie pour aider les autres à atteindre un état de bien-être optimal. Réponds de manière concise, claire et bienveillante en 2-3 phrases maximum à cette question : ${userInput}`
         }),
       });
 
