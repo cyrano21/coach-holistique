@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -9,7 +10,6 @@ interface Message {
 }
 
 const ChatBot = () => {
-  console.log("ChatBot component loaded");
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -26,41 +26,59 @@ const ChatBot = () => {
   const getBotResponse = async (userInput: string) => {
     const lowerInput = userInput.toLowerCase();
     
-    // Questions sur l'identité
-    if (lowerInput.includes('qui es tu') || lowerInput.includes('qui êtes vous') || lowerInput.includes('qui es-tu')) {
-      return "Je suis l'assistant virtuel spécialisé en coaching holistique. Je peux vous informer sur les différentes approches thérapeutiques comme l'EFT, l'analyse transactionnelle, la méditation, et répondre à vos questions sur ces pratiques.";
+    // Navigation et pages
+    if (lowerInput.includes('accueil') || lowerInput.includes('home')) {
+      return "La page d'accueil présente une vue d'ensemble de nos services de coaching holistique, avec des sections sur la méditation guidée, la respiration consciente et le développement personnel. Vous pouvez y accéder en cliquant sur le logo ou 'Accueil' dans le menu.";
     }
 
-    // Capacités et connaissances
-    if (lowerInput.includes('que sais tu') || lowerInput.includes('que peux tu') || lowerInput.includes('capabilities')) {
-      return "Je connais en détail les approches thérapeutiques proposées : EFT, analyse transactionnelle, méditation, thérapie humaniste. Je peux vous expliquer chaque approche, ses bénéfices et comment elle pourrait vous aider. Quelle approche vous intéresse ?";
+    if (lowerInput.includes('approches') || lowerInput.includes('thérapeutiques')) {
+      return "La page 'Approches Thérapeutiques' détaille nos différentes méthodes comme l'EFT, l'analyse transactionnelle, la PNL, etc. Vous pouvez y accéder via le menu principal. Quelle approche vous intéresse particulièrement ?";
     }
 
-    // Questions sur les approches thérapeutiques
+    if (lowerInput.includes('méthodes') || lowerInput.includes('methodes')) {
+      return "La page 'Méthodes' présente nos différentes approches de coaching. Vous y trouverez des informations sur nos techniques et pratiques. Elle est accessible depuis le menu principal.";
+    }
+
+    if (lowerInput.includes('coaching') || lowerInput.includes('personnel')) {
+      return "La section 'Coaching Personnalisé' vous permet de découvrir notre accompagnement sur mesure. Vous pouvez y accéder via le menu principal pour en savoir plus sur nos programmes individualisés.";
+    }
+
+    if (lowerInput.includes('parcours') || lowerInput.includes('spirituel')) {
+      return "Les 'Parcours Spirituels' offrent une exploration des différentes traditions et pratiques spirituelles. Cette page est accessible depuis le menu principal.";
+    }
+
+    if (lowerInput.includes('outils') || lowerInput.includes('développement')) {
+      return "La page 'Outils de Développement' présente les différentes techniques et ressources disponibles pour votre développement personnel. Vous y trouverez des informations sur la méditation, l'EFT, et d'autres pratiques.";
+    }
+
+    if (lowerInput.includes('contact') || lowerInput.includes('joindre')) {
+      return "Vous pouvez nous contacter via la page 'Contact' accessible depuis le menu principal. Vous y trouverez un formulaire pour nous envoyer un message.";
+    }
+
+    // Approches spécifiques
     if (lowerInput.includes('eft') || lowerInput.includes('emotional freedom')) {
-      return "L'EFT (Emotional Freedom Techniques) est une approche qui combine stimulation de points d'acupuncture et exposition émotionnelle. Elle aide à réduire le stress, l'anxiété et les blocages émotionnels. Voulez-vous en savoir plus sur son fonctionnement ?";
+      return "L'EFT (Emotional Freedom Techniques) est une approche qui combine stimulation de points d'acupuncture et travail émotionnel. Vous trouverez plus d'informations dans la section 'Approches Thérapeutiques'.";
     }
 
-    if (lowerInput.includes('analyse transactionnelle') || lowerInput.includes('at')) {
-      return "L'analyse transactionnelle est une théorie de la personnalité qui permet de comprendre nos comportements relationnels. Elle analyse les 'transactions' entre les personnes et identifie différents états du moi. Souhaitez-vous que je vous explique ces états ?";
+    if (lowerInput.includes('méditation') || lowerInput.includes('meditation')) {
+      return "Nous proposons des séances de méditation guidée pour développer la pleine conscience. Vous pouvez découvrir nos vidéos de méditation sur la page d'accueil ou en savoir plus dans la section 'Outils de Développement'.";
     }
 
-    if (lowerInput.includes('meditation') || lowerInput.includes('méditer')) {
-      return "La méditation est une pratique de pleine conscience qui aide à apaiser l'esprit et réduire le stress. Nous proposons différentes techniques de méditation adaptées à chacun. Voulez-vous découvrir une technique particulière ?";
+    if (lowerInput.includes('pnl') || lowerInput.includes('programmation neuro')) {
+      return "La PNL (Programmation Neuro-Linguistique) est une approche permettant d'améliorer la communication et le développement personnel. Plus de détails dans la section 'Approches Thérapeutiques'.";
     }
 
-    // Questions sur le coaching
-    if (lowerInput.includes('coach') || lowerInput.includes('séance')) {
-      return "Le coaching holistique est une approche globale qui prend en compte toutes les dimensions de votre être. Nous travaillons sur le mental, l'émotionnel et l'énergétique. Quel aspect vous intéresse particulièrement ?";
-    }
-
-    // Salutations
+    // Salutations et présentations
     if (lowerInput.includes('bonjour') || lowerInput.includes('salut')) {
-      return "Bonjour ! Je suis là pour vous guider dans la découverte de nos approches thérapeutiques. Quelle pratique souhaitez-vous explorer ?";
+      return "Bonjour ! Je suis l'assistant virtuel du site, je peux vous guider vers les différentes sections et vous informer sur nos approches thérapeutiques. Que souhaitez-vous découvrir ?";
     }
 
-    // Réponse par défaut plus informative
-    return "Je peux vous renseigner sur nos différentes approches thérapeutiques (EFT, analyse transactionnelle, méditation), le coaching holistique, ou répondre à vos questions spécifiques sur ces pratiques. Quel aspect vous intéresse ?";
+    if (lowerInput.includes('qui es') || lowerInput.includes('que fais')) {
+      return "Je suis l'assistant virtuel spécialisé en coaching holistique. Je peux vous guider à travers notre site, vous présenter nos différentes approches thérapeutiques et vous orienter vers les ressources qui vous intéressent.";
+    }
+
+    // Réponse par défaut
+    return "Je peux vous renseigner sur toutes nos approches thérapeutiques, nos méthodes de coaching, et vous guider vers les différentes sections du site. Quelle information recherchez-vous ?";
   };
 
   const handleSubmit = async () => {
