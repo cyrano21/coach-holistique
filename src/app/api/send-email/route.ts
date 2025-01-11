@@ -17,10 +17,15 @@ export async function POST(req: Request) {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: 'minduse04@gmail.com',
-      subject: `Nouveau message de ${body.firstName} ${body.lastName}`,
+      subject: `Nouvelle réservation de ${body.name}`,
       text: `
-        Nom: ${body.firstName} ${body.lastName}
+        Nouvelle réservation:
+        
+        Nom: ${body.name}
         Email: ${body.email}
+        Téléphone: ${body.phone}
+        Date souhaitée: ${body.date}
+        Heure souhaitée: ${body.time}
         Message: ${body.message}
       `
     };
