@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaUserCheck, FaChartLine, FaLightbulb, FaClock, FaHeart, FaStar, FaComments } from "react-icons/fa";
+import { FaUserCheck, FaChartLine, FaLightbulb, FaClock, FaHeart, FaStar, FaComments, FaCheck } from "react-icons/fa";
 
 const CoachingPersonal = () => {
   const [activeTab, setActiveTab] = useState(0);
