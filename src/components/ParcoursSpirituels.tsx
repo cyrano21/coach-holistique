@@ -579,6 +579,8 @@ const EnneagramCalculator: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [result, setResult] = useState<string | null>(null);
+  const [name, setName] = useState('');
+  const [fears, setFears] = useState<string[]>(['']);
 
   const questions = [
     "Je tends à être perfectionniste et critique envers moi-même.",
@@ -708,7 +710,75 @@ const EnneagramCalculator: React.FC = () => {
         </div>
       )}
     </div>
+
+    {/* Section Transformation des Peurs */}
+    <div className="mt-12 bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
+      <h3 className="text-2xl font-bold text-white mb-6">Transformation des Peurs</h3>
+      
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Entrez votre prénom"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300 mb-4"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <h4 className="text-xl font-semibold text-white mb-4">Mes Peurs</h4>
+          <textarea
+            value={fears.join('\n')}
+            onChange={(e) => setFears(e.target.value.split('\n'))}
+            placeholder="Entrez vos peurs (une par ligne)"
+            className="w-full h-64 p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
+          />
+        </div>
+
+        <div className="space-y-4">
+          <h4 className="text-xl font-semibold text-white mb-4">Mes Affirmations Positives</h4>
+          <div className="space-y-2">
+            {fears.map((fear, index) => (
+              fear.trim() && (
+                <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20">
+                  <p className="text-white">
+                    Moi {name ? `"${name}"` : ""}, {generatePositiveAffirmation(fear)}
+                  </p>
+                </div>
+              )
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
+};
+
+const generatePositiveAffirmation = (fear: string): string => {
+  // Enlever les mots négatifs communs
+  const fearLower = fear.toLowerCase();
+  if (fearLower.includes('peur')) {
+    if (fearLower.includes('animaux')) {
+      return "je suis en harmonie avec les animaux et leur présence m'apporte de la joie";
+    }
+    if (fearLower.includes('hauteur')) {
+      return "je me sens en sécurité et confiant(e) en hauteur, appréciant la vue magnifique";
+    }
+    if (fearLower.includes('noir') || fearLower.includes('obscurité')) {
+      return "je suis en paix dans l'obscurité, sachant que je suis en sécurité";
+    }
+    if (fearLower.includes('échec')) {
+      return "chaque expérience est une opportunité d'apprentissage et de croissance";
+    }
+    if (fearLower.includes('rejet')) {
+      return "je suis aimé(e) et accepté(e) tel(le) que je suis";
+    }
+    // Réponse par défaut si aucune correspondance spécifique n'est trouvée
+    return `je transforme cette peur en force et je m'épanouis pleinement`;
+  }
+  // Si le mot "peur" n'est pas présent, on donne une réponse générique positive
+  return `je suis confiant(e) et serein(e) face à toutes les situations`;
 };
 
 export default ParcoursSpirituels;
