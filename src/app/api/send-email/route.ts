@@ -6,6 +6,14 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.error('Missing email credentials in environment variables');
+      return NextResponse.json(
+        { error: 'Email configuration error' },
+        { status: 500 }
+      );
+    }
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
