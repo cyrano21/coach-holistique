@@ -131,7 +131,6 @@ const OutilsDeveloppement = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<HTMLDivElement[]>([]);
   const [isHovered, setIsHovered] = useState(false);
-  const duplicatedOutils = [...outils, ...outils, ...outils];
 
   useEffect(() => {
     const container = containerRef.current;
@@ -176,7 +175,7 @@ const OutilsDeveloppement = () => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {duplicatedOutils.map((outil, index) => (
+          {outils.concat(outils).map((outil, index) => (
             <div
               key={`${outil.id}-${index}`}
               className={`flex-shrink-0 w-72 bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl shadow-2xl border border-gray-700 p-6 text-center mr-6 ${

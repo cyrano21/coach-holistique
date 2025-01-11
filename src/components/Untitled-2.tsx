@@ -87,7 +87,7 @@ export default function OutilsDeveloppement() {
         <div className="container mx-auto flex justify-between items-center py-4 px-6 animate__animated animate__fadeInDown">
           <div className="flex items-center">
             <img
-              src="https://via.placeholder.com/50"
+              src="/images/logo.avif"
               alt="Logo"
               width={50}
               height={50}

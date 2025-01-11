@@ -10,6 +10,8 @@ module.exports = {
       animation: {
         "fade-in": "fadeIn 1s ease-in",
         "slide-up": "slideUp 0.5s ease-out",
+        "carousel-slide": "carouselSlide 20s linear infinite",
+        "pause": "none",
       },
       keyframes: {
         fadeIn: {
@@ -28,6 +30,14 @@ module.exports = {
           "100%": {
             transform: "translateY(0)",
             opacity: "1",
+          },
+        },
+        carouselSlide: {
+          "0%": {
+            transform: "translateX(0)",
+          },
+          "100%": {
+            transform: "translateX(-50%)",
           },
         },
       },
