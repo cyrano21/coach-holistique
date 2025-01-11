@@ -24,62 +24,52 @@ const AIGameDialog = () => {
     try {
       setIsLoading(true);
       
-      if (userInput.toLowerCase().includes('carte')) {
-        const gameSteps = [
-          {
-            title: "Préparation",
-            description: "Mélangez le jeu de cartes spirituelles et placez-le face cachée au centre.",
-            completed: false
-          },
-          {
-            title: "Méditation initiale",
-            description: "Prenez un moment de silence pour vous centrer et vous connecter à votre intuition.",
-            completed: false
-          },
-          {
-            title: "Tirage",
-            description: "Tirez une carte avec intention et mindfulness.",
-            completed: false
-          },
-          {
-            title: "Contemplation",
-            description: "Observez l'image et le message de la carte en silence pendant quelques instants.",
-            completed: false
-          },
-          {
-            title: "Réflexion",
-            description: "Notez les pensées et ressentis qui émergent suite à cette carte.",
-            completed: false
-          }
-        ];
-        setGameSteps(gameSteps);
-        setGameTitle("Oracle Spirituel");
-        setIsLoading(false);
-        return;
-      }
+      const prompt = `Génère un jeu spirituel méditatif structuré basé sur: ${userInput}.
+Format:
+1. Un titre clair
+2. Une brève introduction
+3. 3-5 étapes simples et logiques
+4. Une conclusion méditative
+
+Exemple de structure:
+Titre: Méditation des 4 Éléments
+Introduction: Connectez-vous aux énergies naturelles
+Étapes:
+1. Asseyez-vous confortablement et respirez profondément
+2. Visualisez chaque élément tour à tour
+3. Ressentez leur énergie
+Conclusion: Intégrez les énergies des éléments
+
+La réponse doit être claire, logique et facile à suivre.`;
 
       const result = await hf.textGeneration({
         model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
-        inputs: `Génère un mini-jeu spirituel méditatif basé sur: ${userInput}.`,
+        inputs: prompt,
         parameters: {
           max_new_tokens: 400,
-          temperature: 0.8,
+          temperature: 0.7,
           top_p: 0.9,
         }
       });
 
-      const lines = result.generated_text.split('\n');
-      const filteredSteps = lines.filter(line => line.trim().length > 0)
-        .map(step => ({
-          title: step.split(':')[0] || 'Étape',
-          description: step.split(':')[1] || step,
+      const steps = result.generated_text
+        .split('\n')
+        .filter(line => line.trim().length > 0)
+        .map(line => ({
+          title: line.includes(':') ? line.split(':')[0].trim() : 'Étape',
+          description: line.includes(':') ? line.split(':')[1].trim() : line.trim(),
           completed: false
         }));
 
-      setGameTitle(userInput);
-      setGameSteps(filteredSteps);
+      setGameTitle(steps[0]?.title || userInput);
+      setGameSteps(steps.slice(1)); // Skip title
     } catch (error) {
       console.error('Error:', error);
+      setGameSteps([{
+        title: "Erreur",
+        description: "Désolé, je n'ai pas pu générer le jeu. Veuillez réessayer.",
+        completed: false
+      }]);
     } finally {
       setIsLoading(false);
     }
@@ -96,14 +86,14 @@ const AIGameDialog = () => {
 
   return (
     <div className="p-6 bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl shadow-xl">
-      <h2 className="text-2xl font-bold text-white mb-4">Assistant Spirituel IA</h2>
+      <h2 className="text-2xl font-bold text-white mb-4">Guide Spirituel Interactif</h2>
       
       {!gameSteps.length ? (
         <div className="space-y-4">
           <textarea
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Décrivez le type d'expérience spirituelle que vous souhaitez..."
+            placeholder="Décrivez le type d'expérience spirituelle que vous souhaitez (ex: méditation, visualisation, exercice énergétique)..."
             className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
             rows={4}
           />
@@ -122,7 +112,7 @@ const AIGameDialog = () => {
           animate={{ opacity: 1 }} 
           className="space-y-6"
         >
-          <h3 className="text-xl text-white mb-4">{gameTitle}</h3>
+          <h3 className="text-xl text-white font-semibold mb-4">{gameTitle}</h3>
           
           {gameSteps.map((step, index) => (
             <motion.div
@@ -157,7 +147,7 @@ const AIGameDialog = () => {
               animate={{ opacity: 1 }}
               className="text-center text-white p-4 bg-green-500/20 rounded-lg"
             >
-              Félicitations ! Vous avez terminé votre voyage spirituel.
+              Félicitations ! Vous avez complété cette expérience spirituelle.
             </motion.div>
           )}
 
@@ -166,6 +156,7 @@ const AIGameDialog = () => {
               setGameSteps([]);
               setCurrentStep(0);
               setGameTitle('');
+              setUserInput('');
             }}
             className="w-full py-3 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors"
           >
