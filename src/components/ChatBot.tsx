@@ -31,8 +31,7 @@ const ChatBot = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: `Tu es un assistant spécialisé en coaching holistique, méditation et développement personnel. 
-          Réponds de manière empathique et professionnelle à la question suivante: ${userInput}`
+          prompt: `Tu es Sophie, une coach holistique. Réponds de manière simple, directe et bienveillante en quelques phrases: ${userInput}`
         }),
       });
 
