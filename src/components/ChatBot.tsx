@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -13,7 +12,10 @@ const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [isListening, setIsListening] = useState(false); // Added state for voice input
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const recognition = useRef<webkitSpeechRecognition | null>(null);
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -21,7 +23,29 @@ const ChatBot = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+    if (!recognition.current) {
+      recognition.current = new (window as any).webkitSpeechRecognition(); // Type assertion needed
+      recognition.current.continuous = false;
+      recognition.current.interimResults = false;
+      recognition.current.lang = 'fr-FR'; // Set language to French
+    }
+  }, []);
+
+  const toggleListening = () => {
+    setIsListening(!isListening);
+    if (isListening) {
+      recognition.current?.stop();
+    } else {
+      recognition.current?.start();
+    }
+  };
+
+  recognition.current?.onresult = (event: any) => {
+    const transcript = event.results[0][0].transcript;
+    setInput(transcript);
+    setIsListening(false);
+  };
+
 
   const getBotResponse = async (userInput: string) => {
     try {
@@ -95,6 +119,15 @@ const ChatBot = () => {
                 placeholder="Tapez votre message..."
                 className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
               />
+              <button
+                onClick={toggleListening}
+                className={`p-2 rounded-lg ${isListening ? 'bg-red-500' : 'bg-blue-500'} text-white`}
+                title={isListening ? 'Arrêter' : 'Parler'}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </button>
               <button
                 onClick={handleSubmit}
                 className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
