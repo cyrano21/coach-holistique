@@ -745,11 +745,14 @@ const ParcoursSpirituels = () => {
                   />
                   <button
                     onClick={() => {
-                      const newFears = [...fears];
-                      if (index === fears.length - 1 && fear.trim()) {
-                        newFears.push('');
+                      if (fear.trim()) {
+                        const newFears = [...fears];
+                        if (index === fears.length - 1) {
+                          newFears.push('');
+                        }
+                        newFears[index] = fear.trim();
+                        setFears(newFears);
                       }
-                      setFears(newFears);
                     }}
                     className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                   >
@@ -783,30 +786,33 @@ const ParcoursSpirituels = () => {
 const generatePositiveAffirmation = (fear: string): string => {
   const fearLower = fear.toLowerCase();
   if (fearLower.includes('mort')) {
-    return "j'accepte le cycle naturel de la vie et je me concentre sur chaque instant précieux du présent";
+    return "je célèbre chaque instant de la vie avec gratitude et sérénité";
   }
-  if (fearLower.includes('animaux')) {
-    return "je suis en harmonie avec les animaux et leur présence m'apporte de la joie";
+  if (fearLower.includes('chat')) {
+    return "je ressens une profonde paix et harmonie en présence des félins";
+  }
+  if (fearLower.includes('chien')) {
+    return "j'apprécie la loyauté et l'amour inconditionnel des canidés";
   }
   if (fearLower.includes('hauteur')) {
-    return "je me sens en sécurité et confiant(e) en hauteur, appréciant la vue magnifique";
+    return "je savoure la liberté et la beauté des points de vue élevés";
   }
   if (fearLower.includes('noir') || fearLower.includes('obscurité')) {
-    return "je suis en paix dans l'obscurité, sachant que je suis en sécurité";
+    return "je trouve le calme et la paix dans le silence de la nuit";
   }
   if (fearLower.includes('échec')) {
-    return "chaque expérience est une opportunité d'apprentissage et de croissance";
+    return "je transforme chaque défi en opportunité de croissance";
   }
   if (fearLower.includes('rejet')) {
-    return "je suis aimé(e) et accepté(e) tel(le) que je suis";
+    return "je rayonne de confiance et d'authenticité dans mes relations";
   }
   if (fearLower.includes('solitude')) {
-    return "j'apprécie les moments de solitude comme une opportunité de me connecter à moi-même";
+    return "je cultive une relation enrichissante avec moi-même";
   }
   if (fearLower.includes('avenir')) {
-    return "je crée mon futur avec confiance et optimisme";
+    return "j'avance avec confiance sur mon chemin de vie";
   }
-  return "je transforme ma peur en une force qui me fait grandir";
+  return "je m'épanouis pleinement dans ma force intérieure";
 };
 
 export default ParcoursSpirituels;
