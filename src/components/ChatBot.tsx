@@ -28,6 +28,12 @@ const ChatBot = () => {
       recognition.current.continuous = false;
       recognition.current.interimResults = false;
       recognition.current.lang = 'fr-FR'; // Set language to French
+      
+      recognition.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+      };
     }
   }, []);
 
@@ -38,12 +44,6 @@ const ChatBot = () => {
     } else {
       recognition.current?.start();
     }
-  };
-
-  recognition.current?.onresult = (event: any) => {
-    const transcript = event.results[0][0].transcript;
-    setInput(transcript);
-    setIsListening(false);
   };
 
 
