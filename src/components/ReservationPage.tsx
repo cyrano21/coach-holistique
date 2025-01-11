@@ -50,29 +50,6 @@ const ReservationPage = () => {
           À très bientôt !
         `);
         setShowModal(true);
-
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-8 max-w-md mx-4 relative">
-              <button 
-                onClick={() => setShowModal(false)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-              >
-                ×
-              </button>
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Confirmation</h2>
-              <div className="text-gray-600 whitespace-pre-line">
-                {confirmationMessage}
-              </div>
-              <button
-                onClick={() => setShowModal(false)}
-                className="mt-6 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-4 rounded-lg"
-              >
-                Fermer
-              </button>
-            </div>
-          </div>
-        )}
         setFormData({
           name: "",
           email: "",
@@ -232,6 +209,30 @@ const ReservationPage = () => {
           </form>
         </div>
       </motion.div>
+
+      {/* Modal de confirmation */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md mx-4 relative">
+            <button 
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            >
+              ×
+            </button>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Confirmation</h2>
+            <div className="text-gray-600 whitespace-pre-line">
+              {confirmationMessage}
+            </div>
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-6 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-4 rounded-lg"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
