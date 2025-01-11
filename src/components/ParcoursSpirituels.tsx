@@ -5,7 +5,7 @@ import AIGameDialog from './AIGameDialog';
 import { FaLeaf, FaMountain, FaHandHoldingHeart, FaYinYang } from 'react-icons/fa';
 import { HfInference } from '@huggingface/inference';
 
-const hf = new HfInference(process.env.NEXT_PUBLIC_HF_TOKEN);
+const hf = new HfInference(process.env.NEXT_PUBLIC_HF_TOKEN || '');
 
 type Question = {
   question: string;
