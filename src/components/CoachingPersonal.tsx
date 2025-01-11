@@ -1,221 +1,231 @@
 
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FaHeart, FaStar, FaCompass, FaLeaf, FaMoon, FaSun, FaQuoteLeft, FaArrowRight, FaCheck } from "react-icons/fa";
+import React from "react";
+import { motion } from "framer-motion";
+import { FaLightbulb, FaHandshake, FaChartLine, FaHeart, FaComments, FaPuzzlePiece } from "react-icons/fa";
 
 const CoachingPersonal = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const tools = [
-    {
-      icon: <FaLeaf className="w-12 h-12" />,
-      title: "Nature & Bien-être",
-      description: "Reconnexion à soi par des pratiques naturelles",
-      practices: ["Méditation en pleine nature", "Exercices de respiration", "Marche consciente"],
-      color: "from-green-400 to-green-600"
-    },
-    {
-      icon: <FaMoon className="w-12 h-12" />,
-      title: "Énergétique",
-      description: "Équilibrage des énergies et harmonisation",
-      practices: ["Soins énergétiques", "Chakras", "Méditation guidée"],
-      color: "from-purple-400 to-purple-600"
-    },
-    {
-      icon: <FaSun className="w-12 h-12" />,
-      title: "Développement Personnel",
-      description: "Transformation et évolution personnelle",
-      practices: ["Coaching individuel", "Ateliers collectifs", "Suivi personnalisé"],
-      color: "from-orange-400 to-orange-600"
+  const staggerContainer = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.2
+      }
     }
-  ];
+  };
 
-  const testimonials = [
-    {
-      name: "Sophie L.",
-      text: "Une expérience transformatrice qui a changé ma vision de la vie.",
-      role: "Entrepreneure"
-    },
-    {
-      name: "Marc D.",
-      text: "Le coaching holistique m'a permis de retrouver mon équilibre.",
-      role: "Cadre"
-    },
-    {
-      name: "Julie M.",
-      text: "Une approche complète et personnalisée qui donne des résultats.",
-      role: "Thérapeute"
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    show: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }
     }
-  ];
+  };
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Parallax */}
-      <div className="relative min-h-[80vh] flex items-center justify-center bg-[url('/images/outils/meditation.jpg')] bg-cover bg-fixed bg-center">
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-        <div className="relative z-10 text-center px-4 py-20">
+      {/* Hero Section avec parallax et texte flottant */}
+      <motion.section 
+        className="relative min-h-[90vh] flex items-center justify-center bg-[url('/images/outils/meditation.jpg')] bg-cover bg-fixed bg-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <motion.h1 
-            className="text-6xl md:text-7xl font-light text-white mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-7xl font-extralight text-white mb-8"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
           >
-            Coaching Holistique
+            Coaching Personnalisé
           </motion.h1>
           <motion.p 
-            className="text-xl md:text-2xl text-gray-200 max-w-2xl mx-auto font-light"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            className="text-xl md:text-2xl text-gray-200 leading-relaxed font-light"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1, delay: 0.8 }}
           >
-            Une approche globale pour votre épanouissement
+            Un accompagnement sur mesure pour révéler votre potentiel et transformer votre vie
           </motion.p>
-          <motion.button
-            className="mt-8 px-8 py-3 bg-white/20 backdrop-blur-md text-white border-2 border-white rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Découvrir Notre Approche
-          </motion.button>
         </div>
-      </div>
+      </motion.section>
 
-      {/* Floating Cards Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4">
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+      {/* Section Présentation du Coaching */}
+      <section className="py-20 bg-gradient-to-b from-purple-900 to-indigo-900 text-white">
+        <motion.div 
+          className="max-w-6xl mx-auto px-4"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
+          <motion.h2 
+            className="text-4xl font-light text-center mb-16"
+            variants={fadeInUp}
           >
-            <h2 className="text-4xl font-light mb-4 dark:text-white">Nos Outils</h2>
-            <p className="text-gray-600 dark:text-gray-300">Découvrez nos approches personnalisées</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-12">
-            {tools.map((tool, index) => (
-              <motion.div
-                key={index}
-                className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                whileHover={{ y: -10 }}
-              >
-                <motion.div 
-                  className={`text-white mb-6 p-4 rounded-full w-20 h-20 mx-auto flex items-center justify-center bg-gradient-to-r ${tool.color}`}
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  {tool.icon}
-                </motion.div>
-                <h3 className="text-2xl font-light text-center mb-4 dark:text-white">
-                  {tool.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-center mb-6">
-                  {tool.description}
-                </p>
-                <ul className="space-y-3">
-                  {tool.practices.map((practice, idx) => (
-                    <motion.li 
-                      key={idx}
-                      className="text-gray-700 dark:text-gray-300 flex items-center text-sm"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                    >
-                      <FaCheck className="w-4 h-4 mr-3 text-green-500" />
-                      {practice}
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
+            Qu'est-ce que le Coaching Personnalisé ?
+          </motion.h2>
+          
+          <div className="grid md:grid-cols-2 gap-12">
+            <motion.div 
+              className="space-y-6"
+              variants={fadeInUp}
+            >
+              <p className="text-lg leading-relaxed">
+                Le coaching personnalisé est un voyage transformateur conçu spécifiquement pour vous. C'est un espace sécurisé où vous pouvez explorer vos défis, définir vos objectifs et développer votre plein potentiel.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Mon approche holistique prend en compte tous les aspects de votre vie - émotionnel, mental, physique et spirituel - pour créer un changement profond et durable.
+              </p>
+            </motion.div>
+            <motion.div
+              className="relative h-80 rounded-lg overflow-hidden"
+              variants={fadeInUp}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm rounded-lg transform rotate-3 scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm rounded-lg transform -rotate-3 scale-105" />
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* Testimonials Carousel */}
-      <section className="py-20 bg-gradient-to-r from-purple-900 to-blue-900 text-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <motion.div 
-            className="text-center mb-12"
+      {/* Section Déroulement */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4">
+          <motion.h2 
+            className="text-4xl font-light text-center mb-16 text-gray-800"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Témoignages</h2>
-            <div className="w-20 h-1 bg-white/30 mx-auto rounded-full"></div>
-          </motion.div>
+            Comment se déroule le coaching ?
+          </motion.h2>
 
-          <div className="relative">
-            <AnimatePresence mode="wait">
+          <motion.div 
+            className="grid md:grid-cols-3 gap-8"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+          >
+            {[
+              {
+                icon: <FaHandshake className="w-8 h-8" />,
+                title: "Premier Contact",
+                description: "Une séance découverte gratuite pour comprendre vos besoins et définir nos objectifs communs."
+              },
+              {
+                icon: <FaPuzzlePiece className="w-8 h-8" />,
+                title: "Programme Sur Mesure",
+                description: "Élaboration d'un plan d'action personnalisé adapté à vos objectifs spécifiques."
+              },
+              {
+                icon: <FaChartLine className="w-8 h-8" />,
+                title: "Suivi Régulier",
+                description: "Séances régulières pour maintenir votre progression et ajuster le programme si nécessaire."
+              }
+            ].map((step, index) => (
               <motion.div
-                key={activeIndex}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-                className="text-center px-8"
+                key={index}
+                className="bg-white p-8 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
+                variants={fadeInUp}
+                whileHover={{ y: -10 }}
               >
-                <FaQuoteLeft className="w-8 h-8 mx-auto mb-6 text-purple-300" />
-                <p className="text-xl mb-6">{testimonials[activeIndex].text}</p>
-                <p className="font-semibold">{testimonials[activeIndex].name}</p>
-                <p className="text-sm text-purple-200">{testimonials[activeIndex].role}</p>
+                <div className="text-purple-600 mb-6">{step.icon}</div>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">{step.title}</h3>
+                <p className="text-gray-600">{step.description}</p>
               </motion.div>
-            </AnimatePresence>
-
-            <div className="flex justify-center mt-8 space-x-2">
-              {testimonials.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveIndex(idx)}
-                  className={`w-3 h-3 rounded-full ${
-                    idx === activeIndex ? "bg-white" : "bg-white/30"
-                  } transition-all duration-300`}
-                />
-              ))}
-            </div>
-          </div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-black text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.div 
-            className="space-y-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+      {/* Section Avantages avec parallax */}
+      <section className="py-20 bg-gradient-to-r from-blue-900 to-purple-900 relative overflow-hidden">
+        <motion.div 
+          className="max-w-6xl mx-auto px-4 relative z-10"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+        >
+          <motion.h2 
+            className="text-4xl font-light text-center mb-16 text-white"
+            variants={fadeInUp}
           >
-            <h2 className="text-4xl font-light mb-6">Commencez Votre Voyage</h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Transformez votre vie avec notre approche holistique personnalisée
-            </p>
-            <div className="flex flex-col md:flex-row gap-4 justify-center mt-8">
-              <motion.button 
-                className="px-8 py-3 bg-purple-600 rounded-full hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2 group"
+            Les Avantages du Coaching Personnel
+          </motion.h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              {
+                icon: <FaLightbulb className="w-6 h-6" />,
+                title: "Clarté et Direction",
+                description: "Définissez vos objectifs avec précision et créez un plan d'action clair"
+              },
+              {
+                icon: <FaHeart className="w-6 h-6" />,
+                title: "Développement Personnel",
+                description: "Renforcez votre confiance et découvrez votre plein potentiel"
+              },
+              {
+                icon: <FaChartLine className="w-6 h-6" />,
+                title: "Résultats Concrets",
+                description: "Atteignez vos objectifs avec un accompagnement structuré et efficace"
+              },
+              {
+                icon: <FaComments className="w-6 h-6" />,
+                title: "Accompagnement Personnalisé",
+                description: "Bénéficiez d'un soutien sur mesure adapté à vos besoins spécifiques"
+              }
+            ].map((advantage, index) => (
+              <motion.div
+                key={index}
+                className="bg-white/10 backdrop-blur-md p-6 rounded-lg"
+                variants={fadeInUp}
                 whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
-                <span>Réserver une séance</span>
-                <FaArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-              </motion.button>
-              <motion.button 
-                className="px-8 py-3 border-2 border-white/50 rounded-full hover:bg-white/10 transition-colors"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                En savoir plus
-              </motion.button>
-            </div>
-          </motion.div>
-        </div>
+                <div className="flex items-start space-x-4">
+                  <div className="text-purple-300">
+                    {advantage.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-white">{advantage.title}</h3>
+                    <p className="text-gray-300">{advantage.description}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Section Contact/CTA */}
+      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <motion.div 
+          className="max-w-4xl mx-auto px-4 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="text-4xl font-light mb-8 text-white">Prêt à Commencer Votre Transformation ?</h2>
+          <p className="text-xl text-gray-300 mb-12 leading-relaxed">
+            Réservez votre séance découverte gratuite et commencez votre voyage vers une vie plus épanouie.
+          </p>
+          <motion.button
+            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full text-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Réserver Ma Séance Découverte
+          </motion.button>
+        </motion.div>
       </section>
     </div>
   );
