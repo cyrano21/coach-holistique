@@ -18,8 +18,8 @@ export async function POST(req: Request) {
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
+        pass: process.env.EMAIL_PASS, // This should be an App Password
+      },
     });
 
     const mailOptions = {
@@ -39,10 +39,15 @@ export async function POST(req: Request) {
     };
 
     await transporter.sendMail(mailOptions);
-
     return NextResponse.json({ message: 'Email sent successfully' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error sending email:', error);
-    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    return NextResponse.json(
+      { 
+        error: 'Failed to send email',
+        details: error.message 
+      }, 
+      { status: 500 }
+    );
   }
 }
