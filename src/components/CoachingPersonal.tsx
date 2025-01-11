@@ -1,239 +1,134 @@
-
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { FaUserCheck, FaChartLine, FaLightbulb, FaClock, FaHeart, FaStar, FaComments, FaCheck } from "react-icons/fa";
+import { FaHeart, FaStar, FaCompass, FaLeaf, FaMoon, FaSun } from "react-icons/fa";
 
 const CoachingPersonal = () => {
-  const [activeTab, setActiveTab] = useState(0);
-
-  const programs = [
+  const tools = [
     {
-      title: "Programme Découverte",
-      duration: "4 semaines",
-      price: "400€",
-      features: ["4 séances individuelles", "Suivi personnalisé", "Exercices pratiques"]
+      icon: <FaLeaf className="w-12 h-12" />,
+      title: "Nature & Bien-être",
+      description: "Reconnexion à soi par des pratiques naturelles",
+      practices: ["Méditation en pleine nature", "Exercices de respiration", "Marche consciente"]
     },
     {
-      title: "Programme Transformation",
-      duration: "12 semaines",
-      price: "1000€",
-      features: ["12 séances individuelles", "Suivi hebdomadaire", "Outils exclusifs", "Support illimité"]
+      icon: <FaMoon className="w-12 h-12" />,
+      title: "Énergétique",
+      description: "Équilibrage des énergies et harmonisation",
+      practices: ["Soins énergétiques", "Chakras", "Méditation guidée"]
     },
     {
-      title: "Programme Elite",
-      duration: "6 mois",
-      price: "2000€",
-      features: ["24 séances individuelles", "Suivi quotidien", "Accès VIP", "Ateliers privés", "Retraite bien-être"]
+      icon: <FaSun className="w-12 h-12" />,
+      title: "Développement Personnel",
+      description: "Transformation et évolution personnelle",
+      practices: ["Coaching individuel", "Ateliers collectifs", "Suivi personnalisé"]
     }
   ];
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section avec Parallax */}
-      <div className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 z-0"
-          initial={{ scale: 1.2 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 20, repeat: Infinity, repeatType: "reverse" }}
-        >
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ 
-              backgroundImage: "url('/images/home/backgrounds/hero-background.jpg')",
-              filter: "brightness(0.7)"
-            }}
-          />
-        </motion.div>
-        
-        <div className="relative z-10 text-center px-4 max-w-4xl">
+      <div className="relative min-h-[60vh] flex items-center justify-center bg-[url('/images/outils/meditation.jpg')] bg-cover bg-center">
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+        <div className="relative z-10 text-center px-4 py-20">
           <motion.h1 
-            className="text-5xl md:text-7xl font-bold text-white mb-6 font-serif"
-            initial={{ opacity: 0, y: 30 }}
+            className="text-5xl md:text-6xl font-light text-white mb-6"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.8 }}
           >
-            Coaching Personnalisé
+            Coaching Holistique
           </motion.h1>
           <motion.p 
-            className="text-xl md:text-2xl text-gray-200 mb-8"
+            className="text-xl md:text-2xl text-gray-200 max-w-2xl mx-auto font-light"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.3 }}
           >
-            Révélez votre potentiel et transformez votre vie avec un accompagnement sur mesure
+            Une approche globale pour votre épanouissement
           </motion.p>
-          <motion.button
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Commencer Mon Voyage
-          </motion.button>
         </div>
       </div>
 
-      {/* Section Bénéfices avec Grid Animée */}
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-purple-900 text-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <motion.h2 
-            className="text-4xl font-bold text-center mb-16"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            Pourquoi Choisir Notre Coaching ?
-          </motion.h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <FaClock className="w-8 h-8" />,
-                title: "Flexibilité Totale",
-                description: "Des séances adaptées à votre emploi du temps"
-              },
-              {
-                icon: <FaHeart className="w-8 h-8" />,
-                title: "Approche Holistique",
-                description: "Un accompagnement qui prend en compte tous les aspects de votre vie"
-              },
-              {
-                icon: <FaStar className="w-8 h-8" />,
-                title: "Expertise Reconnue",
-                description: "Des coachs certifiés avec plus de 10 ans d'expérience"
-              }
-            ].map((item, index) => (
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-12">
+            {tools.map((tool, index) => (
               <motion.div
                 key={index}
-                className="bg-white/10 backdrop-blur-lg rounded-xl p-8 text-center hover:bg-white/20 transition-all"
+                className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.2 }}
               >
-                <div className="text-purple-400 mb-4 flex justify-center">
-                  {item.icon}
+                <div className="text-purple-500 dark:text-purple-400 mb-6 flex justify-center">
+                  {tool.icon}
                 </div>
-                <h3 className="text-xl font-semibold mb-4">{item.title}</h3>
-                <p className="text-gray-300">{item.description}</p>
+                <h3 className="text-2xl font-light text-center mb-4 dark:text-white">
+                  {tool.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 text-center mb-6">
+                  {tool.description}
+                </p>
+                <ul className="space-y-3">
+                  {tool.practices.map((practice, idx) => (
+                    <li 
+                      key={idx}
+                      className="text-gray-700 dark:text-gray-300 flex items-center text-sm"
+                    >
+                      <div className="w-2 h-2 bg-purple-400 rounded-full mr-3" />
+                      {practice}
+                    </li>
+                  ))}
+                </ul>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section Programmes */}
-      <section className="py-20 bg-gray-100 dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4">
+      <section className="py-20 bg-purple-50 dark:bg-gray-900">
+        <div className="max-w-4xl mx-auto px-4 text-center">
           <motion.h2 
-            className="text-4xl font-bold text-center mb-16 dark:text-white"
+            className="text-3xl md:text-4xl font-light mb-12 dark:text-white"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            Nos Programmes
+            Votre Parcours de Transformation
           </motion.h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {programs.map((program, index) => (
-              <motion.div
-                key={index}
-                className="bg-white dark:bg-gray-700 rounded-2xl shadow-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-              >
-                <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white">
-                  <h3 className="text-2xl font-bold mb-2">{program.title}</h3>
-                  <p className="text-purple-200">{program.duration}</p>
-                </div>
-                <div className="p-6">
-                  <p className="text-3xl font-bold mb-6 dark:text-white">{program.price}</p>
-                  <ul className="space-y-4">
-                    {program.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center text-gray-700 dark:text-gray-300">
-                        <FaCheck className="w-5 h-5 mr-3 text-purple-600" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <button className="w-full mt-8 bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-                    Choisir ce Programme
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section Témoignages */}
-      <section className="py-20 bg-gradient-to-b from-purple-900 to-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <motion.h2 
-            className="text-4xl font-bold text-center mb-16"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            Ils Nous Font Confiance
-          </motion.h2>
-
           <div className="grid md:grid-cols-2 gap-8">
-            {[
-              {
-                name: "Sophie M.",
-                role: "Entrepreneure",
-                text: "Le coaching m'a permis de dépasser mes blocages et de développer mon entreprise."
-              },
-              {
-                name: "Marc D.",
-                role: "Cadre",
-                text: "Une expérience transformatrice qui a changé ma vision de la vie."
-              }
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                className="bg-white/10 backdrop-blur-lg p-8 rounded-xl"
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
-                <FaComments className="w-8 h-8 text-purple-400 mb-4" />
-                <p className="text-lg mb-4">{testimonial.text}</p>
-                <div className="font-semibold">{testimonial.name}</div>
-                <div className="text-purple-400">{testimonial.role}</div>
-              </motion.div>
-            ))}
+            <motion.div 
+              className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-xl font-light mb-4 dark:text-white">Séance Découverte</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Offerte - 30 minutes
+              </p>
+              <button className="mt-6 px-6 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition-colors">
+                Réserver
+              </button>
+            </motion.div>
+            <motion.div 
+              className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg"
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-xl font-light mb-4 dark:text-white">Accompagnement</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Sur mesure - 1h
+              </p>
+              <button className="mt-6 px-6 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition-colors">
+                En savoir plus
+              </button>
+            </motion.div>
           </div>
         </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-r from-purple-600 to-indigo-600">
-        <motion.div 
-          className="max-w-4xl mx-auto text-center px-4"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl font-bold text-white mb-8">
-            Prêt à Transformer Votre Vie ?
-          </h2>
-          <p className="text-xl text-gray-200 mb-12">
-            Réservez votre séance de découverte gratuite et commencez votre voyage vers le changement
-          </p>
-          <motion.button
-            className="bg-white text-purple-600 px-10 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Réserver Ma Séance
-          </motion.button>
-        </motion.div>
       </section>
     </div>
   );
