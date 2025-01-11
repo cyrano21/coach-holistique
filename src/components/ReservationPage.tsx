@@ -34,7 +34,11 @@ const ReservationPage = () => {
           day: 'numeric'
         });
 
-        const confirmationMessage = `
+        const [showModal, setShowModal] = useState(false);
+        const [confirmationMessage, setConfirmationMessage] = useState('');
+
+        // Dans le reste du composant, avant return
+        setConfirmationMessage(`
           Merci pour votre réservation !
           
           Récapitulatif de votre rendez-vous :
@@ -45,9 +49,31 @@ const ReservationPage = () => {
           Nous avons bien reçu votre demande et nous vous contacterons rapidement pour confirmer votre rendez-vous.
           
           À très bientôt !
-        `;
+        `);
+        setShowModal(true);
 
-        alert(confirmationMessage);
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-8 max-w-md mx-4 relative">
+              <button 
+                onClick={() => setShowModal(false)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              >
+                ×
+              </button>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Confirmation</h2>
+              <div className="text-gray-600 whitespace-pre-line">
+                {confirmationMessage}
+              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="mt-6 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-4 rounded-lg"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        )}
         setFormData({
           name: "",
           email: "",
