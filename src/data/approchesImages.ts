@@ -11,7 +11,7 @@ export const approachImages = {
 
   // Second Row Images
   tcc: "/images/approches/tcc.jpg",
-  systemique: "images/approches/systemique.jpg",
+  systemique: "/images/approches/systemique.jpg",
   humaniste: "/images/approches/humaniste.jpg",
   psychanalytique: "/images/approches/psychanalytique.jpg",
   therapieBrieve: "/images/approches/therapieBrieve.avif",
