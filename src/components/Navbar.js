@@ -87,7 +87,7 @@ function Navbar() {
       </div>
 
       <div
-        className={`md:hidden fixed inset-0 bg-purple-900 bg-opacity-95 backdrop-blur-lg transform transition-transform duration-300 ease-in-out z-[100] ${
+        className={`md:hidden fixed inset-0 bg-purple-900 bg-opacity-98 backdrop-blur-lg transform transition-transform duration-300 ease-in-out z-[100] ${
           isMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
