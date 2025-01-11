@@ -16,7 +16,9 @@ export async function POST(req: Request) {
         }
     });
 
-    return new Response(JSON.stringify({ response: result.generated_text }), {
+    // Nettoyer la réponse en enlevant le prompt
+    const cleanedResponse = result.generated_text.replace(/^[^]*?[?]\s*/, '');
+    return new Response(JSON.stringify({ response: cleanedResponse }), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
