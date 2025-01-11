@@ -451,7 +451,7 @@ Note: Utilise ces balises de couleur pour chaque section.`;
           >
             Calculer mon profil numérologique
           </button>
-          
+
           {result && (
             <button
               onClick={() => {
@@ -492,6 +492,8 @@ Note: Utilise ces balises de couleur pour chaque section.`;
 const ParcoursSpirituels = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [selectedGame, setSelectedGame] = useState<GameType | null>(null);
+  const [fears, setFears] = useState<string[]>(['']);
+  const [name, setName] = useState('');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
@@ -640,7 +642,6 @@ const EnneagramCalculator: React.FC = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Calculer le type d'ennéagramme
       const maxScore = Math.max(...newAnswers);
       const type = newAnswers.indexOf(maxScore) + 1;
       setResult(JSON.stringify(enneagramTypes[type as keyof typeof enneagramTypes]));
@@ -661,7 +662,7 @@ const EnneagramCalculator: React.FC = () => {
         <div className="space-y-6">
           <p className="text-white mb-4">Question {currentQuestion + 1}/{questions.length}</p>
           <p className="text-white text-lg mb-6">{questions[currentQuestion]}</p>
-          
+
           <div className="grid grid-cols-5 gap-4">
             {[1, 2, 3, 4, 5].map((score) => (
               <button
@@ -688,7 +689,7 @@ const EnneagramCalculator: React.FC = () => {
                 </h4>
                 <p className="text-white text-lg">{JSON.parse(result).description}</p>
               </div>
-              
+
               <div className="bg-gradient-to-r from-green-500 to-teal-500 p-6 rounded-lg">
                 <h5 className="text-xl font-semibold text-white mb-3">Conseils de développement :</h5>
                 <ul className="text-white space-y-2">
@@ -710,44 +711,133 @@ const EnneagramCalculator: React.FC = () => {
         </div>
       )}
     </div>
-      
-      {/* Section Transformation des Peurs */}
-      <div className="mt-12 bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
-        <h3 className="text-2xl font-bold text-white mb-6">Transformation des Peurs</h3>
-        
-        <div className="mb-6">
-        <input
-          type="text"
-          placeholder="Entrez votre prénom"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300 mb-4"
-        />
-      </div>
+  );
+};
 
-      <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <h4 className="text-xl font-semibold text-white mb-4">Mes Peurs</h4>
-          <textarea
-            value={fears.join('\n')}
-            onChange={(e) => setFears(e.target.value.split('\n'))}
-            placeholder="Entrez vos peurs (une par ligne)"
-            className="w-full h-64 p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
-          />
+const ParcoursSpirituels = () => {
+  const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [selectedGame, setSelectedGame] = useState<GameType | null>(null);
+  const [fears, setFears] = useState<string[]>(['']);
+  const [name, setName] = useState('');
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
+      <div className="container mx-auto">
+        <h2 className="text-4xl md:text-5xl font-bold text-center text-white mb-12 animate__animated animate__fadeInDown">
+          Parcours Spirituels
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {spiritualPaths.map((path) => (
+            <div 
+              key={path.id}
+              className={`
+                relative group transform transition-all duration-500 
+                ${activeCard === path.id ? 'scale-105 rotate-3 z-50' : 'hover:scale-105 hover:rotate-3'}
+                bg-gradient-to-br ${path.color} 
+                rounded-2xl shadow-2xl overflow-hidden
+                cursor-pointer
+              `}
+              onMouseEnter={() => setActiveCard(path.id)}
+              onMouseLeave={() => setActiveCard(null)}
+            >
+              <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity"></div>
+
+              <div className="relative p-6 text-white">
+                <div className="flex items-center mb-4">
+                  <path.icon className="w-12 h-12 mr-4 text-white/80 group-hover:text-white transition-colors" />
+                  <h3 className="text-2xl font-bold">{path.title}</h3>
+                </div>
+
+                <p className="text-sm text-white/80 mb-4">{path.description}</p>
+
+                <ul className="space-y-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  {path.details.map((detail, index) => (
+                    <li 
+                      key={index} 
+                      className="flex items-center text-white/90 hover:text-yellow-300 transition-colors duration-300"
+                      onClick={() => setSelectedGame(path.game)}
+                    >
+                      <span className="mr-2">•</span>
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
         </div>
 
-        <div className="space-y-4">
-          <h4 className="text-xl font-semibold text-white mb-4">Mes Affirmations Positives</h4>
-          <div className="space-y-2">
-            {fears.map((fear, index) => (
-              fear.trim() && (
-                <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20">
-                  <p className="text-white">
-                    Moi {name ? `"${name}"` : ""}, {generatePositiveAffirmation(fear)}
-                  </p>
-                </div>
-              )
-            ))}
+        {/* Section AI Dialog */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <AIGameDialog />
+        </div>
+
+        <div className="mt-12 bg-gray-800 rounded-xl p-8">
+          {selectedGame ? (
+            selectedGame.component()
+          ) : (
+            <div className="text-center">
+              <h3 className="text-2xl font-bold mb-4 text-gray-100">
+                Sélectionnez un parcours
+              </h3>
+              <p className="text-gray-200">
+                Cliquez sur un détail pour découvrir un jeu ou une activité interactive.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Section Numérologie */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <NumerologyCalculator />
+        </div>
+
+        {/* Section Ennéagramme */}
+        <div className="mt-12 max-w-3xl mx-auto">
+          <EnneagramCalculator />
+        </div>
+
+
+        {/* Section Transformation des Peurs */}
+        <div className="mt-12 bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
+          <h3 className="text-2xl font-bold text-white mb-6">Transformation des Peurs</h3>
+
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Entrez votre prénom"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300 mb-4"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h4 className="text-xl font-semibold text-white mb-4">Mes Peurs</h4>
+              <textarea
+                value={fears.join('\n')}
+                onChange={(e) => setFears(e.target.value.split('\n'))}
+                placeholder="Entrez vos peurs (une par ligne)"
+                className="w-full h-64 p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
+              />
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="text-xl font-semibold text-white mb-4">Mes Affirmations Positives</h4>
+              <div className="space-y-2">
+                {fears.map((fear, index) => (
+                  fear.trim() && (
+                    <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20">
+                      <p className="text-white">
+                        Moi {name ? `"${name}"` : ""}, {generatePositiveAffirmation(fear)}
+                      </p>
+                    </div>
+                  )
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -756,7 +846,6 @@ const EnneagramCalculator: React.FC = () => {
 };
 
 const generatePositiveAffirmation = (fear: string): string => {
-  // Enlever les mots négatifs communs
   const fearLower = fear.toLowerCase();
   if (fearLower.includes('peur')) {
     if (fearLower.includes('animaux')) {
@@ -774,10 +863,8 @@ const generatePositiveAffirmation = (fear: string): string => {
     if (fearLower.includes('rejet')) {
       return "je suis aimé(e) et accepté(e) tel(le) que je suis";
     }
-    // Réponse par défaut si aucune correspondance spécifique n'est trouvée
     return `je transforme cette peur en force et je m'épanouis pleinement`;
   }
-  // Si le mot "peur" n'est pas présent, on donne une réponse générique positive
   return `je suis confiant(e) et serein(e) face à toutes les situations`;
 };
 
