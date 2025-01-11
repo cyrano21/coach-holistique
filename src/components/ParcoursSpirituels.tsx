@@ -443,13 +443,29 @@ Note: Utilise ces balises de couleur pour chaque section.`;
           />
         </div>
 
-        <button
-          onClick={generateNumerologyReading}
-          className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg font-medium
-                   hover:from-purple-600 hover:to-indigo-600 transition-all duration-200"
-        >
-          Calculer mon profil numérologique
-        </button>
+        <div className="space-y-4">
+          <button
+            onClick={generateNumerologyReading}
+            className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg font-medium
+                     hover:from-purple-600 hover:to-indigo-600 transition-all duration-200"
+          >
+            Calculer mon profil numérologique
+          </button>
+          
+          {result && (
+            <button
+              onClick={() => {
+                setResult(null);
+                setName('');
+                setBirthDate('');
+              }}
+              className="w-full py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg font-medium
+                       hover:from-red-600 hover:to-pink-600 transition-all duration-200"
+            >
+              Réinitialiser
+            </button>
+          )}
+        </div>
 
         {result && (
           <div className="mt-6 p-6 bg-white/10 rounded-lg">
