@@ -99,7 +99,7 @@ const TimelineSection = () => {
         >
           {/* Ligne verticale principale */}
           <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 rounded-full" />
-          
+
           <div className="space-y-8">
             {methodesData.map((item, index) => (
               <TimelineItem key={index} item={item} index={index} />

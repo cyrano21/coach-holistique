@@ -1,4 +1,10 @@
-export async function callMcpTool(serverName: string, toolName: string, args: any) {
+
+interface McpToolArgs {
+  prompt?: string;
+  [key: string]: any;
+}
+
+export async function callMcpTool(serverName: string, toolName: string, args: McpToolArgs) {
   const response = await fetch('/api/tool', {
     method: 'POST',
     headers: {
