@@ -679,11 +679,23 @@ const EnneagramCalculator: React.FC = () => {
       ) : (
         <div className="space-y-6">
           {result && (
-            <div className="text-white">
-              <h4 className="text-xl font-semibold mb-4">
-                {JSON.parse(result).title}
-              </h4>
-              <p className="mb-6">{JSON.parse(result).description}</p>
+            <div className="space-y-6">
+              <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-6 rounded-lg">
+                <h4 className="text-2xl font-bold text-white mb-4 text-center">
+                  {JSON.parse(result).title}
+                </h4>
+                <p className="text-white text-lg">{JSON.parse(result).description}</p>
+              </div>
+              
+              <div className="bg-gradient-to-r from-green-500 to-teal-500 p-6 rounded-lg">
+                <h5 className="text-xl font-semibold text-white mb-3">Conseils de développement :</h5>
+                <ul className="text-white space-y-2">
+                  <li>• Prenez conscience de vos points forts et acceptez vos zones d'amélioration</li>
+                  <li>• Pratiquez l'auto-observation sans jugement</li>
+                  <li>• Explorez différentes perspectives pour enrichir votre compréhension</li>
+                  <li>• Cultivez la patience dans votre processus de croissance personnelle</li>
+                </ul>
+              </div>
             </div>
           )}
           <button
