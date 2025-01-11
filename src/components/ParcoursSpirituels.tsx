@@ -371,9 +371,9 @@ const ChakraBalance = () => {
   );
 };
 
-const NumerologyCalculator = () => {
-  const [name, setName] = useState('');
-  const [birthDate, setBirthDate] = useState('');
+const NumerologyCalculator: React.FC = () => {
+  const [name, setName] = useState<string>('');
+  const [birthDate, setBirthDate] = useState<string>('');
   const [result, setResult] = useState<string | null>(null);
 
   const calculateLifePath = (date: string) => {
@@ -464,7 +464,7 @@ Note: Utilise ces balises de couleur pour chaque section.`;
                   }
                   return <p key={i} className="text-white">{line}</p>
                 })
-              ))}
+              }
             </div>
           </div>
         )}
