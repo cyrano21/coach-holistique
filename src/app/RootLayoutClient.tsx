@@ -15,9 +15,11 @@ export default function RootLayoutClient({
   }, []);
 
   return (
-    <div className="relative">
-      {children}
+    <>
+      <div className="relative">
+        {children}
+      </div>
       <ChatBot />
-    </div>
+    </>
   );
 }

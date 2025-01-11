@@ -71,7 +71,7 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-8 right-8 z-[9999]">
       {isOpen ? (
         <div className="bg-white rounded-lg shadow-xl w-80 h-96 flex flex-col">
           <div className="bg-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
@@ -125,7 +125,7 @@ const ChatBot = () => {
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition-colors"
+          className="bg-purple-600 text-white p-4 rounded-full shadow-2xl hover:bg-purple-700 transition-all duration-300 hover:scale-110 animate-pulse"
         >
           <FaComments size={24} />
         </button>
