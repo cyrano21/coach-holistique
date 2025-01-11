@@ -45,6 +45,7 @@ const ParallaxHeader = () => {
 
   return (
     <motion.section
+      as="section"
       className="relative h-[500px] flex items-center justify-center bg-cover bg-center bg-fixed"
       style={{ backgroundImage: "url('/images/methodes/hero.jpg')" }}
       {...motionProps}
@@ -86,8 +87,8 @@ const TimelineSection = () => {
         >
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 font-semibold">
             Un parcours personnalisé
-          </span>{" "}
-          en plusieurs étapes pour prendre soin de vous, selon vos besoins et vos objectifs. Découvrez ci-dessous nos différentes méthodes, expliquées sous forme d'itinéraire.
+          </span>
+          en plusieurs étapes pour prendre soin de vous, selon vos besoins et vos objectifs. Découvrez ci-dessous nos différentes méthodes, expliquées sous forme d&apos;itinéraire.
         </motion.p>
 
         <motion.div 
