@@ -6,8 +6,13 @@ import { motion } from "framer-motion";
 import { VideoCarousel } from "./VideoCarousel";
 
 // Imports CSS
+import dynamic from 'next/dynamic';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
+const Image = dynamic(() => import('next/image'), {
+  loading: () => <div>Loading...</div>
+});
 
 
 // Video interface definition

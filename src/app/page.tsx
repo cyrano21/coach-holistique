@@ -3,10 +3,22 @@
 import { approchesData } from "../data/approchesData";
 import dynamic from 'next/dynamic';
 
-const VideoSection = dynamic(() => import("../components/VideoSection"), { ssr: false });
-const HeroSection = dynamic(() => import("../components/HeroSection"), { ssr: true });
-const Services = dynamic(() => import("../components/Services"), { ssr: true });
-const Testimonials = dynamic(() => import("../components/Testimonials"), { ssr: true });
+const VideoSection = dynamic(() => import("../components/VideoSection"), { 
+  loading: () => <div>Loading...</div>,
+  ssr: false 
+});
+const HeroSection = dynamic(() => import("../components/HeroSection"), { 
+  loading: () => <div>Loading...</div>,
+  ssr: true 
+});
+const Services = dynamic(() => import("../components/Services"), { 
+  loading: () => <div>Loading...</div>,
+  ssr: true 
+});
+const Testimonials = dynamic(() => import("../components/Testimonials"), { 
+  loading: () => <div>Loading...</div>,
+  ssr: true 
+});
 
 export default function HomePage() {
   console.log("Approches data in HomePage:", approchesData);
