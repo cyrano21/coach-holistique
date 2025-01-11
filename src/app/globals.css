@@ -86,20 +86,27 @@ h2 {
   text-align: center;
 }
 
-/* Titres h3 */
-h3 {
+/* Styles généraux pour les titres */
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Poppins', sans-serif;
-  font-size: 1.3rem;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   color: #333;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
-/* Petite barre décorative sous h3 */
-h3::after {
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.3rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+/* Barre décorative sous les titres */
+h1::after, h2::after, h3::after {
   content: "";
   display: block;
   width: 50px;
