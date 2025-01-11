@@ -17,6 +17,8 @@ interface FormErrors {
 }
 
 const Contact = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -51,7 +53,29 @@ const Contact = () => {
         });
 
         if (response.ok) {
-          alert('Message envoyé avec succès !');
+          const date = new Date().toLocaleDateString('fr-FR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric'
+          });
+
+          setConfirmationMessage(`
+            Merci pour votre message !
+            
+            Détails de votre demande :
+            Nom : ${formData.firstName} ${formData.lastName}
+            Email : ${formData.email}
+            Message : ${formData.message}
+            
+            Date : ${date}
+            
+            Nous vous recontacterons dans les plus brefs délais.
+            À très bientôt !
+          `);
+          setShowModal(true);
           setFormData({
             firstName: "",
             lastName: "",
@@ -172,6 +196,30 @@ const Contact = () => {
           </form>
         </div>
       </div>
+
+      {/* Modal de confirmation */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-gradient-to-br from-white via-purple-50 to-indigo-50 rounded-xl p-8 max-w-md mx-4 relative shadow-2xl border border-purple-100 transform animate-modalSlideIn">
+            <button 
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors duration-200"
+            >
+              ×
+            </button>
+            <h2 className="text-2xl font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-6">Confirmation</h2>
+            <div className="text-gray-700 whitespace-pre-line leading-relaxed">
+              {confirmationMessage}
+            </div>
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-8 w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium transform hover:scale-[1.02] transition-all duration-200 hover:shadow-lg"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
