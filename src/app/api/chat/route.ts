@@ -10,9 +10,10 @@ export async function POST(req: Request) {
       model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
       inputs: prompt,
       parameters: {
-          max_new_tokens: 100,
-          temperature: 0.5,
-          top_p: 0.8,
+          max_new_tokens: 150,
+          temperature: 0.4,
+          top_p: 0.9,
+          max_time: 10,
         }
     });
 
