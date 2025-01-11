@@ -5,6 +5,7 @@ import "./globals.css";
 import { Metadata } from "next";
 import dynamic from 'next/dynamic';
 import { Poppins, Playfair_Display } from "next/font/google";
+import RootLayoutClient from "./RootLayoutClient";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
@@ -33,7 +34,9 @@ export default function RootLayout({
     <html lang="fr">
       <body className={`min-h-screen flex flex-col ${poppins.className} ${playfair.variable}`}>
         <Navbar />
-        <main className="flex-grow">{children}</main>
+        <RootLayoutClient>
+          <main className="flex-grow">{children}</main>
+        </RootLayoutClient>
         <Footer />
       </body>
     </html>
