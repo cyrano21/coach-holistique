@@ -26,7 +26,6 @@ const ChatBot = () => {
   const getBotResponse = async (userInput: string) => {
     const lowerInput = userInput.toLowerCase();
     
-    // Réponses prédéfinies pour les questions courantes
     if (lowerInput.includes('bonjour') || lowerInput.includes('salut')) {
       return "Bonjour! Comment puis-je vous aider aujourd'hui?";
     }
@@ -49,13 +48,10 @@ const ChatBot = () => {
   const handleSubmit = async () => {
     if (!input.trim()) return;
 
-    // Ajouter le message de l'utilisateur
     setMessages(prev => [...prev, { text: input, sender: 'user' }]);
     
-    // Obtenir la réponse du bot
     const response = await getBotResponse(input);
     
-    // Ajouter la réponse du bot
     setTimeout(() => {
       setMessages(prev => [...prev, { text: response, sender: 'bot' }]);
     }, 500);
@@ -71,9 +67,9 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="fixed bottom-8 right-8 z-[9999]">
+    <div className="fixed bottom-4 right-4 z-[99999] pointer-events-auto">
       {isOpen ? (
-        <div className="bg-white rounded-lg shadow-xl w-80 h-96 flex flex-col">
+        <div className="bg-white rounded-lg shadow-2xl w-96 h-[500px] flex flex-col">
           <div className="bg-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
             <h3 className="font-semibold">Assistant virtuel</h3>
             <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">
@@ -90,7 +86,7 @@ const ChatBot = () => {
                 }`}
               >
                 <div
-                  className={`inline-block p-3 rounded-lg ${
+                  className={`inline-block p-3 rounded-lg max-w-[80%] ${
                     msg.sender === 'user'
                       ? 'bg-purple-600 text-white'
                       : 'bg-gray-200 text-gray-800'
@@ -125,7 +121,7 @@ const ChatBot = () => {
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-purple-600 text-white p-4 rounded-full shadow-2xl hover:bg-purple-700 transition-all duration-300 hover:scale-110 animate-pulse"
+          className="bg-purple-600 text-white p-4 rounded-full shadow-2xl hover:bg-purple-700 transition-all duration-300 hover:scale-110 animate-bounce"
         >
           <FaComments size={24} />
         </button>
