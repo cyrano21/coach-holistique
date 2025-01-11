@@ -710,12 +710,12 @@ const EnneagramCalculator: React.FC = () => {
         </div>
       )}
     </div>
-
-    {/* Section Transformation des Peurs */}
-    <div className="mt-12 bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
-      <h3 className="text-2xl font-bold text-white mb-6">Transformation des Peurs</h3>
       
-      <div className="mb-6">
+      {/* Section Transformation des Peurs */}
+      <div className="mt-12 bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
+        <h3 className="text-2xl font-bold text-white mb-6">Transformation des Peurs</h3>
+        
+        <div className="mb-6">
         <input
           type="text"
           placeholder="Entrez votre prénom"
