@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -52,15 +53,12 @@ Comment puis-je vous aider aujourd'hui ?`;
       return "L'EFT (Emotional Freedom Techniques) est une approche qui combine la stimulation de points d'acupuncture et le travail émotionnel. Cette technique aide à libérer les blocages émotionnels et réduire le stress. Souhaitez-vous prendre rendez-vous pour une séance ?";
     }
 
-    // Réponse par défaut
-    return "Je peux vous aider à prendre rendez-vous, découvrir nos approches thérapeutiques ou répondre à vos questions. Que souhaitez-vous savoir ?";
-    }
-
     if (lowerInput.includes('méditation') || lowerInput.includes('meditation')) {
       return "Nous proposons différentes techniques de méditation pour développer la pleine conscience et réduire le stress. Vous pouvez découvrir nos vidéos de méditation guidée dans la section 'Vidéos' de la page d'accueil ou explorer nos programmes de méditation dans 'Outils de Développement'.";
     }
 
-    return "Je peux vous renseigner sur nos approches thérapeutiques (EFT, analyse transactionnelle, méditation...), vous guider vers les différentes sections du site ou répondre à vos questions spécifiques. Que souhaitez-vous savoir ?";
+    // Réponse par défaut
+    return "Je peux vous aider à prendre rendez-vous, découvrir nos approches thérapeutiques ou répondre à vos questions. Que souhaitez-vous savoir ?";
   };
 
   const handleSubmit = async () => {
