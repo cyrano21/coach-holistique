@@ -38,14 +38,34 @@ const AIGameDialog = () => {
       setIsLoading(true);
       const result = await hf.textGeneration({
         model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
-        inputs: `Génère un mini-jeu spirituel basé sur: ${userInput}. 
-                Format: Titre, Description, Questions/Actions`,
+        inputs: `Génère un mini-jeu spirituel méditatif basé sur: ${userInput}. 
+                Format requis:
+                {
+                  "titre": "Nom du jeu",
+                  "description": "Description détaillée",
+                  "etapes": [
+                    "Étape 1 - Action méditative",
+                    "Étape 2 - Question réflexive",
+                    "Étape 3 - Conclusion spirituelle"
+                  ],
+                  "message_final": "Message d'apprentissage spirituel"
+                }`,
         parameters: {
-          max_new_tokens: 250,
-          temperature: 0.7,
+          max_new_tokens: 400,
+          temperature: 0.8,
+          top_p: 0.9,
+          repetition_penalty: 1.2
         }
       });
-      setAiResponse(result.generated_text);
+      
+      try {
+        // Tentative de parser la réponse en JSON
+        const formattedResponse = JSON.parse(result.generated_text);
+        setAiResponse(JSON.stringify(formattedResponse, null, 2));
+      } catch {
+        // Si le parsing échoue, afficher la réponse brute
+        setAiResponse(result.generated_text);
+      }
     } catch (error) {
       console.error('Error:', error);
       setAiResponse("Désolé, une erreur s'est produite.");
@@ -95,8 +115,16 @@ const AIGameDialog = () => {
         </button>
         {aiResponse && (
           <div className="mt-6 p-4 bg-white/10 rounded-lg">
-            <pre className="whitespace-pre-wrap text-white">
-              {aiResponse}
+            <pre className="whitespace-pre-wrap text-white font-sans">
+              {typeof aiResponse === 'string' && aiResponse.startsWith('{') ? 
+                JSON.parse(aiResponse).etapes?.map((etape: string, index: number) => (
+                  <div key={index} className="mb-4 p-3 bg-white/5 rounded">
+                    <p className="text-yellow-300 font-medium">Étape {index + 1}:</p>
+                    <p className="text-white/90">{etape}</p>
+                  </div>
+                ))
+                : aiResponse
+              }
             </pre>
           </div>
         )}
