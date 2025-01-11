@@ -38,13 +38,13 @@ Je peux vous rediriger vers l'une de ces pages. Que préférez-vous ?`;
 
     // Présentation du chatbot
     if (lowerInput.includes('qui es') || lowerInput.includes('qui êtes') || lowerInput.includes('présente toi')) {
-      return "Je suis l'assistant virtuel spécialisé en coaching holistique. Je peux vous aider à :
+      return `Je suis l'assistant virtuel spécialisé en coaching holistique. Je peux vous aider à :
 - Prendre rendez-vous
 - Découvrir nos approches thérapeutiques
 - En savoir plus sur nos services
 - Répondre à vos questions
 
-Comment puis-je vous aider aujourd'hui ?";
+Comment puis-je vous aider aujourd'hui ?`;
     }
 
     // Questions sur les approches thérapeutiques
