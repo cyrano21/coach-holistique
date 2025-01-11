@@ -91,7 +91,15 @@ function Navbar() {
           isMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex flex-col items-center justify-center h-full space-y-8 p-4">
+        <div className="flex flex-col items-center justify-center h-full space-y-8 p-4 relative">
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute top-4 right-4 text-white hover:text-gray-300"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
           {[
             { href: "/", text: "Accueil" },
             { href: "/approches-therapeutiques", text: "Approches Thérapeutiques" },
