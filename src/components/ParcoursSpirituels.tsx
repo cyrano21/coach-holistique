@@ -240,20 +240,37 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
 
         const data = await response.json();
         try {
-          // Parse the response into proper Question format
+          if (!data.response) {
+            throw new Error('No response data');
+          }
+          
+          // Ensure we have default questions in case of parsing errors
+          const defaultQuestions = [{
+            question: "Question par défaut",
+            options: ["Oui", "Non", "Peut-être", "Je ne sais pas"],
+            correctAnswer: 0
+          }];
+
           const parsedQuestions = data.response.split('\n')
-            .filter((q: string) => q.trim())
+            .filter((q: string) => q && q.trim())
             .map((q: string) => {
-              const [question, options, correctAnswer] = q.split('|');
-              return {
-                question: question.trim(),
-                options: options.split(',').map((o: string) => o.trim()),
-                correctAnswer: parseInt(correctAnswer.trim()) || 0
-              };
+              try {
+                const parts = q.split('|');
+                if (parts.length < 3) {
+                  return defaultQuestions[0];
+                }
+                return {
+                  question: parts[0].trim(),
+                  options: parts[1].split(',').map((o: string) => o.trim()),
+                  correctAnswer: parseInt(parts[2].trim()) || 0
+                };
+              } catch (e) {
+                return defaultQuestions[0];
+              }
             });
 
-          setQuestions(parsedQuestions);
-          setAvailableQuestions([...Array(parsedQuestions.length).keys()]);
+          setQuestions(parsedQuestions.length > 0 ? parsedQuestions : defaultQuestions);
+          setAvailableQuestions([...Array(parsedQuestions.length || 1).keys()]);
         } catch (error) {
           console.error("Error parsing questions:", error);
           setQuestions([]); // Handle parsing errors appropriately
