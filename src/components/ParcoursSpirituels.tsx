@@ -199,7 +199,33 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
   const [showScore, setShowScore] = useState(false);
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
   const [availableQuestions, setAvailableQuestions] = useState<number[]>([]);
-  const questions = useQuizQuestions(theme);
+  const [questions, setQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    const generateInitialQuestions = async () => {
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: `Génère 4 questions différentes sur le thème ${theme} avec leurs réponses. Format : {"question": "...", "options": ["...", "...", "...", "..."], "correctAnswer": X}`
+          })
+        });
+
+        const data = await response.json();
+        const parsedQuestions = JSON.parse(data.response);
+        setQuestions(parsedQuestions);
+        setAvailableQuestions([...Array(parsedQuestions.length).keys()]);
+        setCurrentQuestion(0);
+      } catch (error) {
+        console.error('Erreur lors de la génération des questions:', error);
+      }
+    };
+
+    generateInitialQuestions();
+  }, [theme]);
 
 
   useEffect(() => {
