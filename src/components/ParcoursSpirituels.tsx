@@ -238,8 +238,14 @@ const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
   const questions = quizzesByTheme[theme];
 
   useEffect(() => {
-    // Initialiser les questions disponibles
-    setAvailableQuestions([...Array(questions.length).keys()]);
+    // Mélanger les questions disponibles de manière aléatoire
+    const shuffledQuestions = [...Array(questions.length).keys()];
+    for (let i = shuffledQuestions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledQuestions[i], shuffledQuestions[j]] = [shuffledQuestions[j], shuffledQuestions[i]];
+    }
+    setAvailableQuestions(shuffledQuestions);
+    setCurrentQuestion(shuffledQuestions[0]);
   }, [theme]);
 
   const getNextQuestion = () => {
