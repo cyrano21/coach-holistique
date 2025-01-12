@@ -286,23 +286,28 @@ const questions = defaultQuestions;
   }, [questions]);
 
   const getNextQuestion = () => {
-    const remainingQuestions = availableQuestions.filter(q => !answeredQuestions.has(q));
-    if (remainingQuestions.length === 0) {
+    if (currentQuestion >= questions.length - 1 || answeredQuestions.size >= questions.length) {
       setShowScore(true);
       return;
     }
-    const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
-    return remainingQuestions[randomIndex];
+    return currentQuestion + 1;
   };
+
+  useEffect(() => {
+    if (questions.length > 0) {
+      setCurrentQuestion(0);
+      setAnsweredQuestions(new Set());
+    }
+  }, [questions]);
 
   const handleAnswerClick = (selectedAnswer: number) => {
     if (questions.length > 0) {
       const isCorrect = selectedAnswer === questions[currentQuestion].correctAnswer;
       if (isCorrect) {
         setScore(score + 1);
-        setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
       }
-
+      setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
+      
       const nextQuestion = getNextQuestion();
       if (nextQuestion !== undefined) {
         setCurrentQuestion(nextQuestion);
