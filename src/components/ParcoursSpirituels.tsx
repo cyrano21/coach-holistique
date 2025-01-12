@@ -310,6 +310,12 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
 
   useEffect(() => {
     const generateInitialQuestions = async () => {
+      const defaultQuestions = [{
+        question: "Quelle est l'importance de la pratique spirituelle?",
+        options: ["Très importante", "Modérément importante", "Peu importante", "Pas importante"],
+        correctAnswer: 0
+      }];
+
       try {
         const response = await fetch('/api/chat', {
           method: 'POST',
@@ -321,28 +327,39 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
           })
         });
 
-        const data = await response.json();
-        const lines = data.response.split('\n').filter((line: string) => line.trim());
-        const parsedQuestions = lines.map((line: string) => {
-          const [question, options, answer] = line.split('|');
-          return {
-            question: question.trim(),
-            options: options.split(',').map((opt: string) => opt.trim()),
-            correctAnswer: parseInt(answer.trim()) || 0
-          };
-        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
 
-        setQuestions(parsedQuestions);
+        const data = await response.json();
+        
+        if (!data || !data.response) {
+          throw new Error('Invalid response data');
+        }
+
+        const questions = data.response
+          .split('\n')
+          .filter((line: string) => line && line.trim())
+          .map((line: string) => {
+            const parts = line.split('|');
+            if (parts.length !== 3) {
+              return defaultQuestions[0];
+            }
+            const [question, options, answer] = parts;
+            const optionsArray = options.split(',').filter(Boolean);
+            return {
+              question: question.trim(),
+              options: optionsArray.length >= 4 ? optionsArray.map(opt => opt.trim()) : defaultQuestions[0].options,
+              correctAnswer: Number.isInteger(parseInt(answer)) ? parseInt(answer) : 0
+            };
+          });
+
+        setQuestions(questions.length > 0 ? questions : defaultQuestions);
         setCurrentQuestion(0);
         setAnsweredQuestions(new Set());
       } catch (error) {
         console.error('Error generating questions:', error);
-        // Set default questions if there's an error
-        setQuestions([{
-          question: "Quelle est l'importance de la pratique spirituelle?",
-          options: ["Très importante", "Modérément importante", "Peu importante", "Pas importante"],
-          correctAnswer: 0
-        }]);
+        setQuestions(defaultQuestions);
       }
     };
 
