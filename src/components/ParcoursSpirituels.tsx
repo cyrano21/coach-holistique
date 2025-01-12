@@ -88,15 +88,25 @@ const emotionalQuestions = [
   "Qu'est-ce qui vous préoccupe le plus ?"
 ];
 
-const chakras = [
-  { name: "Racine", color: "red" },
-  { name: "Sacral", color: "orange" },
-  { name: "Plexus solaire", color: "yellow" },
-  { name: "Cœur", color: "green" },
-  { name: "Gorge", color: "blue" },
-  { name: "Troisième œil", color: "indigo" },
-  { name: "Couronne", color: "purple" }
-];
+// Questions générées dynamiquement par l'IA
+const getChakraQuestions = async () => {
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: 'Génère une question sur les chakras avec 4 options de réponse et indique la bonne réponse (0-3)'
+      })
+    });
+    const data = await response.json();
+    return data.response;
+  } catch (error) {
+    console.error('Erreur génération questions chakras:', error);
+    return null;
+  }
+};
 
 const spiritualPaths = [
   {
@@ -468,41 +478,52 @@ const EmotionalExploration = () => {
 };
 
 const ChakraBalance = () => {
-  const [selectedChakra, setSelectedChakra] = useState<number | null>(null);
-  const [isBalancing, setIsBalancing] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleChakraClick = (index: number) => {
-    setSelectedChakra(index);
-    setIsBalancing(true);
-    setTimeout(() => {
-      setIsBalancing(false);
-    }, 3000);
+  useEffect(() => {
+    loadNewQuestion();
+  }, []);
+
+  const loadNewQuestion = async () => {
+    setLoading(true);
+    const question = await getChakraQuestions();
+    if (question) {
+      setCurrentQuestion(question);
+    }
+    setLoading(false);
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-4">
-        {chakras.map((chakra, index) => (
-          <div
-            key={index}
-            onClick={() => handleChakraClick(index)}
-            className={`
-              p-4 rounded-lg cursor-pointer transition-all duration-300
-              ${isBalancing && selectedChakra === index ? 'animate-pulse' : ''}
-            `}
-            style={{ backgroundColor: chakra.color + '40' }}
-          >
-            <h3 className="text-lg font-semibold">{chakra.name}</h3>
-          </div>
-        ))}
-      </div>
-      {selectedChakra !== null && (
+    <div className="space-y-6 p-4">
+      {loading ? (
         <div className="text-center">
-          <p>
-            {isBalancing
-              ? `Harmonisation du chakra ${chakras[selectedChakra].name} en cours...`
-              : `Le chakra ${chakras[selectedChakra].name} est harmonisé`}
-          </p>
+          <p className="text-white">Chargement de la question...</p>
+        </div>
+      ) : currentQuestion ? (
+        <div className="bg-white/10 rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-4">{currentQuestion.question}</h3>
+          <div className="space-y-3">
+            {currentQuestion.options.map((option: string, index: number) => (
+              <button
+                key={index}
+                onClick={() => loadNewQuestion()}
+                className="w-full p-3 text-left rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="text-center">
+          <p className="text-white">Une erreur est survenue lors du chargement de la question</p>
+          <button
+            onClick={loadNewQuestion}
+            className="mt-4 px-6 py-2 bg-purple-600 rounded-lg hover:bg-purple-700"
+          >
+            Réessayer
+          </button>
         </div>
       )}
     </div>
