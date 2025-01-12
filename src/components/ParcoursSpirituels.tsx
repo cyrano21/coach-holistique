@@ -223,28 +223,7 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
   const [showScore, setShowScore] = useState(false);
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
   const [availableQuestions, setAvailableQuestions] = useState<number[]>([]);
-  const [questions, setQuestions] = useState<Question[]>([
-    {
-      question: "Quelle est la principale fonction des chakras dans le corps énergétique ?",
-      options: ["Centres de circulation d'énergie", "Points de pression", "Zones musculaires", "Nœuds nerveux"],
-      correctAnswer: 0
-    },
-    {
-      question: "Quel chakra est associé à la communication et l'expression de soi ?",
-      options: ["Le chakra de la gorge", "Le chakra racine", "Le chakra du cœur", "Le troisième œil"],
-      correctAnswer: 0
-    },
-    {
-      question: "Quelle couleur est associée au chakra du plexus solaire ?",
-      options: ["Jaune", "Rouge", "Vert", "Bleu"],
-      correctAnswer: 0
-    },
-    {
-      question: "Quelle pratique permet de rééquilibrer les centres énergétiques ?",
-      options: ["La méditation", "Le sport intensif", "Le régime alimentaire", "Le sommeil"],
-      correctAnswer: 0
-    }
-  ]);
+  const [questions, setQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
     const generateInitialQuestions = async () => {
@@ -260,29 +239,7 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
         });
 
         const data = await response.json();
-        const defaultQuestions = [
-  {
-    question: "Quelle est la principale fonction des chakras dans le corps énergétique ?",
-    options: ["Centres de circulation d'énergie", "Points de pression", "Zones musculaires", "Nœuds nerveux"],
-    correctAnswer: 0
-  },
-  {
-    question: "Quel chakra est associé à la communication et l'expression de soi ?",
-    options: ["Le chakra de la gorge", "Le chakra racine", "Le chakra du cœur", "Le troisième œil"],
-    correctAnswer: 0
-  },
-  {
-    question: "Quelle couleur est associée au chakra du plexus solaire ?",
-    options: ["Jaune", "Rouge", "Vert", "Bleu"],
-    correctAnswer: 0
-  },
-  {
-    question: "Quelle pratique permet de rééquilibrer les centres énergétiques ?",
-    options: ["La méditation", "Le sport intensif", "Le régime alimentaire", "Le sommeil"],
-    correctAnswer: 0
-  }
-];
-const questions = defaultQuestions;
+        const questions = JSON.parse(data.response);
           
         setQuestions(questions);
         setAvailableQuestions([...Array(questions.length).keys()]);
