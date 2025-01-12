@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FaComments, FaTimes } from 'react-icons/fa';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 interface Message {
   text: string;
@@ -28,26 +27,37 @@ const ChatBot = () => {
     scrollToBottom();
   }, [messages]);
 
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition();
+  const recognition = useRef<any>(null);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition;
+      recognition.current = new SpeechRecognition();
+      recognition.current.continuous = false;
+      recognition.current.lang = 'fr-FR';
+      
+      recognition.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+      };
+      
+      recognition.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, []);
 
   const toggleListening = () => {
-    if (listening) {
-      SpeechRecognition.stopListening();
+    if (!recognition.current) return;
+    
+    if (isListening) {
+      recognition.current.stop();
     } else {
-      SpeechRecognition.startListening({ language: 'fr-FR' });
+      recognition.current.start();
     }
+    setIsListening(!isListening);
   };
-
-  useEffect(() => {
-    if (transcript) {
-      setInput(transcript);
-    }
-  }, [transcript]);
 
   const speakText = (text: string) => {
     if (!utterance.current) {
