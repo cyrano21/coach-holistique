@@ -41,17 +41,27 @@ const generateQuizQuestions = async (theme: string) => {
     });
 
     const data = await response.json();
-    return data.response
+    const newQuestions = data.response
       .split('\n')
       .filter((q: string) => q.trim())
       .map((q: string) => {
-        const [question, options, correctAnswer] = q.split('|');
+        const parts = q.split('|');
+        if (parts.length < 3) {
+          return {
+            question: parts[0] || "Question par défaut",
+            options: ["Oui", "Non", "Peut-être", "Je ne sais pas"],
+            correctAnswer: 0
+          };
+        }
+        const [question, options, correctAnswer] = parts;
+        const optionsArray = options?.split(',') || ["Oui", "Non", "Peut-être", "Je ne sais pas"];
         return {
           question,
-          options: options.split(','),
-          correctAnswer: parseInt(correctAnswer)
+          options: optionsArray,
+          correctAnswer: parseInt(correctAnswer) || 0
         };
       });
+    return newQuestions;
   } catch (error) {
     console.error('Erreur lors de la génération des questions:', error);
     return [];
@@ -837,7 +847,7 @@ const ParcoursSpirituels = () => {
                         if (index === fears.length - 1) {
                           newFears.push('');
                         }
-                        newFears[index] = fear.trim();
+                        newFears[index] = fear.trim;
                         setFears(newFears);
                       }
                     }}
