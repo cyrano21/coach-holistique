@@ -215,9 +215,17 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
         });
 
         const data = await response.json();
-        const parsedQuestions = JSON.parse(data.response);
-        setQuestions(parsedQuestions);
-        setAvailableQuestions([...Array(parsedQuestions.length).keys()]);
+        const questions = data.response.split('\n')
+          .filter((line: string) => line.trim())
+          .map((line: string) => ({
+            question: line,
+            options: ["Oui", "Non", "Peut-être", "Je ne sais pas"],
+            correctAnswer: 0
+          }))
+          .slice(0, 4);
+          
+        setQuestions(questions);
+        setAvailableQuestions([...Array(questions.length).keys()]);
         setCurrentQuestion(0);
       } catch (error) {
         console.error('Erreur lors de la génération des questions:', error);
