@@ -73,6 +73,16 @@ const quizzesByTheme = {
       question: "Quelle est la couleur du chakra du cœur ?",
       options: ["Rouge", "Bleu", "Vert", "Violet"],
       correctAnswer: 2
+    },
+    {
+      question: "Quel est le chakra de la gorge ?",
+      options: ["Le premier", "Le troisième", "Le cinquième", "Le septième"],
+      correctAnswer: 2
+    },
+    {
+      question: "Quelle est la couleur du chakra racine ?",
+      options: ["Rouge", "Jaune", "Bleu", "Violet"],
+      correctAnswer: 0
     }
   ]
 };
