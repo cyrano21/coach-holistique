@@ -273,20 +273,41 @@ const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
     }
   };
 
-  const resetQuiz = () => {
-    const unansweredQuestions = availableQuestions.filter(q => !answeredQuestions.has(q));
-    if (unansweredQuestions.length === 0) {
-      // Toutes les questions ont été répondues correctement
+  const resetQuiz = async () => {
+    try {
+      // Générer de nouvelles questions via l'API
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: `Génère 4 nouvelles questions différentes sur le thème ${theme} avec leurs réponses. Format: question|option1,option2,option3,option4|indexReponseCorrecte`
+        })
+      });
+
+      const data = await response.json();
+      const newQuestions = data.response
+        .split('\n')
+        .filter((q: string) => q.trim())
+        .map((q: string) => {
+          const [question, options, correctAnswer] = q.split('|');
+          return {
+            question,
+            options: options.split(','),
+            correctAnswer: parseInt(correctAnswer)
+          };
+        });
+
+      // Mettre à jour l'état avec les nouvelles questions
+      setQuestions(newQuestions);
       setShowScore(false);
       setScore(0);
       setAnsweredQuestions(new Set());
       setCurrentQuestion(0);
-      setAvailableQuestions([...Array(questions.length).keys()]);
-    } else {
-      // Il reste des questions non répondues correctement
-      setShowScore(false);
-      setScore(0);
-      setCurrentQuestion(unansweredQuestions[0]);
+      setAvailableQuestions([...Array(newQuestions.length).keys()]);
+    } catch (error) {
+      console.error('Erreur lors de la génération des nouvelles questions:', error);
     }
   };
 
