@@ -26,95 +26,50 @@ type GameType = {
   };
 };
 
-const quizzesByTheme = {
-  comparatives: [
-    {
-      question: "Quelle est la principale pratique du bouddhisme ?",
-      options: ["La méditation", "La danse", "Le chant", "Le jeûne"],
-      correctAnswer: 0
-    },
-    {
-      question: "Quel est le concept central du taoïsme ?",
-      options: ["Le karma", "L'équilibre", "La réincarnation", "La prière"],
-      correctAnswer: 1
-    },
-    {
-      question: "Quelle est la signification du Yin et Yang ?",
-      options: ["Le bien et le mal", "La dualité complémentaire", "Le jour et la nuit", "Le positif et le négatif"],
-      correctAnswer: 1
-    },
-    {
-      question: "Quel est le but ultime de l'hindouisme ?",
-      options: ["Le nirvana", "Le moksha", "Le paradis", "L'illumination"],
-      correctAnswer: 1
-    }
-  ],
-  meditation: [
-    {
-      question: "Qu'est-ce que la pleine conscience ?",
-      options: ["Une technique de respiration", "Une forme de méditation", "Une présence consciente au moment présent", "Une pratique de yoga"],
-      correctAnswer: 2
-    },
-    {
-      question: "Quelle est la durée recommandée pour débuter la méditation ?",
-      options: ["1 heure", "5-10 minutes", "30 minutes", "2 heures"],
-      correctAnswer: 1
-    },
-    {
-      question: "Quel est le principal bénéfice de la méditation ?",
-      options: ["La relaxation physique", "La réduction du stress", "L'amélioration de la concentration", "Tous ces éléments"],
-      correctAnswer: 3
-    },
-    {
-      question: "Quelle posture est recommandée pour la méditation ?",
-      options: ["Allongé", "En tailleur", "N'importe quelle position confortable", "Debout"],
-      correctAnswer: 2
-    }
-  ],
-  connexion: [
-    {
-      question: "Qu'est-ce que l'intelligence émotionnelle ?",
-      options: ["La capacité à supprimer ses émotions", "La capacité à reconnaître et gérer ses émotions", "La capacité à éviter les conflits", "La capacité à rester neutre"],
-      correctAnswer: 1
-    },
-    {
-      question: "Comment développer son empathie ?",
-      options: ["En ignorant les autres", "En écoutant activement", "En donnant des conseils non sollicités", "En restant distant"],
-      correctAnswer: 1
-    },
-    {
-      question: "Qu'est-ce que la résilience émotionnelle ?",
-      options: ["Éviter les émotions", "La capacité à rebondir après les difficultés", "Ne jamais être triste", "Ignorer les problèmes"],
-      correctAnswer: 1
-    },
-    {
-      question: "Comment améliorer sa conscience de soi ?",
-      options: ["Par l'introspection régulière", "En évitant l'auto-réflexion", "En suivant les autres", "En restant occupé"],
-      correctAnswer: 0
-    }
-  ],
-  energetique: [
-    {
-      question: "Combien y a-t-il de chakras principaux ?",
-      options: ["5", "6", "7", "8"],
-      correctAnswer: 2
-    },
-    {
-      question: "Quelle est la couleur du chakra du cœur ?",
-      options: ["Rouge", "Bleu", "Vert", "Violet"],
-      correctAnswer: 2
-    },
-    {
-      question: "Quel chakra est associé à la communication ?",
-      options: ["Le chakra racine", "Le chakra du cœur", "Le chakra de la gorge", "Le troisième œil"],
-      correctAnswer: 2
-    },
-    {
-      question: "Où est situé le chakra racine ?",
-      options: ["Au sommet de la tête", "À la base de la colonne vertébrale", "Au niveau du cœur", "Au niveau du front"],
-      correctAnswer: 1
-    }
-  ]
+
+const generateQuizQuestions = async (theme: string) => {
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: `Génère 4 questions différentes sur le thème ${theme} avec leurs réponses. 
+        Format: question|option1,option2,option3,option4|indexReponseCorrecte`
+      })
+    });
+
+    const data = await response.json();
+    return data.response
+      .split('\n')
+      .filter((q: string) => q.trim())
+      .map((q: string) => {
+        const [question, options, correctAnswer] = q.split('|');
+        return {
+          question,
+          options: options.split(','),
+          correctAnswer: parseInt(correctAnswer)
+        };
+      });
+  } catch (error) {
+    console.error('Erreur lors de la génération des questions:', error);
+    return [];
+  }
+};
+
+const useQuizQuestions = (theme: string) => {
+  const [questions, setQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const newQuestions = await generateQuizQuestions(theme);
+      setQuestions(newQuestions);
+    };
+    fetchQuestions();
+  }, [theme]);
+
+  return questions;
 };
 
 const emotionalQuestions = [
@@ -228,25 +183,27 @@ const spiritualPaths = [
   }
 ];
 
-const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
+const SpiritualQuiz = ({ theme }: { theme: string }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
   const [availableQuestions, setAvailableQuestions] = useState<number[]>([]);
+  const questions = useQuizQuestions(theme);
 
-  const questions = quizzesByTheme[theme];
 
   useEffect(() => {
     // Mélanger les questions disponibles de manière aléatoire
-    const shuffledQuestions = [...Array(questions.length).keys()];
-    for (let i = shuffledQuestions.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledQuestions[i], shuffledQuestions[j]] = [shuffledQuestions[j], shuffledQuestions[i]];
+    if (questions.length > 0) {
+      const shuffledQuestions = [...Array(questions.length).keys()];
+      for (let i = shuffledQuestions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledQuestions[i], shuffledQuestions[j]] = [shuffledQuestions[j], shuffledQuestions[i]];
+      }
+      setAvailableQuestions(shuffledQuestions);
+      setCurrentQuestion(shuffledQuestions[0]);
     }
-    setAvailableQuestions(shuffledQuestions);
-    setCurrentQuestion(shuffledQuestions[0]);
-  }, [theme]);
+  }, [questions]);
 
   const getNextQuestion = () => {
     const remainingQuestions = availableQuestions.filter(q => !answeredQuestions.has(q));
@@ -259,53 +216,31 @@ const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
   };
 
   const handleAnswerClick = (selectedAnswer: number) => {
-    const isCorrect = selectedAnswer === questions[currentQuestion].correctAnswer;
-    if (isCorrect) {
-      setScore(score + 1);
-      setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
-    }
+    if (questions.length > 0) {
+      const isCorrect = selectedAnswer === questions[currentQuestion].correctAnswer;
+      if (isCorrect) {
+        setScore(score + 1);
+        setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
+      }
 
-    const nextQuestion = getNextQuestion();
-    if (nextQuestion !== undefined) {
-      setCurrentQuestion(nextQuestion);
-    } else {
-      setShowScore(true);
+      const nextQuestion = getNextQuestion();
+      if (nextQuestion !== undefined) {
+        setCurrentQuestion(nextQuestion);
+      } else {
+        setShowScore(true);
+      }
     }
   };
 
   const resetQuiz = async () => {
     try {
-      // Générer de nouvelles questions via l'API
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: `Génère 4 nouvelles questions différentes sur le thème ${theme} avec leurs réponses. Format: question|option1,option2,option3,option4|indexReponseCorrecte`
-        })
-      });
-
-      const data = await response.json();
-      const newQuestions = data.response
-        .split('\n')
-        .filter((q: string) => q.trim())
-        .map((q: string) => {
-          const [question, options, correctAnswer] = q.split('|');
-          return {
-            question,
-            options: options.split(','),
-            correctAnswer: parseInt(correctAnswer)
-          };
-        });
-
-      // Mettre à jour l'état avec les nouvelles questions
+      const newQuestions = await generateQuizQuestions(theme);
+      setAvailableQuestions([...Array(newQuestions.length).keys()]);
       setQuestions(newQuestions);
       setShowScore(false);
       setScore(0);
       setAnsweredQuestions(new Set());
       setCurrentQuestion(0);
-      setAvailableQuestions([...Array(newQuestions.length).keys()]);
     } catch (error) {
       console.error('Erreur lors de la génération des nouvelles questions:', error);
     }
@@ -315,21 +250,25 @@ const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
     <div className="space-y-6">
       {!showScore ? (
         <>
-          <h3 className="text-xl font-semibold mb-4">
-            Question {currentQuestion + 1}/{questions.length}
-          </h3>
-          <p className="mb-4">{questions[currentQuestion].question}</p>
-          <div className="space-y-2">
-            {questions[currentQuestion].options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswerClick(index)}
-                className="w-full p-3 text-left rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-              >
-                {option}
-              </button>
-            ))}
-          </div>
+          {questions.length > 0 && (
+            <>
+              <h3 className="text-xl font-semibold mb-4">
+                Question {currentQuestion + 1}/{questions.length}
+              </h3>
+              <p className="mb-4">{questions[currentQuestion].question}</p>
+              <div className="space-y-2">
+                {questions[currentQuestion].options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerClick(index)}
+                    className="w-full p-3 text-left rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </>
       ) : (
         <div className="text-center space-y-4">
@@ -347,11 +286,7 @@ const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
             ))}
           </div>
           <button
-            onClick={() => {
-              setCurrentQuestion(0);
-              setScore(0);
-              setShowScore(false);
-            }}
+            onClick={resetQuiz}
             className="mt-6 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
           >
             Recommencer le quiz
@@ -916,7 +851,7 @@ const ParcoursSpirituels = () => {
 
             <div className="space-y-4">
               <h4 className="text-xl font-semibold text-white mb-4">Mes Affirmations Positives</h4>
-              <div className="space-y-2">
+              <div<div className="space-y-2">
                 {fears.map((fear, index) => (
                   fear.trim() && (
                     <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20">
