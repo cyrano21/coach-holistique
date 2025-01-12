@@ -780,6 +780,18 @@ const ParcoursSpirituels = () => {
           ))}
         </div>
 
+        <div className="mt-12 bg-gray-800 rounded-xl p-8">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-4 text-gray-100">
+              Sélectionnez un parcours
+            </h3>
+            <p className="text-gray-200">
+              Cliquez sur un détail pour découvrir un jeu ou une activité interactive.
+            </p>
+          </div>
+          {selectedGame && selectedGame.component()}
+        </div>
+
         {/* Section AI Chat */}
         <div className="mt-12 max-w-3xl mx-auto">
           <AIChat />
@@ -790,20 +802,6 @@ const ParcoursSpirituels = () => {
           <AIGameDialog />
         </div>
 
-        <div className="mt-12 bg-gray-800 rounded-xl p-8">
-          {selectedGame ? (
-            selectedGame.component()
-          ) : (
-            <div className="text-center">
-              <h3 className="text-2xl font-bold mb-4 text-gray-100">
-                Sélectionnez un parcours
-              </h3>
-              <p className="text-gray-200">
-                Cliquez sur un détail pour découvrir un jeu ou une activité interactive.
-              </p>
-            </div>
-          )}
-        </div>
 
         {/* Section Numérologie */}
         <div className="mt-12 max-w-3xl mx-auto">
@@ -829,7 +827,7 @@ const ParcoursSpirituels = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid gridcols-2 gap-6">
             <div className="space-y-4">
               <h4 className="text-xl font-semibold text-white mb-4">Mes Peurs</h4>
               {fears.map((fear, index) => (
