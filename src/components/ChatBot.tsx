@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FaComments, FaTimes } from 'react-icons/fa';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 interface Message {
   text: string;
@@ -25,28 +26,28 @@ const ChatBot = () => {
 
   useEffect(() => {
     scrollToBottom();
-    if (!recognition.current) {
-      recognition.current = new (window as any).webkitSpeechRecognition(); // Type assertion needed
-      recognition.current.continuous = false;
-      recognition.current.interimResults = false;
-      recognition.current.lang = 'fr-FR'; // Set language to French
+  }, [messages]);
 
-      recognition.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setInput(transcript);
-        setIsListening(false);
-      };
-    }
-  }, []);
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
 
   const toggleListening = () => {
-    setIsListening(!isListening);
-    if (isListening) {
-      recognition.current?.stop();
+    if (listening) {
+      SpeechRecognition.stopListening();
     } else {
-      recognition.current?.start();
+      SpeechRecognition.startListening({ language: 'fr-FR' });
     }
   };
+
+  useEffect(() => {
+    if (transcript) {
+      setInput(transcript);
+    }
+  }, [transcript]);
 
   const speakText = (text: string) => {
     if (!utterance.current) {
