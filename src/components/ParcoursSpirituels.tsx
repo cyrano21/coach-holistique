@@ -239,11 +239,25 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
         });
 
         const data = await response.json();
-        const questions = JSON.parse(data.response);
-          
-        setQuestions(questions);
-        setAvailableQuestions([...Array(questions.length).keys()]);
-        setCurrentQuestion(0);
+        try {
+          // Parse the response into proper Question format
+          const parsedQuestions = data.response.split('\n')
+            .filter((q: string) => q.trim())
+            .map((q: string) => {
+              const [question, options, correctAnswer] = q.split('|');
+              return {
+                question: question.trim(),
+                options: options.split(',').map((o: string) => o.trim()),
+                correctAnswer: parseInt(correctAnswer.trim()) || 0
+              };
+            });
+
+          setQuestions(parsedQuestions);
+          setAvailableQuestions([...Array(parsedQuestions.length).keys()]);
+        } catch (error) {
+          console.error("Error parsing questions:", error);
+          setQuestions([]); // Handle parsing errors appropriately
+        }
       } catch (error) {
         console.error('Erreur lors de la génération des questions:', error);
       }
@@ -288,7 +302,7 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
         setScore(score + 1);
       }
       setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
-      
+
       const nextQuestion = getNextQuestion();
       if (nextQuestion !== undefined) {
         setCurrentQuestion(nextQuestion);
@@ -408,7 +422,7 @@ const EmotionalExploration = () => {
   const [answers, setAnswers] = useState<string[]>([]);
   const [answer, setAnswer] = useState('');
   const [questions, setQuestions] = useState<string[]>([]);
-  
+
   useEffect(() => {
     const loadQuestions = async () => {
       const emotionalQuestions = await getEmotionalQuestions();
@@ -421,7 +435,7 @@ const EmotionalExploration = () => {
     if (answer.trim()) {
       setAnswers([...answers, answer]);
       setAnswer('');
-      if (currentQuestion < emotionalQuestions.length - 1) {
+      if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
       }
     }
@@ -917,7 +931,7 @@ const ParcoursSpirituels = () => {
                         if (index === fears.length - 1) {
                           newFears.push('');
                         }
-                        newFears[index] = fear.trim;
+                        newFears[index] = fear.trim();
                         setFears(newFears);
                       }
                     }}
