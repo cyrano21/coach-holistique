@@ -37,6 +37,16 @@ const quizzesByTheme = {
       question: "Quel est le concept central du taoïsme ?",
       options: ["Le karma", "L'équilibre", "La réincarnation", "La prière"],
       correctAnswer: 1
+    },
+    {
+      question: "Quelle est la signification du Yin et Yang ?",
+      options: ["Le bien et le mal", "La dualité complémentaire", "Le jour et la nuit", "Le positif et le négatif"],
+      correctAnswer: 1
+    },
+    {
+      question: "Quel est le but ultime de l'hindouisme ?",
+      options: ["Le nirvana", "Le moksha", "Le paradis", "L'illumination"],
+      correctAnswer: 1
     }
   ],
   meditation: [
@@ -49,6 +59,16 @@ const quizzesByTheme = {
       question: "Quelle est la durée recommandée pour débuter la méditation ?",
       options: ["1 heure", "5-10 minutes", "30 minutes", "2 heures"],
       correctAnswer: 1
+    },
+    {
+      question: "Quel est le principal bénéfice de la méditation ?",
+      options: ["La relaxation physique", "La réduction du stress", "L'amélioration de la concentration", "Tous ces éléments"],
+      correctAnswer: 3
+    },
+    {
+      question: "Quelle posture est recommandée pour la méditation ?",
+      options: ["Allongé", "En tailleur", "N'importe quelle position confortable", "Debout"],
+      correctAnswer: 2
     }
   ],
   connexion: [
@@ -61,6 +81,16 @@ const quizzesByTheme = {
       question: "Comment développer son empathie ?",
       options: ["En ignorant les autres", "En écoutant activement", "En donnant des conseils non sollicités", "En restant distant"],
       correctAnswer: 1
+    },
+    {
+      question: "Qu'est-ce que la résilience émotionnelle ?",
+      options: ["Éviter les émotions", "La capacité à rebondir après les difficultés", "Ne jamais être triste", "Ignorer les problèmes"],
+      correctAnswer: 1
+    },
+    {
+      question: "Comment améliorer sa conscience de soi ?",
+      options: ["Par l'introspection régulière", "En évitant l'auto-réflexion", "En suivant les autres", "En restant occupé"],
+      correctAnswer: 0
     }
   ],
   energetique: [
@@ -75,14 +105,14 @@ const quizzesByTheme = {
       correctAnswer: 2
     },
     {
-      question: "Quel est le chakra de la gorge ?",
-      options: ["Le premier", "Le troisième", "Le cinquième", "Le septième"],
+      question: "Quel chakra est associé à la communication ?",
+      options: ["Le chakra racine", "Le chakra du cœur", "Le chakra de la gorge", "Le troisième œil"],
       correctAnswer: 2
     },
     {
-      question: "Quelle est la couleur du chakra racine ?",
-      options: ["Rouge", "Jaune", "Bleu", "Violet"],
-      correctAnswer: 0
+      question: "Où est situé le chakra racine ?",
+      options: ["Au sommet de la tête", "À la base de la colonne vertébrale", "Au niveau du cœur", "Au niveau du front"],
+      correctAnswer: 1
     }
   ]
 };
