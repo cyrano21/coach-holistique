@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -12,12 +13,11 @@ const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [isListening, setIsListening] = useState(false); // Added state for voice input
+  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const recognition = useRef<webkitSpeechRecognition | null>(null);
-  const [isSpeaking, setIsSpeaking] = useState(false); // Added state for speech synthesis
+  const recognition = useRef<any>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const utterance = useRef<SpeechSynthesisUtterance | null>(null);
-
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -26,8 +26,6 @@ const ChatBot = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const recognition = useRef<any>(null);
   
   useEffect(() => {
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
