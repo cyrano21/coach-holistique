@@ -234,7 +234,9 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            prompt: `Génère 4 questions différentes sur le thème ${theme} avec leurs réponses. Format : {"question": "...", "options": ["...", "...", "...", "..."], "correctAnswer": X}`
+            prompt: `Génère 4 questions différentes sur le thème ${theme} avec leurs réponses. Format: question|option1,option2,option3,option4|indexReponseCorrecte 
+            Example:
+            Quelle est la principale caractéristique de la méditation?|La concentration,Le mouvement,Le bruit,Le stress|0`
           })
         });
 
@@ -306,11 +308,45 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
   };
 
   useEffect(() => {
-    if (questions.length > 0) {
-      setCurrentQuestion(0);
-      setAnsweredQuestions(new Set());
-    }
-  }, [questions]);
+    const generateInitialQuestions = async () => {
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: `Génère 4 questions différentes sur le thème ${theme} avec leurs réponses. Format: question|option1,option2,option3,option4|indexReponseCorrecte`
+          })
+        });
+
+        const data = await response.json();
+        const lines = data.response.split('\n').filter((line: string) => line.trim());
+        const parsedQuestions = lines.map((line: string) => {
+          const [question, options, answer] = line.split('|');
+          return {
+            question: question.trim(),
+            options: options.split(',').map((opt: string) => opt.trim()),
+            correctAnswer: parseInt(answer.trim()) || 0
+          };
+        });
+
+        setQuestions(parsedQuestions);
+        setCurrentQuestion(0);
+        setAnsweredQuestions(new Set());
+      } catch (error) {
+        console.error('Error generating questions:', error);
+        // Set default questions if there's an error
+        setQuestions([{
+          question: "Quelle est l'importance de la pratique spirituelle?",
+          options: ["Très importante", "Modérément importante", "Peu importante", "Pas importante"],
+          correctAnswer: 0
+        }]);
+      }
+    };
+
+    generateInitialQuestions();
+  }, [theme]);
 
   const handleAnswerClick = (selectedAnswer: number) => {
     if (questions.length > 0) {
