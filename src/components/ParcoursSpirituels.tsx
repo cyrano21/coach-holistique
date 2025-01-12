@@ -598,18 +598,43 @@ const EnneagramCalculator: React.FC = () => {
   const [result, setResult] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [fears, setFears] = useState<string[]>(['']);
+  const [questions, setQuestions] = useState<string[]>([]);
 
-  const questions = [
-    "Je tends à être perfectionniste et critique envers moi-même.",
-    "J'aime aider les autres et je peux négliger mes propres besoins.",
-    "Je suis motivé par la réussite et la reconnaissance.",
-    "Je suis sensible et j'ai tendance à me retirer quand je suis stressé.",
-    "J'aime analyser et comprendre les choses en profondeur.",
-    "La sécurité et la loyauté sont très importantes pour moi.",
-    "Je suis spontané et j'aime vivre de nouvelles expériences.",
-    "Je prends naturellement les choses en main et j'aime diriger.",
-    "Je suis pacifique et j'évite les conflits."
-  ];
+  useEffect(() => {
+    const generateQuestions = async () => {
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: "Génère 5 questions différentes pour un test d'ennéagramme qui aide à découvrir son type de personnalité. Les questions doivent être introspectives et varier à chaque fois."
+          })
+        });
+
+        const data = await response.json();
+        const generatedQuestions = data.response
+          .split('\n')
+          .filter((q: string) => q.trim().length > 0)
+          .slice(0, 5);
+
+        setQuestions(generatedQuestions);
+      } catch (error) {
+        console.error('Erreur lors de la génération des questions:', error);
+        // Questions de secours en cas d'erreur
+        setQuestions([
+          "Comment réagissez-vous face aux défis ?",
+          "Quelle est votre plus grande motivation ?",
+          "Comment gérez-vous vos émotions ?",
+          "Que recherchez-vous dans vos relations ?",
+          "Comment prenez-vous vos décisions ?"
+        ]);
+      }
+    };
+
+    generateQuestions();
+  }, []);
 
   const enneagramTypes = {
     1: {
@@ -804,7 +829,7 @@ const ParcoursSpirituels = () => {
         </div>
 
         {/* Section AI Dialog */}
-        <div className="mt-12 max-w-3xl mx-auto">
+        <div className="mt-12 max-w-3xl mxauto">
           <AIGameDialog />
         </div>
 
