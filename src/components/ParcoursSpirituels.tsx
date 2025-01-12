@@ -232,18 +232,55 @@ const SpiritualQuiz = ({ theme }: { theme: keyof typeof quizzesByTheme }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
+  const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
+  const [availableQuestions, setAvailableQuestions] = useState<number[]>([]);
 
   const questions = quizzesByTheme[theme];
 
+  useEffect(() => {
+    // Initialiser les questions disponibles
+    setAvailableQuestions([...Array(questions.length).keys()]);
+  }, [theme]);
+
+  const getNextQuestion = () => {
+    const remainingQuestions = availableQuestions.filter(q => !answeredQuestions.has(q));
+    if (remainingQuestions.length === 0) {
+      setShowScore(true);
+      return;
+    }
+    const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
+    return remainingQuestions[randomIndex];
+  };
+
   const handleAnswerClick = (selectedAnswer: number) => {
-    if (selectedAnswer === questions[currentQuestion].correctAnswer) {
+    const isCorrect = selectedAnswer === questions[currentQuestion].correctAnswer;
+    if (isCorrect) {
       setScore(score + 1);
+      setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
     }
 
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+    const nextQuestion = getNextQuestion();
+    if (nextQuestion !== undefined) {
+      setCurrentQuestion(nextQuestion);
     } else {
       setShowScore(true);
+    }
+  };
+
+  const resetQuiz = () => {
+    const unansweredQuestions = availableQuestions.filter(q => !answeredQuestions.has(q));
+    if (unansweredQuestions.length === 0) {
+      // Toutes les questions ont été répondues correctement
+      setShowScore(false);
+      setScore(0);
+      setAnsweredQuestions(new Set());
+      setCurrentQuestion(0);
+      setAvailableQuestions([...Array(questions.length).keys()]);
+    } else {
+      // Il reste des questions non répondues correctement
+      setShowScore(false);
+      setScore(0);
+      setCurrentQuestion(unansweredQuestions[0]);
     }
   };
 
@@ -726,7 +763,7 @@ const ParcoursSpirituels = () => {
 
                 <p className="text-sm text-white/80 mb-4">{path.description}</p>
 
-                <ul className="space-y-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <ul className="space-y-2 text-sm md:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500">
                   {path.details.map((detail, index) => (
                     <li 
                       key={index} 
