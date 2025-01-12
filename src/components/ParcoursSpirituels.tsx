@@ -851,7 +851,7 @@ const ParcoursSpirituels = () => {
 
             <div className="space-y-4">
               <h4 className="text-xl font-semibold text-white mb-4">Mes Affirmations Positives</h4>
-              <div<div className="space-y-2">
+              <div className="space-y-2">
                 {fears.map((fear, index) => (
                   fear.trim() && (
                     <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20">
