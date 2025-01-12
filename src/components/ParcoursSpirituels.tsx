@@ -82,13 +82,27 @@ const useQuizQuestions = (theme: string) => {
   return questions;
 };
 
-const emotionalQuestions = [
-  "Comment vous sentez-vous aujourd'hui ?",
-  "Quelle est votre plus grande source de joie ?",
-  "Qu'est-ce qui vous préoccupe le plus ?"
-];
+const getEmotionalQuestions = async () => {
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: 'Génère 3 questions introspectives sur les émotions et le développement personnel'
+      })
+    });
+    const data = await response.json();
+    return data.response.split('\n').filter((q: string) => q.trim());
+  } catch (error) {
+    console.error('Erreur génération questions émotionnelles:', error);
+    return [
+      "Comment vous sentez-vous aujourd'hui ?",
+      "Quelle est votre plus grande source de joie ?",
+      "Qu'est-ce qui vous préoccupe le plus ?"
+    ];
+  }
+};
 
-// Questions générées dynamiquement par l'IA
 const getChakraQuestions = async () => {
   try {
     const response = await fetch('/api/chat', {
@@ -436,6 +450,15 @@ const EmotionalExploration = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [answer, setAnswer] = useState('');
+  const [questions, setQuestions] = useState<string[]>([]);
+  
+  useEffect(() => {
+    const loadQuestions = async () => {
+      const emotionalQuestions = await getEmotionalQuestions();
+      setQuestions(emotionalQuestions);
+    };
+    loadQuestions();
+  }, []);
 
   const handleSubmit = () => {
     if (answer.trim()) {
@@ -449,10 +472,10 @@ const EmotionalExploration = () => {
 
   return (
     <div className="space-y-6">
-      {currentQuestion < emotionalQuestions.length ? (
+      {questions.length > 0 && currentQuestion < questions.length ? (
         <>
           <h3 className="text-xl font-semibold mb-4">
-            {emotionalQuestions[currentQuestion]}
+            {questions[currentQuestion]}
           </h3>
           <textarea
             value={answer}
