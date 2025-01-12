@@ -253,18 +253,19 @@ const SpiritualQuiz = ({ theme }: { theme: string }) => {
             correctAnswer: 0
           }];
 
-          const parsedQuestions = data.response.split('\n')
-            .filter((q: string) => q && q.trim())
+          const parsedQuestions = (data.response || '')
+            .split('\n')
+            .filter((q: string) => q && typeof q === 'string' && q.trim())
             .map((q: string) => {
               try {
-                const parts = q.split('|');
+                const parts = q.split('|').map(part => part?.trim() || '');
                 if (parts.length < 3) {
                   return defaultQuestions[0];
                 }
                 return {
-                  question: parts[0].trim(),
-                  options: parts[1].split(',').map((o: string) => o.trim()),
-                  correctAnswer: parseInt(parts[2].trim()) || 0
+                  question: parts[0],
+                  options: (parts[1] || '').split(',').map(o => o?.trim() || ''),
+                  correctAnswer: parseInt(parts[2]) || 0
                 };
               } catch (e) {
                 return defaultQuestions[0];
