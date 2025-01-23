@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import AIGameDialog from './AIGameDialog';
-import AIChat from './AIChat';
-import { FaLeaf, FaMountain, FaHandHoldingHeart, FaYinYang } from 'react-icons/fa';
-import { HfInference } from '@huggingface/inference';
+import React, { useState, useEffect, useCallback } from "react";
+import AIGameDialog from "./AIGameDialog";
+import AIChat from "./AIChat";
+import {
+  FaMountain,
+  FaHandHoldingHeart,
+  FaYinYang,
+  FaBrain,
+} from "react-icons/fa";
 
-const hf = new HfInference(process.env.NEXT_PUBLIC_HF_TOKEN);
-
+// Define Question type
 type Question = {
   question: string;
   options: string[];
@@ -18,7 +21,7 @@ type GameType = {
   title: string;
   description: string;
   component: () => React.ReactNode;
-  color: {
+  color?: {
     background: string;
     titleText: string;
     paragraphText: string;
@@ -26,423 +29,485 @@ type GameType = {
   };
 };
 
-
-const generateQuizQuestions = async (theme: string) => {
+const getEmotionalQuestions = async (): Promise<string[]> => {
   try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
+    const response = await fetch("/api/chat", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt: `Génère 4 questions différentes sur le thème ${theme} avec leurs réponses. 
-        Format: question|option1,option2,option3,option4|indexReponseCorrecte`
-      })
+        prompt:
+          "Génère 3 questions introspectives sur les émotions et le développement personnel. Format: une question par ligne sans numérotation.",
+      }),
     });
 
     const data = await response.json();
-    const newQuestions = data.response
-      .split('\n')
-      .filter((q: string) => q.trim())
-      .map((q: string) => {
-        const parts = q.split('|');
-        if (parts.length < 3) {
-          return {
-            question: parts[0] || "Question par défaut",
-            options: ["Oui", "Non", "Peut-être", "Je ne sais pas"],
-            correctAnswer: 0
-          };
-        }
-        const [question, options, correctAnswer] = parts;
-        const optionsArray = options?.split(',') || ["Oui", "Non", "Peut-être", "Je ne sais pas"];
-        return {
-          question,
-          options: optionsArray,
-          correctAnswer: parseInt(correctAnswer) || 0
-        };
-      });
-    return newQuestions;
+    return data.response.split("\n").filter((q: string) => q.trim());
   } catch (error) {
-    console.error('Erreur lors de la génération des questions:', error);
-    return [];
-  }
-};
-
-const useQuizQuestions = (theme: string) => {
-  const [questions, setQuestions] = useState<Question[]>([]);
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      const newQuestions = await generateQuizQuestions(theme);
-      setQuestions(newQuestions);
-    };
-    fetchQuestions();
-  }, [theme]);
-
-  return questions;
-};
-
-const getEmotionalQuestions = async () => {
-  try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt: 'Génère 3 questions introspectives sur les émotions et le développement personnel'
-      })
-    });
-    const data = await response.json();
-    return data.response.split('\n').filter((q: string) => q.trim());
-  } catch (error) {
-    console.error('Erreur génération questions émotionnelles:', error);
+    console.error("Erreur génération questions émotionnelles:", error);
     return [
-      "Comment vous sentez-vous aujourd'hui ?",
-      "Quelle est votre plus grande source de joie ?",
-      "Qu'est-ce qui vous préoccupe le plus ?"
+      "Quelle émotion vous a le plus marqué récemment ?",
+      "Comment votre passé influence-t-il vos réactions émotionnelles ?",
+      "Quels sont vos mécanismes de défense émotionnels ?",
     ];
   }
 };
 
-const getChakraQuestions = async () => {
+const getChakraQuestions = async (currentPath?: string): Promise<string> => {
+  // Fallback questions for different paths
+  const fallbackQuestions = {
+    "Approches Comparatives":
+      "Comment l'étude comparative enrichit-elle votre compréhension spirituelle?|Élargit les perspectives,Développe l'empathie,Approfondit la sagesse,Transcende les frontières|2",
+    "Méditation Profonde":
+      "Qu'est-ce qui définit une pratique méditative authentique?|Présence totale,Lâcher-prise,Conscience de soi,Paix intérieure|0",
+    "Connexion Intérieure":
+      "Comment cultiver une connexion plus profonde avec soi-même?|Méditation,Introspection,Écoute intérieure,Acceptation|1",
+    "Énergétique Spirituelle":
+      "Quel est le rôle fondamental de l'énergie spirituelle?|Guérison,Transformation,Expansion de conscience,Alignement|2",
+    "Quiz des Traditions Spirituelles":
+      "Quel est le but ultime de votre exploration spirituelle?|Connaissance,Amour,Paix,Harmonie|3",
+    "Analyse des Systèmes de Croyances":
+      "Comment définissez-vous un système de croyances universel?|Valeurs communes,Pratiques identiques,Principes fondamentaux,Expérience personnelle|2",
+  };
+
+  // Si un chemin est fourni et qu'il existe dans les questions de secours, utiliser directement la question de secours
+  if (
+    currentPath &&
+    fallbackQuestions[currentPath as keyof typeof fallbackQuestions]
+  ) {
+    console.log("Using fallback question for path:", currentPath);
+    return fallbackQuestions[currentPath as keyof typeof fallbackQuestions];
+  }
+
+  // Sinon, essayer de générer une nouvelle question avec l'IA
   try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
+    const response = await fetch("/api/chat", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt: 'Génère une question sur les chakras avec 4 options de réponse et indique la bonne réponse (0-3)'
-      })
+        prompt: `Génère une question spirituelle profonde pour le thème "${
+          currentPath || "Spiritualité"
+        }".
+                Format requis: "Question|Option1,Option2,Option3,Option4|IndexRéponseCorrecte(0-3)"
+                Example: "Quelle est l'essence de la spiritualité?|Méditation,Amour,Sagesse,Harmonie|2"`,
+      }),
     });
+
     const data = await response.json();
-    return data.response;
+
+    if (!data.response) {
+      throw new Error("Réponse IA vide");
+    }
+
+    const validateQuestion = (question: string): boolean => {
+      const parts = question.split("|");
+      if (parts.length !== 3) return false;
+
+      const [, options, correctIndex] = parts;
+      const optionsArray = options.split(",");
+      const index = parseInt(correctIndex);
+
+      return (
+        optionsArray.length === 4 && !isNaN(index) && index >= 0 && index <= 3
+      );
+    };
+
+    // Valider la réponse de l'IA
+    if (validateQuestion(data.response)) {
+      return data.response;
+    }
+
+    console.warn("Format de question IA incorrect, utilisation du fallback");
   } catch (error) {
-    console.error('Erreur génération questions chakras:', error);
-    return null;
+    console.error("Erreur lors de la génération de la question:", error);
   }
+
+  // En cas d'erreur ou de format incorrect, retourner une question par défaut
+  return "Quelle est l'essence de votre quête spirituelle?|Connaissance,Paix,Transformation,Connexion|1";
 };
 
 const spiritualPaths = [
   {
     id: 1,
-    title: "Approches Comparatives",
-    description: "Exploration des différentes traditions spirituelles et philosophiques",
-    icon: FaLeaf,
-    color: "from-green-500 to-emerald-700",
+    title: "Quiz des Traditions Spirituelles",
+    icon: FaYinYang,
+    color: "from-purple-600 to-indigo-600",
+    description:
+      "Explorez la richesse et la diversité des traditions spirituelles",
     details: [
       "Analyse comparative des traditions",
       "Compréhension des systèmes de croyances",
-      "Recherche de points communs universels"
+      "Recherche de points communs universels",
     ],
     game: {
       title: "Quiz des Traditions Spirituelles",
-      description: "Testez vos connaissances sur les différentes traditions spirituelles du monde.",
+      description:
+        "Explorez et testez vos connaissances sur les traditions spirituelles",
+      component: () => (
+        <SpiritualQuiz
+          theme="spiritual"
+          path="Quiz des Traditions Spirituelles"
+        />
+      ),
       color: {
-        background: "from-green-800 to-green-600",
+        background: "from-purple-600 to-indigo-600",
         titleText: "text-white",
         paragraphText: "text-white/80",
-        buttonBg: "bg-green-600 hover:bg-green-500"
+        buttonBg: "bg-purple-600 hover:bg-purple-500",
       },
-      component: () => <SpiritualQuiz theme="comparatives" />
-    }
+    },
   },
   {
     id: 2,
-    title: "Méditation Profonde",
-    description: "Techniques de méditation avancées pour la transformation intérieure",
-    icon: FaMountain,
-    color: "from-blue-500 to-indigo-700",
+    title: "Analyse des Systèmes de Croyances",
+    icon: FaBrain,
+    color: "from-green-600 to-teal-600",
+    description:
+      "Approfondissez votre compréhension des différents systèmes spirituels",
     details: [
-      "Pleine conscience",
-      "Méditation transcendantale",
-      "Pratiques de mindfulness"
+      "Étude comparative des philosophies",
+      "Exploration des paradigmes spirituels",
+      "Découverte des principes fondamentaux",
     ],
     game: {
-      title: "Atelier de Méditation Guidée",
-      description: "Expérimentez différentes techniques de méditation.",
+      title: "Analyse des Systèmes de Croyances",
+      description: "Explorez les différents systèmes de croyances spirituelles",
+      component: () => (
+        <SpiritualQuiz
+          theme="spiritual"
+          path="Analyse des Systèmes de Croyances"
+        />
+      ),
       color: {
-        background: "from-blue-800 to-blue-600",
+        background: "from-green-600 to-teal-600",
         titleText: "text-white",
         paragraphText: "text-white/80",
-        buttonBg: "bg-blue-600 hover:bg-blue-500"
+        buttonBg: "bg-green-600 hover:bg-green-500",
       },
-      component: () => <SpiritualQuiz theme="meditation" />
-    }
+    },
   },
   {
     id: 3,
-    title: "Connexion Intérieure",
-    description: "Développement de l'intelligence émotionnelle et spirituelle",
-    icon: FaHandHoldingHeart,
-    color: "from-purple-500 to-pink-700",
+    title: "Méditation Profonde",
+    description:
+      "Techniques de méditation avancées pour la transformation intérieure",
+    icon: FaMountain,
+    color: "from-blue-600 to-indigo-700",
     details: [
-      "Travail sur l'ego",
-      "Développement de l'empathie",
-      "Alignement personnel"
+      "Pratiques méditatives profondes",
+      "Techniques de pleine conscience",
+      "Exploration de l'état de conscience",
     ],
     game: {
-      title: "Exploration de l'Intelligence Émotionnelle",
-      description: "Un jeu pour développer votre intelligence émotionnelle.",
+      title: "Méditation Profonde",
+      description: "Approfondissez votre pratique méditative",
+      component: () => <MeditationTimer />,
       color: {
-        background: "from-purple-800 to-purple-600",
+        background: "from-blue-600 to-indigo-700",
         titleText: "text-white",
         paragraphText: "text-white/80",
-        buttonBg: "bg-purple-600 hover:bg-purple-500"
+        buttonBg: "bg-blue-600 hover:bg-blue-500",
       },
-      component: () => <SpiritualQuiz theme="connexion" />
-    }
+    },
   },
   {
     id: 4,
+    title: "Connexion Intérieure",
+    description: "Développement de l'intelligence émotionnelle et spirituelle",
+    icon: FaHandHoldingHeart,
+    color: "from-pink-600 to-rose-700",
+    details: [
+      "Exploration émotionnelle",
+      "Développement personnel",
+      "Alignement intérieur",
+    ],
+    game: {
+      title: "Connexion Intérieure",
+      description: "Explorez et développez votre intelligence émotionnelle",
+      component: () => <EmotionalExploration onResponse={() => {}} />,
+      color: {
+        background: "from-pink-600 to-rose-700",
+        titleText: "text-white",
+        paragraphText: "text-white/80",
+        buttonBg: "bg-pink-600 hover:bg-pink-500",
+      },
+    },
+  },
+  {
+    id: 5,
     title: "Énergétique Spirituelle",
     description: "Exploration des énergies subtiles et des chakras",
     icon: FaYinYang,
-    color: "from-orange-500 to-red-700",
+    color: "from-orange-600 to-amber-700",
     details: [
-      "Équilibrage énergétique",
-      "Travail sur les blocages",
-      "Harmonisation des centres énergétiques"
+      "Compréhension des chakras",
+      "Circulation énergétique",
+      "Harmonisation des énergies",
     ],
     game: {
-      title: "Harmonisation des Chakras",
-      description: "Un jeu pour comprendre et équilibrer vos centres énergétiques.",
+      title: "Énergétique Spirituelle",
+      description: "Découvrez et équilibrez vos chakras",
+      component: () => <ChakraBalance onAnswer={() => {}} />,
       color: {
-        background: "from-orange-800 to-red-600",
+        background: "from-orange-600 to-amber-700",
         titleText: "text-white",
         paragraphText: "text-white/80",
-        buttonBg: "bg-red-600 hover:bg-red-500"
+        buttonBg: "bg-orange-600 hover:bg-orange-500",
       },
-      component: () => <SpiritualQuiz theme="energetique" />
-    }
-  }
+    },
+  },
 ];
 
-const SpiritualQuiz = ({ theme }: { theme: string }) => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [score, setScore] = useState(0);
-  const [showScore, setShowScore] = useState(false);
-  const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
-  const [availableQuestions, setAvailableQuestions] = useState<number[]>([]);
+// Define quiz questions for different spiritual paths
+const spiritualPathQuizzes: Record<string, Question[]> = {
+  "Quiz des Traditions Spirituelles": [
+    {
+      question: "Quel est le but ultime de votre exploration spirituelle?",
+      options: ["Connaissance", "Amour", "Paix", "Harmonie"],
+      correctAnswer: 3,
+    },
+    {
+      question:
+        "Comment percevez-vous la connexion entre différentes traditions spirituelles?",
+      options: [
+        "Complémentarité",
+        "Contradiction",
+        "Indifférence",
+        "Universalité",
+      ],
+      correctAnswer: 0,
+    },
+    {
+      question:
+        "Quelle approche vous attire le plus dans la compréhension spirituelle?",
+      options: ["Analytique", "Intuitive", "Émotionnelle", "Expérimentale"],
+      correctAnswer: 1,
+    },
+    {
+      question: "Quel aspect des traditions spirituelles vous fascine le plus?",
+      options: [
+        "Rituels",
+        "Philosophie",
+        "Pratiques méditatives",
+        "Mythologie",
+      ],
+      correctAnswer: 2,
+    },
+  ],
+  "Analyse des Systèmes de Croyances": [
+    {
+      question: "Comment définissez-vous un système de croyances universel?",
+      options: [
+        "Valeurs communes",
+        "Pratiques identiques",
+        "Principes fondamentaux",
+        "Expérience personnelle",
+      ],
+      correctAnswer: 2,
+    },
+    {
+      question:
+        "Quelle est votre approche principale pour comprendre différentes traditions?",
+      options: [
+        "Comparaison",
+        "Immersion",
+        "Analyse critique",
+        "Respect mutuel",
+      ],
+      correctAnswer: 3,
+    },
+    {
+      question:
+        "Quel élément recherchez-vous principalement dans l'étude des traditions?",
+      options: [
+        "Points communs",
+        "Différences",
+        "Origines historiques",
+        "Pratiques spirituelles",
+      ],
+      correctAnswer: 0,
+    },
+    {
+      question: "Comment percevez-vous la diversité des systèmes de croyances?",
+      options: ["Enrichissement", "Confusion", "Conflit", "Relativité"],
+      correctAnswer: 0,
+    },
+  ],
+};
+
+const SpiritualQuiz = ({ theme, path }: { theme: string; path?: string }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [score, setScore] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
-  useEffect(() => {
-    const generateInitialQuestions = async () => {
-      try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            prompt: `Génère 4 questions différentes sur le thème ${theme} avec leurs réponses. Format: question|option1,option2,option3,option4|indexReponseCorrecte 
-            Example:
-            Quelle est la principale caractéristique de la méditation?|La concentration,Le mouvement,Le bruit,Le stress|0`
-          })
-        });
-
-        const data = await response.json();
-        try {
-          if (!data.response) {
-            throw new Error('No response data');
-          }
-          
-          // Ensure we have default questions in case of parsing errors
-          const defaultQuestions = [{
-            question: "Question par défaut",
-            options: ["Oui", "Non", "Peut-être", "Je ne sais pas"],
-            correctAnswer: 0
-          }];
-
-          const parsedQuestions = (data.response || '')
-            .split('\n')
-            .filter((q: string) => q && typeof q === 'string' && q.trim())
-            .map((q: string) => {
-              try {
-                const parts = q.split('|').map(part => part?.trim() || '');
-                if (parts.length < 3) {
-                  return defaultQuestions[0];
-                }
-                return {
-                  question: parts[0],
-                  options: (parts[1] || '').split(',').map(o => o?.trim() || ''),
-                  correctAnswer: parseInt(parts[2]) || 0
-                };
-              } catch (e) {
-                return defaultQuestions[0];
-              }
-            });
-
-          setQuestions(parsedQuestions.length > 0 ? parsedQuestions : defaultQuestions);
-          setAvailableQuestions([...Array(parsedQuestions.length || 1).keys()]);
-        } catch (error) {
-          console.error("Error parsing questions:", error);
-          setQuestions([]); // Handle parsing errors appropriately
-        }
-      } catch (error) {
-        console.error('Erreur lors de la génération des questions:', error);
+  // Parse a question string into a Question object
+  const parseChakraQuestion = useCallback(
+    (questionString: string): Question => {
+      const parts = questionString.split("|");
+      if (parts.length !== 3) {
+        console.warn("Invalid question format:", questionString);
+        return {
+          question: "Question par défaut",
+          options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+          correctAnswer: 0,
+        };
       }
-    };
 
-    generateInitialQuestions();
-  }, [theme]);
+      return {
+        question: parts[0],
+        options: parts[1].split(","),
+        correctAnswer: parseInt(parts[2], 10),
+      };
+    },
+    []
+  );
 
-
-  useEffect(() => {
-    // Mélanger les questions disponibles de manière aléatoire
-    if (questions.length > 0) {
-      const shuffledQuestions = [...Array(questions.length).keys()];
-      for (let i = shuffledQuestions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledQuestions[i], shuffledQuestions[j]] = [shuffledQuestions[j], shuffledQuestions[i]];
+  // Generate initial questions based on the current path
+  const generateInitialQuestions = useCallback(async () => {
+    try {
+      // First, try to use predefined path-specific questions
+      if (path && spiritualPathQuizzes[path]) {
+        setQuestions(spiritualPathQuizzes[path]);
+        setCurrentQuestionIndex(0);
+        return;
       }
-      setAvailableQuestions(shuffledQuestions);
-      setCurrentQuestion(shuffledQuestions[0]);
+
+      // If no predefined questions, use getChakraQuestions
+      const initialQuestionString = await getChakraQuestions(path);
+      const parsedQuestion = parseChakraQuestion(initialQuestionString);
+      setQuestions([parsedQuestion]);
+      setCurrentQuestionIndex(0);
+    } catch (error) {
+      console.error("Error generating initial questions:", error);
+      // Fallback to a default question
+      const defaultQuestion: Question = {
+        question: "Quelle est votre approche spirituelle principale?",
+        options: ["Méditation", "Étude", "Pratique", "Contemplation"],
+        correctAnswer: 0,
+      };
+      setQuestions([defaultQuestion]);
     }
-  }, [questions]);
+  }, [path, parseChakraQuestion]);
 
-  const getNextQuestion = () => {
-    if (currentQuestion >= questions.length - 1 || answeredQuestions.size >= questions.length) {
-      setShowScore(true);
-      return;
-    }
-    return currentQuestion + 1;
-  };
-
+  // Use path-specific questions or default to general spiritual quiz
   useEffect(() => {
-    const generateInitialQuestions = async () => {
-      const defaultQuestions = [{
-        question: "Quelle est l'importance de la pratique spirituelle?",
-        options: ["Très importante", "Modérément importante", "Peu importante", "Pas importante"],
-        correctAnswer: 0
-      }];
-
-      try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            prompt: `Génère 4 questions différentes sur le thème ${theme} avec leurs réponses. Format: question|option1,option2,option3,option4|indexReponseCorrecte`
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        
-        if (!data || !data.response) {
-          throw new Error('Invalid response data');
-        }
-
-        const questions = data.response
-          .split('\n')
-          .filter((line: string) => line && line.trim())
-          .map((line: string) => {
-            const parts = line.split('|');
-            if (parts.length !== 3) {
-              return defaultQuestions[0];
-            }
-            const [question, options, answer] = parts;
-            const optionsArray = options.split(',').filter(Boolean);
-            return {
-              question: question.trim(),
-              options: optionsArray.length >= 4 ? optionsArray.map(opt => opt.trim()) : defaultQuestions[0].options,
-              correctAnswer: Number.isInteger(parseInt(answer)) ? parseInt(answer) : 0
-            };
-          });
-
-        setQuestions(questions.length > 0 ? questions : defaultQuestions);
-        setCurrentQuestion(0);
-        setAnsweredQuestions(new Set());
-      } catch (error) {
-        console.error('Error generating questions:', error);
-        setQuestions(defaultQuestions);
-      }
-    };
-
     generateInitialQuestions();
-  }, [theme]);
+  }, [path, generateInitialQuestions]);
 
-  const handleAnswerClick = (selectedAnswer: number) => {
-    if (questions.length > 0) {
-      const isCorrect = selectedAnswer === questions[currentQuestion].correctAnswer;
+  // Handle answer selection
+  const handleAnswerSelect = useCallback(
+    (answer: string) => {
+      if (quizCompleted) return;
+
+      setSelectedAnswer(answer);
+
+      // Check if the answer is correct
+      const currentQuestion = questions[currentQuestionIndex];
+      const correctOptionIndex = currentQuestion.correctAnswer;
+      const isCorrect = currentQuestion.options[correctOptionIndex] === answer;
+
+      // Update score
       if (isCorrect) {
-        setScore(score + 1);
+        setScore((prevScore) => prevScore + 1);
       }
-      setAnsweredQuestions(prev => new Set(prev).add(currentQuestion));
 
-      const nextQuestion = getNextQuestion();
-      if (nextQuestion !== undefined) {
-        setCurrentQuestion(nextQuestion);
-      } else {
-        setShowScore(true);
-      }
-    }
+      // Move to next question or complete quiz
+      setTimeout(() => {
+        if (currentQuestionIndex < questions.length - 1) {
+          setCurrentQuestionIndex((prev) => prev + 1);
+          setSelectedAnswer(null);
+        } else {
+          setQuizCompleted(true);
+        }
+      }, 1000);
+    },
+    [currentQuestionIndex, questions, quizCompleted]
+  );
+
+  // Quiz theme configuration
+  const quizTheme = {
+    spiritual: {
+      bgColor: "bg-purple-600",
+      textColor: "text-white",
+      buttonColor: "bg-purple-500 hover:bg-purple-600",
+    },
+    // Add more themes if needed
   };
 
-  const resetQuiz = () => {
-    setShowScore(false);
-    setScore(0);
-    setAnsweredQuestions(new Set());
-    setCurrentQuestion(0);
-    setAvailableQuestions([...Array(questions.length).keys()]);
-  };
-
+  // Render quiz content
   return (
-    <div className="space-y-6">
-      {!showScore ? (
-        <>
+    <div
+      className={`p-8 rounded-xl ${
+        quizTheme[theme as keyof typeof quizTheme].bgColor
+      } text-white`}
+    >
+      {!quizCompleted ? (
+        <div>
           {questions.length > 0 && (
-            <>
-              <h3 className="text-xl font-semibold mb-4">
-                Question {currentQuestion + 1}/{questions.length}
+            <div>
+              <h3 className="text-2xl font-bold mb-6">
+                {questions[currentQuestionIndex].question}
               </h3>
-              <p className="mb-4">{questions[currentQuestion].question}</p>
-              <div className="space-y-2">
-                {questions[currentQuestion].options.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerClick(index)}
-                    className="w-full p-3 text-left rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                  >
-                    {option}
-                  </button>
-                ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {questions[currentQuestionIndex].options.map(
+                  (option, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelect(option)}
+                      className={`
+                      p-4 rounded-lg text-left transition-all duration-300
+                      ${
+                        selectedAnswer === option
+                          ? option ===
+                            questions[currentQuestionIndex].options[
+                              questions[currentQuestionIndex].correctAnswer
+                            ]
+                            ? "bg-green-500"
+                            : "bg-red-500"
+                          : "bg-white/20 hover:bg-white/30"
+                      }
+                    `}
+                    >
+                      {option}
+                    </button>
+                  )
+                )}
               </div>
-            </>
+            </div>
           )}
-        </>
+        </div>
       ) : (
-        <div className="text-center space-y-4">
-          <h3 className="text-2xl font-bold mb-4">Quiz terminé !</h3>
-          <p className="text-xl">
-            Votre score : {score}/{questions.length}
+        <div className="text-center">
+          <h3 className="text-3xl font-bold mb-6">Quiz Terminé</h3>
+          <p className="text-xl mb-4">
+            Votre score : {score} / {questions.length}
           </p>
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold">Réponses correctes :</h4>
-            {questions.map((q, idx) => (
-              <div key={idx} className="bg-white/10 p-4 rounded-lg">
-                <p className="font-medium">{q.question}</p>
-                <p className="text-green-400">Réponse correcte : {q.options[q.correctAnswer]}</p>
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={resetQuiz}
-            className="mt-6 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            Recommencer le quiz
-          </button>
+          <p className="text-lg">
+            {score === questions.length
+              ? "Félicitations ! Résultat parfait !"
+              : "Continuez à explorer et à apprendre"}
+          </p>
         </div>
       )}
     </div>
   );
 };
 
-const MeditationTimer = () => {
+/**
+ * Composant de minuterie pour les séances de méditation
+ * Prévu pour être intégré dans les parcours de méditation via spiritualPaths
+ */
+interface TimerProps {
+  onComplete?: () => void;
+  onProgress?: (time: number) => void;
+}
+
+const MeditationTimer = ({ onComplete, onProgress }: TimerProps) => {
   const [time, setTime] = useState(300); // 5 minutes
   const [isActive, setIsActive] = useState(false);
 
@@ -453,8 +518,12 @@ const MeditationTimer = () => {
         setTime((time) => time - 1);
       }, 1000);
     }
+    if (time === 0) {
+      onComplete?.();
+    }
+    onProgress?.(time);
     return () => clearInterval(interval);
-  }, [isActive, time]);
+  }, [isActive, time, onComplete, onProgress]);
 
   const toggleTimer = () => {
     setIsActive(!isActive);
@@ -467,19 +536,19 @@ const MeditationTimer = () => {
 
   return (
     <div className="text-center space-y-6">
-      <div className="text-4xl font-bold">
-        {Math.floor(time / 60)}:{(time % 60).toString().padStart(2, '0')}
+      <div className="text-4xl font-bold text-yellow-500">
+        {Math.floor(time / 60)}:{(time % 60).toString().padStart(2, "0")}
       </div>
       <div className="space-x-4">
         <button
           onClick={toggleTimer}
-          className="px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20"
+          className="px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white"
         >
-          {isActive ? 'Pause' : 'Démarrer'}
+          {isActive ? "Pause" : "Démarrer"}
         </button>
         <button
           onClick={resetTimer}
-          className="px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20"
+          className="px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white"
         >
           Réinitialiser
         </button>
@@ -488,10 +557,14 @@ const MeditationTimer = () => {
   );
 };
 
-const EmotionalExploration = () => {
+interface EmotionalExplorationProps {
+  onResponse: (answer: string) => void;
+}
+
+const EmotionalExploration = ({ onResponse }: EmotionalExplorationProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState("");
   const [questions, setQuestions] = useState<string[]>([]);
 
   useEffect(() => {
@@ -505,7 +578,8 @@ const EmotionalExploration = () => {
   const handleSubmit = () => {
     if (answer.trim()) {
       setAnswers([...answers, answer]);
-      setAnswer('');
+      onResponse(answer); // Informer le parent de la réponse
+      setAnswer("");
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
       }
@@ -519,12 +593,20 @@ const EmotionalExploration = () => {
           <h3 className="text-xl font-semibold mb-4">
             {questions[currentQuestion]}
           </h3>
-          <textarea
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            className="w-full p-3 rounded-lg bg-white/10 text-white"
-            rows={4}
-          />
+          <div className="form-group">
+            <label htmlFor="emotional-answer" className="sr-only">
+              Votre réponse à la question
+            </label>
+            <textarea
+              id="emotional-answer"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
+              rows={4}
+              placeholder="Écrivez votre réponse ici..."
+              aria-label="Réponse à la question émotionnelle"
+            />
+          </div>
           <button
             onClick={handleSubmit}
             className="px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20"
@@ -542,69 +624,154 @@ const EmotionalExploration = () => {
   );
 };
 
-const ChakraBalance = () => {
-  const [currentQuestion, setCurrentQuestion] = useState<any>(null);
+interface ChakraBalanceProps {
+  onAnswer: (answer: string, isCorrect: boolean) => void;
+}
+
+const ChakraBalance = ({ onAnswer }: ChakraBalanceProps) => {
+  interface ChakraQuestion {
+    question: string;
+    options: string[];
+    correctAnswer: number;
+  }
+
   const [loading, setLoading] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState<ChakraQuestion | null>(
+    null
+  );
+  const [answer, setAnswer] = useState("");
+  const [currentPath, setCurrentPath] = useState<string>(
+    "Approches Comparatives"
+  );
+
+  // Mettre à jour le chemin actuel en fonction du contexte
+  useEffect(() => {
+    const selectedPath = spiritualPaths.find(
+      (path) =>
+        path.title === "Approches Comparatives" ||
+        path.title === "Méditation Profonde" ||
+        path.title === "Connexion Intérieure" ||
+        path.title === "Énergétique Spirituelle"
+    );
+
+    if (selectedPath) {
+      setCurrentPath(selectedPath.title);
+    }
+  }, []);
+
+  const parseChakraQuestion = (question: string): ChakraQuestion | null => {
+    try {
+      const parts: string[] = question.split("|").map((part) => part.trim());
+
+      const [questionText, options, correctAnswer] = parts;
+
+      return {
+        question: questionText,
+        options: options.split(",").map((opt) => opt.trim()),
+        correctAnswer: parseInt(correctAnswer, 10) || 0,
+      };
+    } catch (error) {
+      console.error("Erreur lors du parsing de la question chakra:", error);
+      return null;
+    }
+  };
+
+  const loadNewQuestion = useCallback(async () => {
+    setLoading(true);
+    const question = await getChakraQuestions(currentPath);
+    const parsedQuestion = question ? parseChakraQuestion(question) : null;
+    if (parsedQuestion) {
+      setCurrentQuestion(parsedQuestion);
+    }
+    setLoading(false);
+  }, [currentPath]);
 
   useEffect(() => {
     loadNewQuestion();
-  }, []);
+  }, [loadNewQuestion]);
 
-  const loadNewQuestion = async () => {
-    setLoading(true);
-    const question = await getChakraQuestions();
-    if (question) {
-      setCurrentQuestion(question);
-    }
-    setLoading(false);
+  const handleSubmit = () => {
+    if (!currentQuestion) return;
+
+    const selectedOptionIndex = currentQuestion.options.findIndex(
+      (opt) => opt.trim() === answer.trim()
+    );
+
+    const isCorrect = selectedOptionIndex === currentQuestion.correctAnswer;
+
+    onAnswer(answer, isCorrect);
+
+    // Charger une nouvelle question après la soumission
+    loadNewQuestion();
+
+    // Réinitialiser la réponse
+    setAnswer("");
   };
 
+  if (loading || !currentQuestion) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 p-4">
-      {loading ? (
-        <div className="text-center">
-          <p className="text-white">Chargement de la question...</p>
+    <div className="bg-gradient-to-br from-purple-900 to-indigo-900 text-white p-8 rounded-xl shadow-2xl">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-yellow-500 mb-4 text-center">
+          {currentQuestion.question}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {currentQuestion.options.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => setAnswer(option)}
+              className={`p-4 rounded-lg text-left transition-all duration-300 
+                ${
+                  answer === option
+                    ? "bg-purple-600 text-white"
+                    : "bg-white/10 hover:bg-white/20"
+                }`}
+            >
+              {option}
+            </button>
+          ))}
         </div>
-      ) : currentQuestion ? (
-        <div className="bg-white/10 rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-4">{currentQuestion.question}</h3>
-          <div className="space-y-3">
-            {currentQuestion.options.map((option: string, index: number) => (
-              <button
-                key={index}
-                onClick={() => loadNewQuestion()}
-                className="w-full p-3 text-left rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="text-center">
-          <p className="text-white">Une erreur est survenue lors du chargement de la question</p>
-          <button
-            onClick={loadNewQuestion}
-            className="mt-4 px-6 py-2 bg-purple-600 rounded-lg hover:bg-purple-700"
-          >
-            Réessayer
-          </button>
-        </div>
-      )}
+      </div>
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={handleSubmit}
+          disabled={!answer}
+          className={`px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 
+            ${
+              answer
+                ? "bg-purple-600 hover:bg-purple-700 text-white"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+        >
+          Soumettre la réponse
+        </button>
+      </div>
     </div>
   );
 };
 
 const NumerologyCalculator: React.FC = () => {
-  const [name, setName] = useState<string>('');
-  const [birthDate, setBirthDate] = useState<string>('');
+  const [name, setName] = useState<string>("");
+  const [birthDate, setBirthDate] = useState<string>("");
   const [result, setResult] = useState<string | null>(null);
 
   const calculateLifePath = (date: string) => {
-    const numbers = date.split('-').join('').split('').map(Number);
+    const numbers = date.split("-").join("").split("").map(Number);
     const sum = numbers.reduce((a, b) => a + b, 0);
     if (sum <= 9) return sum;
-    return parseInt(sum.toString().split('').reduce((a, b) => (parseInt(a) + parseInt(b)).toString()));
+    return parseInt(
+      sum
+        .toString()
+        .split("")
+        .reduce((a, b) => (parseInt(a) + parseInt(b)).toString())
+    );
   };
 
   const generateNumerologyReading = async () => {
@@ -624,26 +791,32 @@ Format souhaité avec balises de couleur:
 
 Note: Utilise ces balises de couleur pour chaque section.`;
 
-      const response = await hf.textGeneration({
-        model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
-        inputs: prompt,
-        parameters: {
-          max_new_tokens: 500,
-          temperature: 0.7,
-          top_p: 0.9,
-        }
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+        }),
       });
 
-      setResult(response.generated_text);
+      const data = await response.json();
+
+      setResult(data.response);
     } catch (error) {
-      console.error('Error:', error);
-      setResult("Une erreur est survenue lors de la génération de l'interprétation.");
+      console.error("Error:", error);
+      setResult(
+        "Une erreur est survenue lors de la génération de l'interprétation."
+      );
     }
   };
 
   return (
     <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
-      <h3 className="text-2xl font-bold text-white mb-6">Calcul Numérologique</h3>
+      <h3 className="text-2xl font-bold text-white mb-6">
+        Calcul Numérologique
+      </h3>
 
       <div className="space-y-4">
         <div>
@@ -659,12 +832,19 @@ Note: Utilise ces balises de couleur pour chaque section.`;
 
         <div>
           <label className="block text-white mb-2">Date de naissance</label>
-          <input
-            type="date"
-            value={birthDate}
-            onChange={(e) => setBirthDate(e.target.value)}
-            className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
-          />
+          <div className="form-group">
+            <label htmlFor="birth-date-input" className="block text-white mb-2">
+              Date de naissance
+            </label>
+            <input
+              id="birth-date-input"
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
+              aria-label="Sélectionner votre date de naissance"
+            />
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -680,8 +860,8 @@ Note: Utilise ces balises de couleur pour chaque section.`;
             <button
               onClick={() => {
                 setResult(null);
-                setName('');
-                setBirthDate('');
+                setName("");
+                setBirthDate("");
               }}
               className="w-full py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg font-medium
                        hover:from-red-600 hover:to-pink-600 transition-all duration-200"
@@ -694,17 +874,32 @@ Note: Utilise ces balises de couleur pour chaque section.`;
         {result && (
           <div className="mt-6 p-6 bg-white/10 rounded-lg">
             <div className="prose prose-invert">
-              {result.split('\n').map((line, i) => {
-                  if (line.includes('[purple]')) {
-                    return <p key={i} className="text-purple-400 font-bold text-xl">{line.replace('[purple]', '').replace('[/purple]', '')}</p>
-                  } else if (line.includes('[blue]')) {
-                    return <p key={i} className="text-blue-400 font-bold text-xl">{line.replace('[blue]', '').replace('[/blue]', '')}</p>
-                  } else if (line.includes('[green]')) {
-                    return <p key={i} className="text-green-400 font-bold text-xl">{line.replace('[green]', '').replace('[/green]', '')}</p>
-                  }
-                  return <p key={i} className="text-white">{line}</p>
-                })
-              }
+              {result.split("\n").map((line, i) => {
+                if (line.includes("[purple]")) {
+                  return (
+                    <p key={i} className="text-purple-400 font-bold text-xl">
+                      {line.replace("[purple]", "").replace("[/purple]", "")}
+                    </p>
+                  );
+                } else if (line.includes("[blue]")) {
+                  return (
+                    <p key={i} className="text-blue-400 font-bold text-xl">
+                      {line.replace("[blue]", "").replace("[/blue]", "")}
+                    </p>
+                  );
+                } else if (line.includes("[green]")) {
+                  return (
+                    <p key={i} className="text-green-400 font-bold text-xl">
+                      {line.replace("[green]", "").replace("[/green]", "")}
+                    </p>
+                  );
+                }
+                return (
+                  <p key={i} className="text-white">
+                    {line}
+                  </p>
+                );
+              })}
             </div>
           </div>
         )}
@@ -717,39 +912,41 @@ const EnneagramCalculator: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [result, setResult] = useState<string | null>(null);
-  const [name, setName] = useState('');
-  const [fears, setFears] = useState<string[]>(['']);
   const [questions, setQuestions] = useState<string[]>([]);
 
   useEffect(() => {
     const generateQuestions = async () => {
       try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
+        const response = await fetch("/api/chat", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            prompt: "Génère 5 questions différentes pour un test d'ennéagramme qui aide à découvrir son type de personnalité. Les questions doivent être introspectives et varier à chaque fois."
-          })
+            prompt:
+              "Génère 5 questions différentes pour un test d'ennéagramme qui aide à découvrir son type de personnalité. Les questions doivent être introspectives et varier à chaque fois.",
+          }),
         });
 
         const data = await response.json();
+        if (!data || !data.response) {
+          throw new Error("Réponse invalide du serveur");
+        }
         const generatedQuestions = data.response
-          .split('\n')
+          .split("\n")
           .filter((q: string) => q.trim().length > 0)
           .slice(0, 5);
 
         setQuestions(generatedQuestions);
       } catch (error) {
-        console.error('Erreur lors de la génération des questions:', error);
+        console.error("Erreur lors de la génération des questions:", error);
         // Questions de secours en cas d'erreur
         setQuestions([
           "Comment réagissez-vous face aux défis ?",
           "Quelle est votre plus grande motivation ?",
           "Comment gérez-vous vos émotions ?",
           "Que recherchez-vous dans vos relations ?",
-          "Comment prenez-vous vos décisions ?"
+          "Comment prenez-vous vos décisions ?",
         ]);
       }
     };
@@ -760,40 +957,40 @@ const EnneagramCalculator: React.FC = () => {
   const enneagramTypes = {
     1: {
       title: "Le Perfectionniste",
-      description: "Rationnel, idéaliste, moral, perfectionniste et organisé."
+      description: "Rationnel, idéaliste, moral, perfectionniste et organisé.",
     },
     2: {
       title: "L'Aidant",
-      description: "Bienveillant, généreux, possessif et altruiste."
+      description: "Bienveillant, généreux, possessif et altruiste.",
     },
     3: {
       title: "Le Battant",
-      description: "Adaptable, ambitieux, orienté image et succès."
+      description: "Adaptable, ambitieux, orienté image et succès.",
     },
     4: {
       title: "L'Individualiste",
-      description: "Créatif, sensible, dramatique et introspectif."
+      description: "Créatif, sensible, dramatique et introspectif.",
     },
     5: {
       title: "L'Observateur",
-      description: "Perspicace, innovant, isolé et analytique."
+      description: "Perspicace, innovant, isolé et analytique.",
     },
     6: {
       title: "Le Loyaliste",
-      description: "Engagé, orienté sécurité, anxieux et vigilant."
+      description: "Engagé, orienté sécurité, anxieux et vigilant.",
     },
     7: {
       title: "L'Enthousiaste",
-      description: "Spontané, versatile, distrait et optimiste."
+      description: "Spontané, versatile, distrait et optimiste.",
     },
     8: {
       title: "Le Chef",
-      description: "Puissant, dominateur, confiant et décisif."
+      description: "Puissant, dominateur, confiant et décisif.",
     },
     9: {
       title: "Le Médiateur",
-      description: "Réceptif, rassurant, complaisant et apaisant."
-    }
+      description: "Réceptif, rassurant, complaisant et apaisant.",
+    },
   };
 
   const handleAnswer = (score: number) => {
@@ -805,7 +1002,9 @@ const EnneagramCalculator: React.FC = () => {
     } else {
       const maxScore = Math.max(...newAnswers);
       const type = newAnswers.indexOf(maxScore) + 1;
-      setResult(JSON.stringify(enneagramTypes[type as keyof typeof enneagramTypes]));
+      setResult(
+        JSON.stringify(enneagramTypes[type as keyof typeof enneagramTypes])
+      );
     }
   };
 
@@ -817,12 +1016,18 @@ const EnneagramCalculator: React.FC = () => {
 
   return (
     <div className="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
-      <h3 className="text-2xl font-bold text-white mb-6">Test d'Ennéagramme</h3>
+      <h3 className="text-2xl font-bold text-white mb-6">
+        Test d&apos;Ennéagramme
+      </h3>
 
       {!result ? (
         <div className="space-y-6">
-          <p className="text-white mb-4">Question {currentQuestion + 1}/{questions.length}</p>
-          <p className="text-white text-lg mb-6">{questions[currentQuestion]}</p>
+          <p className="text-white mb-4">
+            Question {currentQuestion + 1}/{questions.length}
+          </p>
+          <p className="text-white text-lg mb-6">
+            {questions[currentQuestion]}
+          </p>
 
           <div className="grid grid-cols-5 gap-4">
             {[1, 2, 3, 4, 5].map((score) => (
@@ -837,7 +1042,7 @@ const EnneagramCalculator: React.FC = () => {
             ))}
           </div>
           <p className="text-white text-sm text-center mt-4">
-            1 = Pas du tout d'accord, 5 = Totalement d'accord
+            1 = Pas du tout d&apos;accord, 5 = Totalement d&apos;accord
           </p>
         </div>
       ) : (
@@ -848,16 +1053,29 @@ const EnneagramCalculator: React.FC = () => {
                 <h4 className="text-2xl font-bold text-white mb-4 text-center">
                   {JSON.parse(result).title}
                 </h4>
-                <p className="text-white text-lg">{JSON.parse(result).description}</p>
+                <p className="text-white text-lg">
+                  {JSON.parse(result).description}
+                </p>
               </div>
 
               <div className="bg-gradient-to-r from-green-500 to-teal-500 p-6 rounded-lg">
-                <h5 className="text-xl font-semibold text-white mb-3">Conseils de développement :</h5>
+                <h5 className="text-xl font-semibold text-white mb-3">
+                  Conseils de développement :
+                </h5>
                 <ul className="text-white space-y-2">
-                  <li>• Prenez conscience de vos points forts et acceptez vos zones d'amélioration</li>
-                  <li>• Pratiquez l'auto-observation sans jugement</li>
-                  <li>• Explorez différentes perspectives pour enrichir votre compréhension</li>
-                  <li>• Cultivez la patience dans votre processus de croissance personnelle</li>
+                  <li>
+                    • Prenez conscience de vos points forts et acceptez vos
+                    zones d&apos;amélioration
+                  </li>
+                  <li>• Pratiquez l&apos;auto-observation sans jugement</li>
+                  <li>
+                    • Explorez différentes perspectives pour enrichir votre
+                    compréhension
+                  </li>
+                  <li>
+                    • Cultivez la patience dans votre processus de croissance
+                    personnelle
+                  </li>
                 </ul>
               </div>
             </div>
@@ -878,26 +1096,108 @@ const EnneagramCalculator: React.FC = () => {
 const ParcoursSpirituels = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [selectedGame, setSelectedGame] = useState<GameType | null>(null);
-  const [fears, setFears] = useState<string[]>(['']);
-  const [name, setName] = useState('');
+  const [fears, setFears] = useState<string[]>([""]);
+  const [name, setName] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [result, setResult] = useState<string | null>(null);
 
+  const hideInitialText = () => {
+    const selectPathText = document.querySelector(
+      ".select-path-text"
+    ) as HTMLElement;
+    const clickDetailText = document.querySelector(
+      ".click-detail-text"
+    ) as HTMLElement;
+
+    if (selectPathText) {
+      selectPathText.style.display = "none";
+    }
+
+    if (clickDetailText) {
+      clickDetailText.style.display = "none";
+    }
+  };
+
+  // Écouter les événements des composants enfants
+  useEffect(() => {
+    const handleMeditationComplete = (e: CustomEvent) => {
+      const duration = e.detail.duration;
+      setAnswers((prev) => [...prev, duration]);
+      setResult(`Session de méditation de ${duration} secondes complétée`);
+    };
+
+    const handleEmotionalResponse = (e: CustomEvent) => {
+      setAnswers((prev) => [...prev, e.detail.answer]);
+      setCurrentQuestion((prev) => prev + 1);
+    };
+
+    const handleChakraAnswer = (e: CustomEvent) => {
+      const { answer, isCorrect } = e.detail;
+      setAnswers((prev) => [...prev, answer]);
+      setResult(isCorrect ? "Bonne réponse !" : "Continuez d'essayer");
+    };
+
+    window.addEventListener(
+      "meditation_complete",
+      handleMeditationComplete as EventListener
+    );
+    window.addEventListener(
+      "emotional_response",
+      handleEmotionalResponse as EventListener
+    );
+    window.addEventListener(
+      "chakra_answer",
+      handleChakraAnswer as EventListener
+    );
+
+    return () => {
+      window.removeEventListener(
+        "meditation_complete",
+        handleMeditationComplete as EventListener
+      );
+      window.removeEventListener(
+        "emotional_response",
+        handleEmotionalResponse as EventListener
+      );
+      window.removeEventListener(
+        "chakra_answer",
+        handleChakraAnswer as EventListener
+      );
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
-      <div className="container mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-center text-white mb-12 animate__animated animate__fadeInDown">
-          Parcours Spirituels
-        </h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16 mt-10">
+      <div className="container mx-auto mt-20">
+        <div className="initial-text-container text-center mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold text-yellow-500 mb-12 animate__animated animate__fadeInDown">
+            Parcours Spirituels
+          </h2>
+          <p className="select-path-text text-xl text-gray-300 mb-6">
+            Sélectionnez un parcours pour commencer votre voyage intérieur
+          </p>
+          <p className="click-detail-text text-lg text-gray-400 mb-6">
+            Cliquez sur un détail pour découvrir un jeu ou une activité
+            interactive
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {spiritualPaths.map((path) => (
-            <div 
+            <div
               key={path.id}
+              onClick={() => {
+                setSelectedGame(path.game);
+                hideInitialText(); // Call hideInitialText when a game is selected
+              }}
               className={`
                 relative group transform transition-all duration-500 
-                ${activeCard === path.id ? 'scale-105 rotate-3 z-50' : 'hover:scale-105 hover:rotate-3'}
+                ${
+                  activeCard === path.id
+                    ? "scale-105 rotate-3 z-50"
+                    : "hover:scale-105 hover:rotate-3"
+                }
                 bg-gradient-to-br ${path.color} 
                 rounded-2xl shadow-2xl overflow-hidden
                 cursor-pointer
@@ -917,8 +1217,8 @@ const ParcoursSpirituels = () => {
 
                 <ul className="space-y-2 text-sm md:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500">
                   {path.details.map((detail, index) => (
-                    <li 
-                      key={index} 
+                    <li
+                      key={index}
                       className="flex items-center text-white/90 hover:text-yellow-300 transition-colors duration-300"
                       onClick={() => setSelectedGame(path.game)}
                     >
@@ -933,15 +1233,46 @@ const ParcoursSpirituels = () => {
         </div>
 
         <div className="mt-12 bg-gray-800 rounded-xl p-8">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4 text-gray-100">
-              Sélectionnez un parcours
-            </h3>
-            <p className="text-gray-200">
-              Cliquez sur un détail pour découvrir un jeu ou une activité interactive.
-            </p>
-          </div>
-          {selectedGame && selectedGame.component()}
+          <div className="text-center"></div>
+          {selectedGame && (
+            <div>
+              {selectedGame.title !== "Quiz des Traditions Spirituelles" &&
+                selectedGame.component()}
+              {selectedGame.title === "Quiz des Traditions Spirituelles" && (
+                <SpiritualQuiz
+                  theme="spiritual"
+                  path="Quiz des Traditions Spirituelles"
+                />
+              )}
+            </div>
+          )}
+
+          {/* Affichage du suivi de progression */}
+          {result && (
+            <div className="mt-8 p-6 bg-white/10 rounded-lg text-white">
+              <h4 className="text-xl font-bold mb-4">Progression</h4>
+              <div className="space-y-4">
+                <p className="text-lg">{result}</p>
+                {answers.length > 0 && (
+                  <div className="space-y-2">
+                    <h5 className="font-semibold">Historique des réponses :</h5>
+                    <ul className="list-disc pl-5">
+                      {answers.map((answer, index) => (
+                        <li key={index} className="text-gray-300">
+                          {answer}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <div className="mt-4">
+                  <p className="text-sm text-gray-400">
+                    Question actuelle : {currentQuestion + 1}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Section AI Chat */}
@@ -950,10 +1281,9 @@ const ParcoursSpirituels = () => {
         </div>
 
         {/* Section AI Dialog */}
-        <div className="mt-12 max-w-3xl mxauto">
+        <div className="mt-12 max-w-3xl mx-auto">
           <AIGameDialog />
         </div>
-
 
         {/* Section Numérologie */}
         <div className="mt-12 max-w-3xl mx-auto">
@@ -967,7 +1297,9 @@ const ParcoursSpirituels = () => {
 
         {/* Section Transformation des Peurs */}
         <div className="mt-12 bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
-          <h3 className="text-2xl font-bold text-white mb-6">Transformation des Peurs</h3>
+          <h3 className="text-2xl font-bold text-white mb-6">
+            Transformation des Peurs
+          </h3>
 
           <div className="mb-6">
             <input
@@ -979,9 +1311,11 @@ const ParcoursSpirituels = () => {
             />
           </div>
 
-          <div className="grid gridcols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h4 className="text-xl font-semibold text-white mb-4">Mes Peurs</h4>
+              <h4 className="text-xl font-semibold text-white mb-4">
+                Mes Peurs
+              </h4>
               {fears.map((fear, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <input
@@ -1000,7 +1334,7 @@ const ParcoursSpirituels = () => {
                       if (fear.trim()) {
                         const newFears = [...fears];
                         if (index === fears.length - 1) {
-                          newFears.push('');
+                          newFears.push("");
                         }
                         newFears[index] = fear.trim();
                         setFears(newFears);
@@ -1015,17 +1349,24 @@ const ParcoursSpirituels = () => {
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-xl font-semibold text-white mb-4">Mes Affirmations Positives</h4>
+              <h4 className="text-xl font-semibold text-white mb-4">
+                Mes Affirmations Positives
+              </h4>
               <div className="space-y-2">
-                {fears.map((fear, index) => (
-                  fear.trim() && (
-                    <div key={index} className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20">
-                      <p className="text-white">
-                        Moi {name ? name : ""}, {generatePositiveAffirmation(fear)}
-                      </p>
-                    </div>
-                  )
-                ))}
+                {fears.map(
+                  (fear, index) =>
+                    fear.trim() && (
+                      <div
+                        key={index}
+                        className="p-4 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20"
+                      >
+                        <p className="text-white">
+                          Moi {name ? name : ""},{" "}
+                          {generatePositiveAffirmation(fear)}
+                        </p>
+                      </div>
+                    )
+                )}
               </div>
             </div>
           </div>
@@ -1037,31 +1378,28 @@ const ParcoursSpirituels = () => {
 
 const generatePositiveAffirmation = (fear: string): string => {
   const fearLower = fear.toLowerCase();
-  if (fearLower.includes('mort')) {
+  if (fearLower.includes("mort")) {
     return "je célèbre chaque instant de la vie avec gratitude et sérénité";
   }
-  if (fearLower.includes('chat')) {
+  if (fearLower.includes("chat")) {
     return "je ressens une profonde paix et harmonie en présence des félins";
   }
-  if (fearLower.includes('chien')) {
+  if (fearLower.includes("chien")) {
     return "j'apprécie la loyauté et l'amour inconditionnel des canidés";
   }
-  if (fearLower.includes('hauteur')) {
+  if (fearLower.includes("hauteur")) {
     return "je savoure la liberté et la beauté des points de vue élevés";
   }
-  if (fearLower.includes('noir') || fearLower.includes('obscurité')) {
-    return "je trouve le calme et la paix dans le silence de la nuit";
-  }
-  if (fearLower.includes('échec')) {
+  if (fearLower.includes("échec")) {
     return "je transforme chaque défi en opportunité de croissance";
   }
-  if (fearLower.includes('rejet')) {
+  if (fearLower.includes("rejet")) {
     return "je rayonne de confiance et d'authenticité dans mes relations";
   }
-  if (fearLower.includes('solitude')) {
+  if (fearLower.includes("solitude")) {
     return "je cultive une relation enrichissante avec moi-même";
   }
-  if (fearLower.includes('avenir')) {
+  if (fearLower.includes("avenir")) {
     return "j'avance avec confiance sur mon chemin de vie";
   }
   return "je m'épanouis pleinement dans ma force intérieure";
