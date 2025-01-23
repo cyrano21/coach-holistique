@@ -1,0 +1,19 @@
+.hero-title {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: white;
+  background-image: linear-gradient(to right, #FFD700, #FDB931, #F0B90B);
+  background-size: 200% auto;
+}
+
+.hero-description {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.hero-floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+}

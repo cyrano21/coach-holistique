@@ -68,7 +68,7 @@ const CoachingPersonal = () => {
             className="text-4xl font-light text-center mb-16"
             variants={fadeInUp}
           >
-            Qu'est-ce que le Coaching Personnalisé ?
+            Qu&apos;est-ce que le Coaching Personnalisé ?
           </motion.h2>
           
           <div className="grid md:grid-cols-2 gap-12">
@@ -77,7 +77,7 @@ const CoachingPersonal = () => {
               variants={fadeInUp}
             >
               <p className="text-lg leading-relaxed">
-                Le coaching personnalisé est un voyage transformateur conçu spécifiquement pour vous. C'est un espace sécurisé où vous pouvez explorer vos défis, définir vos objectifs et développer votre plein potentiel.
+                Le coaching personnalisé est un voyage transformateur conçu spécifiquement pour vous. C&apos;est un espace sécurisé où vous pouvez explorer vos défis, définir vos objectifs et développer votre plein potentiel.
               </p>
               <p className="text-lg leading-relaxed">
                 Mon approche holistique prend en compte tous les aspects de votre vie - émotionnel, mental, physique et spirituel - pour créer un changement profond et durable.

@@ -1,4 +1,3 @@
-
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
@@ -57,12 +56,12 @@ export async function POST(req: Request) {
 
     await transporter.sendMail(mailOptions);
     return NextResponse.json({ message: 'Email sent successfully' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error sending email:', error);
     return NextResponse.json(
       { 
         error: 'Failed to send email',
-        details: error.message 
+        details: error instanceof Error ? error.message : 'Unknown error'
       }, 
       { status: 500 }
     );

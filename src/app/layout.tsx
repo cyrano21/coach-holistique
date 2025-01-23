@@ -1,9 +1,7 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 import { Metadata } from "next";
-import dynamic from 'next/dynamic';
 import { Poppins, Playfair_Display } from "next/font/google";
 import RootLayoutClient from "./RootLayoutClient";
 

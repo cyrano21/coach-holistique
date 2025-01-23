@@ -1,0 +1,30 @@
+.chat-bot-container {
+  position: fixed;
+  inset-block-end: 0; /* Remplace bottom: 0 */
+  inset-inline-end: 0; /* Remplace right: 0 */
+  margin: 1rem;
+  z-index: 9999;
+}
+
+.chat-toggle-button {
+  position: fixed;
+  inset-block-end: 20px; /* Remplace bottom: 20px */
+  inset-inline-end: 20px; /* Remplace right: 20px */
+  z-index: 9999;
+  background-color: #9b59b6;
+  color: white;
+  padding: 1rem;
+  border-radius: 9999px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s;
+  animation: bounce 1s infinite;
+}
+
+.chat-toggle-button:hover {
+  background-color: #8e44ad;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(-5%); }
+  50% { transform: translateY(0); }
+}
