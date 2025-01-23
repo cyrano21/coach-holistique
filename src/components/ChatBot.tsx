@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -34,6 +34,7 @@ const ChatBot = () => {
       recognition.current.continuous = false;
       recognition.current.lang = 'fr-FR';
       
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       recognition.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setInput(transcript);

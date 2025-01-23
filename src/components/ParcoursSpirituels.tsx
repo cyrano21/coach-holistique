@@ -659,6 +659,7 @@ const ChakraBalance = ({ onAnswer }: ChakraBalanceProps) => {
     }
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const parseChakraQuestion = (question: string): ChakraQuestion | null => {
     try {
       const parts: string[] = question.split("|").map((part) => part.trim());
@@ -684,7 +685,7 @@ const ChakraBalance = ({ onAnswer }: ChakraBalanceProps) => {
       setCurrentQuestion(parsedQuestion);
     }
     setLoading(false);
-  }, [currentPath]);
+  }, [currentPath, parseChakraQuestion]);
 
   useEffect(() => {
     loadNewQuestion();
