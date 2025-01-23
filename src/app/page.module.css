@@ -1,0 +1,57 @@
+.backgroundSection {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image 0.5s ease-in-out;
+  will-change: background-image;
+}
+
+.heroSection,
+.servicesSection,
+.videoSection,
+.testimonialsSection {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image 0.5s ease-in-out;
+  will-change: background-image;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.heroSection {
+  background-image: url('/images/home/backgrounds/hero-background.jpg');
+  background-color: rgba(0,0,0,0.5); /* Fallback color */
+}
+
+.servicesSection {
+  background-image: url('/images/home/backgrounds/services-background.jpg');
+  background-color: rgba(0,0,0,0.5); /* Fallback color */
+}
+
+.videoSection {
+  background-image: url('/images/home/backgrounds/video-background.jpg');
+  background-color: rgba(0,0,0,0.5); /* Fallback color */
+}
+
+.testimonialsSection {
+  background-image: url('/images/home/backgrounds/testimonials-background.jpg');
+  background-color: rgba(0,0,0,0.5); /* Fallback color */
+}
+
+.overlay--solid {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.overlay--transparent {
+  background-color: rgba(255, 255, 255, 0.1);
+}

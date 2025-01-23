@@ -1,99 +1,101 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from 'framer-motion';
-
-// Color palette for professional design
-const COLOR_VARIANTS = [
-  {
-    name: 'blue',
-    gradient: 'from-blue-500 to-blue-700',
-    background: 'bg-gradient-to-br from-blue-50 to-blue-100',
-    text: 'text-blue-900',
-    accent: 'text-blue-600',
-    button: 'bg-gradient-to-r from-blue-600 to-blue-800'
-  },
-  {
-    name: 'purple',
-    gradient: 'from-purple-500 to-purple-700',
-    background: 'bg-gradient-to-br from-purple-50 to-purple-100',
-    text: 'text-purple-900',
-    accent: 'text-purple-600',
-    button: 'bg-gradient-to-r from-purple-600 to-purple-800'
-  },
-  {
-    name: 'teal',
-    gradient: 'from-teal-500 to-teal-700',
-    background: 'bg-gradient-to-br from-teal-50 to-teal-100',
-    text: 'text-teal-900',
-    accent: 'text-teal-600',
-    button: 'bg-gradient-to-r from-teal-600 to-teal-800'
-  }
-];
-
-// Icons as SVG components for better customization
-const ServiceIcons = {
-  Personal: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-    </svg>
-  ),
-  Holistic: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-    </svg>
-  ),
-  Spiritual: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-    </svg>
-  )
-};
+import { FaLeaf, FaHeart, FaLightbulb } from 'react-icons/fa';
 
 function Services() {
+  const [backgroundLoaded, setBackgroundLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/images/home/backgrounds/services-background.jpg';
+    img.onload = () => setBackgroundLoaded(true);
+    img.onerror = () => {
+      console.error('Services background image failed to load');
+      setBackgroundLoaded(true);
+    };
+  }, []);
+
   const services = [
     {
       title: "Coaching Personnel",
-      description: "Développez votre potentiel et atteignez vos objectifs personnels avec un accompagnement sur mesure.",
-      icon: ServiceIcons.Personal,
-      features: ["Séances individuelles", "Plan d'action personnalisé", "Suivi régulier"]
+      description: "Un voyage introspectif pour révéler votre potentiel caché et aligner vos actions avec vos valeurs profondes.",
+      icon: FaLightbulb,
+      color: "text-amber-500",
+      gradient: "from-amber-400 to-amber-600",
+      layout: "col-span-2 md:col-span-1",
+      features: [
+        "Clarification des objectifs personnels",
+        "Stratégies de développement personnel",
+        "Accompagnement sur-mesure"
+      ]
     },
     {
       title: "Bien-être Holistique",
-      description: "Retrouvez l'harmonie entre corps, esprit et âme pour une vie plus équilibrée et épanouie.",
-      icon: ServiceIcons.Holistic,
-      features: ["Méditation guidée", "Techniques de respiration", "Gestion du stress"]
+      description: "Une approche globale qui harmonise votre corps, votre esprit et votre âme pour une transformation complète.",
+      icon: FaHeart,
+      color: "text-emerald-500",
+      gradient: "from-emerald-400 to-emerald-600",
+      layout: "col-span-2",
+      features: [
+        "Techniques de méditation avancées",
+        "Gestion émotionnelle et stress",
+        "Équilibre énergétique"
+      ]
     },
     {
       title: "Développement Spirituel",
-      description: "Explorez votre dimension spirituelle et trouvez votre chemin vers une vie plus consciente.",
-      icon: ServiceIcons.Spiritual,
-      features: ["Exploration personnelle", "Pratiques énergétiques", "Connexion intérieure"]
+      description: "Un chemin de conscience qui transcende les limites conventionnelles et ouvre de nouveaux horizons de compréhension.",
+      icon: FaLeaf,
+      color: "text-indigo-500",
+      gradient: "from-indigo-400 to-indigo-600",
+      layout: "col-span-2 md:col-span-1",
+      features: [
+        "Exploration de la conscience",
+        "Pratiques de transformation",
+        "Connexion avec soi"
+      ]
     }
   ];
 
   return (
-    <section className="py-20">
-      <div className="max-w-7xl mx-auto px-4">
+    <section 
+      className={`py-24 relative transition-opacity duration-1000 ${
+        backgroundLoaded ? 'opacity-100' : 'opacity-0'
+      }`}
+      style={{
+        backgroundImage: `url('/images/home/backgrounds/services-background.jpg')`,
+        backgroundColor: 'rgba(30, 20, 50, 0.8)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundBlendMode: 'multiply',
+        transition: 'opacity 0.5s ease-in-out'
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-4 relative z-10">
         <motion.h2 
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-5xl font-extrabold text-center mb-4 text-gray-900 tracking-tight"
+          className="text-6xl font-extrabold text-center mb-8 text-white 
+            bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70
+            drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)]"
         >
-          Nos Services
+          Chemins de Transformation
         </motion.h2>
+        
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-lg text-gray-700 text-center mb-12 max-w-2xl mx-auto leading-relaxed font-medium tracking-tight"
+          className="text-xl text-center mb-16 max-w-3xl mx-auto leading-relaxed text-gray-200
+            bg-black/20 rounded-xl p-6 shadow-lg backdrop-blur-sm"
         >
-          Découvrez nos programmes conçus pour vous accompagner vers une transformation positive et durable.
+          Trois approches complémentaires pour une évolution profonde et authentique.
         </motion.p>
-        <div className="grid md:grid-cols-3 gap-8">
+        
+        <div className="grid md:grid-cols-3 gap-10">
           {services.map((service, index) => {
-            const colorScheme = COLOR_VARIANTS[index % COLOR_VARIANTS.length];
-            const ServiceIcon = service.icon;
-            
+            const Icon = service.icon;
             return (
               <motion.div
                 key={index}
@@ -103,89 +105,32 @@ function Services() {
                   duration: 0.5, 
                   delay: index * 0.2 
                 }}
-                className={`
-                  ${colorScheme.background}
-                  rounded-xl 
-                  p-8 
-                  shadow-lg 
-                  hover:shadow-2xl 
-                  transition-all 
-                  duration-300 
-                  transform 
-                  hover:-translate-y-2
-                  border
-                  border-opacity-20
-                  ${colorScheme.border}
-                  hover:shadow-purple-200/50 
-                  relative
-                  overflow-hidden
-                  before:absolute
-                  before:inset-0
-                  before:bg-gradient-to-br
-                  before:from-white/10
-                  before:to-transparent
-                  before:opacity-0
-                  hover:before:opacity-20
-                  before:transition-opacity
-                  before:duration-300
-                `}
+                className={`bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 
+                  transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${service.layout}`}
               >
-                <div className={`
-                  mb-6 
-                  w-16 h-16 
-                  rounded-full 
-                  flex items-center justify-center
-                  bg-gradient-to-br ${colorScheme.gradient}
-                  text-white
-                  shadow-md
-                `}>
-                  <ServiceIcon />
+                <div className={`mb-6 flex items-center justify-center w-20 h-20 rounded-full 
+                  bg-gradient-to-br ${service.gradient} mx-auto shadow-lg`}>
+                  <Icon className={`text-4xl ${service.color}`} />
                 </div>
-                <h3 className={`
-                  text-2xl 
-                  font-bold 
-                  mb-4 
-                  ${colorScheme.text}
-                `}>
+                
+                <h3 className="text-3xl font-bold mb-4 text-center text-white">
                   {service.title}
                 </h3>
-                <p className={`
-                  mb-6 
-                  text-gray-800 
-                  leading-relaxed 
-                  font-medium 
-                  opacity-90
-                `}>
+                
+                <p className="text-center text-gray-300 mb-6 italic">
                   {service.description}
                 </p>
-                <ul className="space-y-2 mb-6">
-                  {service.features.map((feature, i) => (
+                
+                <ul className="space-y-3 text-center">
+                  {service.features.map((feature, featureIndex) => (
                     <li 
-                      key={i} 
-                      className="flex items-center text-gray-600"
+                      key={featureIndex} 
+                      className={`text-sm ${service.color} font-semibold`}
                     >
-                      <span className={`mr-2 ${colorScheme.accent}`}>•</span>
                       {feature}
                     </li>
                   ))}
                 </ul>
-                <button 
-                  className={`
-                    w-full 
-                    ${colorScheme.button}
-                    text-white 
-                    py-3 
-                    px-4 
-                    rounded-lg 
-                    hover:shadow-xl 
-                    transition-all 
-                    duration-300
-                    font-semibold
-                    tracking-wide
-                  `}
-                >
-                  En savoir plus
-                </button>
               </motion.div>
             );
           })}

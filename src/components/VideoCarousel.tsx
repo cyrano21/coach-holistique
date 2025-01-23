@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
+import { motion, Variants, MotionProps } from 'framer-motion';
 import Image from 'next/image';
 import { FaPlay } from 'react-icons/fa';
 
@@ -17,10 +17,12 @@ interface VideoCarouselProps {
 }
 
 // Extended motion props to include mouse events and onClick
-type ExtendedMotionProps = HTMLMotionProps<'div'> & {
+type ExtendedMotionProps = Omit<MotionProps, 'variants'> & {
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
   onClick?: () => void;
+  variants?: Variants;
+  className?: string;
 };
 
 export const VideoCarousel: React.FC<VideoCarouselProps> = ({ videos, onVideoSelect }) => {

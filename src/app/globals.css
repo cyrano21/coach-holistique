@@ -31,13 +31,35 @@
 }
 
 /* Corps du texte global */
-:global(body) {
+:global(html), :global(body) {
   font-family: 'Poppins', sans-serif;
   color: #444;
   line-height: 1.6;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  background-color: #1A1A2E; /* Deep dark background */
+  color: #ffffff;
+  transition: background-color 0.5s ease-in-out;
+  scroll-behavior: smooth;
+  scroll-padding-top: 0;
+}
+
+:global(html) {
+  scrollbar-color: #4A4E69 #1A1A2E;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: none; /* Prevent bounce effect on some browsers */
+}
+
+/* Ensure page always starts at top */
+:global(body) {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  scroll-behavior: smooth;
 }
 
 * {
@@ -125,6 +147,22 @@ p {
   text-align: justify;
 }
 
+/* Ensure smooth section transitions */
+:global(section) {
+  background-color: #1A1A2E;
+  transition: background-color 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Prevent white flashes during scroll */
+:global(html) {
+  scrollbar-color: #4A4E69 #1A1A2E;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+}
 
 /* Animation d'entrée du titre */
 .gradient-title {
@@ -181,9 +219,6 @@ p {
   font-weight: 900;
 }
 
-
-
-
 /* Animation d'entrée du titre */
 @keyframes titleEntry {
   0% {
@@ -228,8 +263,6 @@ p {
   100% { background-position: 0% 50%; }
 }
 
-
-
 /* Responsive */
 @media screen and (max-width: 768px) {
   .parallax{
@@ -246,7 +279,6 @@ p {
   }
 
 }
-
 
 @keyframes shimmer {
   0% { background-position: 200% center; }
@@ -311,4 +343,3 @@ p {
 .animate-pulse-slow {
   animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-

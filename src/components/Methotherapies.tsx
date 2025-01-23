@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { motion, Variants, HTMLMotionProps } from "framer-motion";
+import { motion, Variants, MotionProps } from "framer-motion";
 import { MethodesItem, methodesData } from "../data/methodesData";
 
-interface ExtendedMotionProps extends HTMLMotionProps<"div"> {
+interface ExtendedMotionProps extends Omit<MotionProps, 'variants'> {
   className?: string;
+  variants?: Variants;
 }
 
 const containerVariants: Variants = {
@@ -36,7 +37,7 @@ const Methotherapies = () => {
 };
 
 const ParallaxHeader = () => {
-  const motionProps: HTMLMotionProps<"div"> = {
+  const motionProps: MotionProps = {
     initial: { opacity: 0 },
     whileInView: { opacity: 1 },
     transition: { duration: 1 },
@@ -63,7 +64,7 @@ const ParallaxHeader = () => {
 };
 
 const TimelineSection = () => {
-  const motionProps: HTMLMotionProps<"section"> = {
+  const motionProps: MotionProps = {
     initial: { opacity: 0 },
     whileInView: { opacity: 1 },
     transition: { duration: 0.8 },
@@ -179,7 +180,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item, index }) => {
 };
 
 const ParallaxFooter = () => {
-  const motionProps: HTMLMotionProps<"section"> = {
+  const motionProps: MotionProps = {
     initial: { opacity: 0 },
     whileInView: { opacity: 1 },
     transition: { duration: 1 },
