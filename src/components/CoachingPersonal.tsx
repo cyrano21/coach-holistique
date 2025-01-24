@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { FaLightbulb, FaHandshake, FaChartLine, FaHeart, FaComments, FaPuzzlePiece } from "react-icons/fa";
 
 const CoachingPersonal = () => {
@@ -101,9 +102,11 @@ const CoachingPersonal = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                  <img
+                  <Image
                     src="/images/coaching/coaching1.jpg"
                     alt="Coaching personnel"
+                    width={500}
+                    height={300}
                     className="w-full h-full object-cover rounded-lg shadow-2xl ring-4 ring-purple-500/20 transform -rotate-6 hover:rotate-0 transition-all duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent rounded-lg" />
@@ -115,9 +118,11 @@ const CoachingPersonal = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  <img
+                  <Image
                     src="/images/coaching/coaching2.jpg"
                     alt="Séance de coaching"
+                    width={500}
+                    height={300}
                     className="w-full h-full object-cover rounded-lg shadow-2xl ring-4 ring-indigo-500/20 transform rotate-6 hover:rotate-0 transition-all duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/50 to-transparent rounded-lg" />
