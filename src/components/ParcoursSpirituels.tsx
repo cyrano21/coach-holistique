@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import AIGameDialog from "./AIGameDialog";
 import AIChat from "./AIChat";
 import {
@@ -1178,10 +1179,6 @@ const ParcoursSpirituels = () => {
           <p className="select-path-text text-xl text-gray-300 mb-6">
             Sélectionnez un parcours pour commencer votre voyage intérieur
           </p>
-          <p className="click-detail-text text-lg text-gray-400 mb-6">
-            Cliquez sur un détail pour découvrir un jeu ou une activité
-            interactive
-          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -1371,6 +1368,29 @@ const ParcoursSpirituels = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Section Analyse Numérologique */}
+        <div className="mt-32 mb-16 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto"
+          >
+            <h3 className="text-3xl font-semibold text-purple-300 mb-6">
+              Approfondissez Votre Voyage Spirituel
+            </h3>
+            <a
+              href="https://analyse-num-rologique-lime.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg shadow-lg hover:from-purple-700 hover:to-pink-700 transform hover:-translate-y-1 transition-all duration-300"
+            >
+              Explorer Encore Plus ?
+            </a>
+          </motion.div>
         </div>
       </div>
     </div>
