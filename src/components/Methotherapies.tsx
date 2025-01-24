@@ -73,13 +73,13 @@ const TimelineSection = () => {
 
   return (
     <motion.section
-      className="py-20 px-4 md:px-8 lg:px-16 bg-gradient-to-br from-blue-900/90 via-indigo-800/90 to-purple-900/90 text-white"
+      className="py-12 md:py-20 px-4 md:px-8 lg:px-16 bg-gradient-to-br from-blue-900/90 via-indigo-800/90 to-purple-900/90 text-white"
       id="nos-methodes"
       {...motionProps}
     >
       <div className="max-w-7xl mx-auto">
         <motion.p
-          className="text-lg md:text-xl text-gray-100 mb-16 text-center max-w-2xl mx-auto leading-relaxed tracking-wide font-light"
+          className="text-base md:text-lg lg:text-xl text-gray-100 mb-8 md:mb-16 text-center max-w-2xl mx-auto leading-relaxed tracking-wide font-light"
           initial={{ y: 20, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
@@ -87,23 +87,23 @@ const TimelineSection = () => {
         >
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 font-semibold">
             Un parcours personnalisé
-          </span>
+          </span>{" "}
           en plusieurs étapes pour prendre soin de vous, selon vos besoins et
           vos objectifs. Découvrez ci-dessous nos différentes méthodes,
           expliquées sous forme d&apos;itinéraire.
         </motion.p>
 
         <motion.div
-          className="relative bg-white/10 rounded-xl p-6 shadow-2xl border border-white/20"
+          className="relative bg-white/10 rounded-xl p-4 md:p-6 shadow-2xl border border-white/20"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {/* Ligne verticale principale */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 rounded-full" />
+          {/* Ligne verticale principale - visible uniquement sur desktop */}
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 rounded-full" />
 
-          <div className="space-y-8">
+          <div className="space-y-12 md:space-y-8">
             {methodesData.map((item, index) => (
               <TimelineItem key={index} item={item} index={index} />
             ))}
@@ -123,52 +123,67 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item, index }) => {
   const isEven = index % 2 === 0;
   const motionProps: ExtendedMotionProps = {
     variants: itemVariants,
-    className: `flex items-center w-full relative ${isEven ? "flex-row-reverse" : ""}`,
+    className: `flex flex-col md:flex-row items-center w-full relative ${isEven ? "md:flex-row-reverse" : ""}`,
   };
 
   return (
     <motion.div {...motionProps}>
-      {/* Branche horizontale */}
+      {/* Branche horizontale - visible uniquement sur desktop */}
       <div
-        className={`absolute top-1/2 transform -translate-y-1/2 w-1/2 h-1 
+        className={`hidden md:block absolute top-1/2 transform -translate-y-1/2 w-1/2 h-1 
                     bg-gradient-to-r from-blue-500 to-purple-500 
                     dark:from-blue-600 dark:to-purple-600 
                     ${isEven ? "right-1/2" : "left-1/2"}`}
       />
 
-      <div className={`w-1/2 ${isEven ? "pl-8" : "pr-8"}`}>
+      {/* Point central avec ligne verticale sur mobile */}
+      <div className="md:hidden flex flex-col items-center w-full">
+        <div className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 border-4 border-blue-500 dark:border-blue-600 flex items-center justify-center z-10">
+          <span className="text-blue-500 dark:text-blue-400 font-bold text-sm">
+            {index + 1}
+          </span>
+        </div>
+        {/* Ligne verticale qui ne s'étend que jusqu'au prochain élément */}
+        {index < methodesData.length - 1 && (
+          <div className="w-1 h-12 bg-gradient-to-b from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 my-2" />
+        )}
+      </div>
+
+      {/* Contenu */}
+      <div className={`w-full md:w-1/2 px-4 md:px-8 ${isEven ? "md:pl-8" : "md:pr-8"}`}>
         <motion.div
           className={`
             bg-white dark:bg-gray-800 
-            shadow-lg rounded-xl p-6 
+            shadow-lg rounded-xl p-4 md:p-6
             border border-gray-100 dark:border-gray-700 
             hover:shadow-2xl 
             transition-all duration-300 ease-in-out 
             transform hover:-translate-y-2
             ${
               index % 2 === 0
-                ? "bg-gradient-to-br from-blue-50 to-blue-100"
-                : "bg-gradient-to-br from-purple-50 to-purple-100"
+                ? "bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/50 dark:to-blue-800/50"
+                : "bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/50 dark:to-purple-800/50"
             }
           `}
-          initial={{ opacity: 0, x: isEven ? 50 : -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20, x: 0 }}
+          whileInView={{ opacity: 1, y: 0, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 * index }}
         >
           <motion.h3
-            className="text-2xl font-extrabold mb-3 
+            className="text-xl md:text-2xl font-extrabold mb-3 
                        bg-gradient-to-r from-blue-600 to-purple-600 
-                       bg-clip-text text-transparent 
-                       animate-pulse"
+                       bg-clip-text text-transparent"
           >
             {item.title}
           </motion.h3>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
+          <p className="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
             {item.description}
           </p>
         </motion.div>
       </div>
-      <div className="w-1/2 flex justify-center relative">
+
+      {/* Point central sur desktop */}
+      <div className="hidden md:flex w-1/2 justify-center relative">
         <div className="w-12 h-12 rounded-full bg-white dark:bg-gray-800 border-4 border-blue-500 dark:border-blue-600 flex items-center justify-center z-10">
           <span className="text-blue-500 dark:text-blue-400 font-bold">
             {index + 1}
