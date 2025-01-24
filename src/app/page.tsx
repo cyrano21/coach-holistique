@@ -42,7 +42,7 @@ const Testimonials = dynamic(() => import("../components/Testimonials"), {
 
 export default function HomePage() {
   return (
-    <main className="bg-[#1A1A2E] min-h-screen">
+    <main className="bg-[#1A1A2E] min-h-screen w-screen max-w-[100vw] overflow-x-hidden">
       <HeroSection />
       <Services />
       <VideoSection videos={approchesData.videos} />

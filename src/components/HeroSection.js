@@ -16,7 +16,7 @@ function HeroSection() {
 
   return (
     <section 
-      className={`relative min-h-screen flex items-center justify-center overflow-hidden transition-opacity duration-1000 ${
+      className={`relative min-h-screen w-screen max-w-[100vw] flex items-center justify-center overflow-hidden transition-opacity duration-1000 ${
         backgroundLoaded ? 'opacity-100' : 'opacity-0'
       }`}
       style={{
@@ -24,11 +24,11 @@ function HeroSection() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundBlendMode: 'overlay',
-        backgroundColor: 'rgba(26, 26, 46, 0.7)', // Soft dark overlay
+        backgroundColor: 'rgba(26, 26, 46, 0.7)',
         transition: 'opacity 0.5s ease-in-out'
       }}
     >
-      <div className="relative max-w-5xl mx-auto px-6 md:px-12 text-center z-10">
+      <div className="relative w-full max-w-5xl mx-auto px-6 md:px-12 text-center z-10">
         <div className="text-white space-y-8">
           <div className="relative py-4 px-2 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-500">
             <h1 

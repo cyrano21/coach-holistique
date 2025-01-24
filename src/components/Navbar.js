@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import "./navbar.css";
 
 function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
   const isActive = (path) => {
@@ -17,162 +17,88 @@ function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 w-full bg-gradient-to-r from-purple-900 via-purple-600 to-blue-900 text-white shadow-lg z-50 backdrop-blur-sm bg-opacity-90">
-      <div className="h-1 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-gradient-x"></div>
-
-      <div className="navbar-container w-full mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-3 group">
-            <div className="relative overflow-hidden rounded-full border-2 border-purple-300 hover:border-yellow-300 transition-colors duration-300 transform hover:scale-110 animate-float">
+    <nav className="fixed top-0 w-full bg-gradient-to-r from-purple-900 via-purple-600 to-blue-900 shadow-lg z-50 overflow-x-hidden">
+      <div className="h-1 w-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500"></div>
+      
+      <div className="w-full mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center">
+            <div className="relative w-12 h-12">
               <Image
                 src="/logo.avif"
                 alt="Mon logo"
-                width={50}
-                height={50}
-                className="rounded-full transition-transform duration-500 hover:rotate-12"
+                width={48}
+                height={48}
+                priority
+                className="rounded-full"
               />
-              <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 animate-shine"></div>
             </div>
-            <Link href="/" prefetch className="flex items-center group">
-              <span className="font-extrabold text-lg md:text-xl lg:text-2xl whitespace-nowrap bg-gradient-to-r from-white via-purple-200 to-yellow-200 bg-clip-text text-transparent group-hover:from-yellow-200 group-hover:via-purple-200 group-hover:to-white transition-all duration-500">
-                Coach Holistique
-              </span>
-            </Link>
+            <span className="ml-3 text-xl font-bold text-white">Coach Holistique</span>
           </div>
 
-          <div className="hidden md:flex items-center space-x-6 ml-8">
-            {[
-              { href: "/", text: "Accueil" },
-              { href: "/approches-therapeutiques", text: "Approches Thérapeutiques" },
-              { href: "/methodes", text: "Méthodes" },
-              { href: "/coaching-personnalise", text: "Coaching Personnalisé" },
-              { href: "/parcours-spirituels", text: "Parcours Spirituels" },
-              { href: "/outils", text: "Outils" },
-              { href: "/contact", text: "Contact" }
-            ].map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                prefetch
-                className={`relative transition-all duration-300 ease-in-out ${isActive(
-                  link.href
-                )} hover:animate-pulse`}
-              >
-                <span className="relative">
-                  {link.text}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-300 transition-all duration-300 group-hover:w-full"></span>
-                </span>
-              </Link>
-            ))}
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link href="/" className={isActive("/")}>Accueil</Link>
+            <Link href="/approches-therapeutiques" className={isActive("/approches-therapeutiques")}>Approches Thérapeutiques</Link>
+            <Link href="/methodes" className={isActive("/methodes")}>Méthodes</Link>
+            <Link href="/coaching-personnalise" className={isActive("/coaching-personnalise")}>Coaching Personnalisé</Link>
+            <Link href="/parcours-spirituels" className={isActive("/parcours-spirituels")}>Parcours Spirituels</Link>
+            <Link href="/outils" className={isActive("/outils")}>Outils</Link>
             <a
               href="https://new-blog-mong.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="relative transition-all duration-300 ease-in-out font-medium text-gray-100 hover:text-purple-200 hover:animate-pulse"
-            >
-              <span className="relative">
-                Blog
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-300 transition-all duration-300 group-hover:w-full"></span>
-              </span>
-            </a>
-          </div>
-
-          <button
-            className="md:hidden relative z-50 transform transition-all duration-300 hover:scale-110"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <div className={`burger-icon ${isMenuOpen ? 'open' : ''}`}>
-              <span className="block w-6 h-0.5 bg-white mb-1.5 transition-all duration-300"></span>
-              <span className="block w-6 h-0.5 bg-white mb-1.5 transition-all duration-300"></span>
-              <span className="block w-6 h-0.5 bg-white transition-all duration-300"></span>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      <div
-        className={`md:hidden fixed inset-0 bg-purple-900 bg-opacity-100 transform transition-transform duration-300 ease-in-out z-[100] ${
-          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="flex flex-col items-center mt-16 px-4 bg-purple-900 min-h-screen">
-          <button
-            onClick={() => setIsMenuOpen(false)}
-            className="absolute top-4 right-4 text-white hover:text-gray-300"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          
-          <div className="flex flex-col w-full space-y-4 pb-8">
-            <Link
-              href="/"
-              prefetch
-              onClick={() => setIsMenuOpen(false)}
-              className={`${isActive("/")} text-xl py-2 text-center`}
-            >
-              Accueil
-            </Link>
-            <Link
-              href="/approches-therapeutiques"
-              prefetch
-              onClick={() => setIsMenuOpen(false)}
-              className={`${isActive("/approches-therapeutiques")} text-xl py-2 text-center`}
-            >
-              Approches Thérapeutiques
-            </Link>
-            <Link
-              href="/methodes"
-              prefetch
-              onClick={() => setIsMenuOpen(false)}
-              className={`${isActive("/methodes")} text-xl py-2 text-center`}
-            >
-              Méthodes
-            </Link>
-            <Link
-              href="/coaching-personnalise"
-              prefetch
-              onClick={() => setIsMenuOpen(false)}
-              className={`${isActive("/coaching-personnalise")} text-xl py-2 text-center`}
-            >
-              Coaching Personnalisé
-            </Link>
-            <Link
-              href="/parcours-spirituels"
-              prefetch
-              onClick={() => setIsMenuOpen(false)}
-              className={`${isActive("/parcours-spirituels")} text-xl py-2 text-center`}
-            >
-              Parcours Spirituels
-            </Link>
-            <Link
-              href="/outils"
-              prefetch
-              onClick={() => setIsMenuOpen(false)}
-              className={`${isActive("/outils")} text-xl py-2 text-center`}
-            >
-              Outils
-            </Link>
-            <a
-              href="https://new-blog-mong.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setIsMenuOpen(false)}
-              className="text-xl py-2 text-center font-medium text-gray-100 hover:text-purple-200"
+              className="text-gray-100 hover:text-purple-200"
             >
               Blog
             </a>
-            <Link
-              href="/contact"
-              prefetch
-              onClick={() => setIsMenuOpen(false)}
-              className={`${isActive("/contact")} text-xl py-2 text-center`}
-            >
-              Contact
-            </Link>
+            <Link href="/contact" className={isActive("/contact")}>Contact</Link>
           </div>
+
+          {/* Burger Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="inline-flex md:hidden items-center justify-center p-2 text-white hover:text-gray-300 focus:outline-none"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="white"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="md:hidden w-full">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <Link href="/" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Accueil</Link>
+              <Link href="/approches-therapeutiques" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Approches Thérapeutiques</Link>
+              <Link href="/methodes" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Méthodes</Link>
+              <Link href="/coaching-personnalise" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Coaching Personnalisé</Link>
+              <Link href="/parcours-spirituels" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Parcours Spirituels</Link>
+              <Link href="/outils" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Outils</Link>
+              <a
+                href="https://new-blog-mong.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md"
+              >
+                Blog
+              </a>
+              <Link href="/contact" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Contact</Link>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
