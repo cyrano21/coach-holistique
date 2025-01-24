@@ -48,7 +48,7 @@ function Navbar() {
             <Link href="/methodes" className={isActive("/methodes")}>Méthodes</Link>
             <Link href="/coaching-personnalise" className={isActive("/coaching-personnalise")}>Coaching Personnalisé</Link>
             <Link href="/parcours-spirituels" className={isActive("/parcours-spirituels")}>Parcours Spirituels</Link>
-            <Link href="/outils" className={isActive("/outils")}>Outils</Link>
+            <Link href="/outils-developpement" className={isActive("/outils-developpement")}>Outils</Link>
             <a
               href="https://new-blog-mong.vercel.app/"
               target="_blank"
@@ -63,7 +63,9 @@ function Navbar() {
           {/* Burger Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="inline-flex md:hidden items-center justify-center p-2 text-white hover:text-gray-300 focus:outline-none"
+            className="block md:hidden items-center justify-center p-2 rounded-md text-white hover:text-gray-300 hover:bg-purple-800 focus:outline-none"
+            aria-expanded={isOpen}
+            aria-label="Menu principal"
           >
             <svg
               className="w-6 h-6"
@@ -100,7 +102,7 @@ function Navbar() {
               <Link href="/methodes" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Méthodes</Link>
               <Link href="/coaching-personnalise" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Coaching Personnalisé</Link>
               <Link href="/parcours-spirituels" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Parcours Spirituels</Link>
-              <Link href="/outils" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Outils</Link>
+              <Link href="/outils-developpement" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Outils</Link>
               <a
                 href="https://new-blog-mong.vercel.app/"
                 target="_blank"

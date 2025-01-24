@@ -2,8 +2,6 @@
 import React from "react";
 import OutilsDeveloppement from "@/components/OutilsDeveloppement";
 
-const OutilsDeveloppementPage = () => {
+export default function OutilsDeveloppementPage() {
   return <OutilsDeveloppement />;
-};
-
-export default OutilsDeveloppementPage;
+}

@@ -1169,7 +1169,7 @@ const ParcoursSpirituels = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16 mt-10">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
       <div className="container mx-auto mt-20">
         <div className="initial-text-container text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-bold text-yellow-500 mb-12 animate__animated animate__fadeInDown">
