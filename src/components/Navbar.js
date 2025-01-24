@@ -47,7 +47,8 @@ function Navbar() {
               { href: "/methodes", text: "Méthodes" },
               { href: "/coaching-personnalise", text: "Coaching Personnalisé" },
               { href: "/parcours-spirituels", text: "Parcours Spirituels" },
-              { href: "/outils-developpement", text: "Outils" },
+              { href: "/outils", text: "Outils" },
+              { href: "/contact", text: "Contact" }
             ].map((link) => (
               <Link
                 key={link.href}
@@ -63,14 +64,17 @@ function Navbar() {
                 </span>
               </Link>
             ))}
-            <Link
-              href="/contact"
-              prefetch
-              className="relative overflow-hidden bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50 animate-pulse-slow"
+            <a
+              href="https://new-blog-mong.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative transition-all duration-300 ease-in-out font-medium text-gray-100 hover:text-purple-200 hover:animate-pulse"
             >
-              <span className="relative z-10">Contact</span>
-              <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-            </Link>
+              <span className="relative">
+                Blog
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-300 transition-all duration-300 group-hover:w-full"></span>
+              </span>
+            </a>
           </div>
 
           <button
@@ -87,11 +91,11 @@ function Navbar() {
       </div>
 
       <div
-        className={`md:hidden fixed inset-0 bg-purple-900 bg-opacity-98 backdrop-blur-lg transform transition-transform duration-300 ease-in-out z-[100] ${
+        className={`md:hidden fixed inset-0 bg-purple-900 bg-opacity-100 transform transition-transform duration-300 ease-in-out z-[100] ${
           isMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex flex-col items-center justify-center h-full space-y-8 p-4 relative">
+        <div className="flex flex-col items-center mt-16 px-4 bg-purple-900 min-h-screen">
           <button
             onClick={() => setIsMenuOpen(false)}
             className="absolute top-4 right-4 text-white hover:text-gray-300"
@@ -100,36 +104,74 @@ function Navbar() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          {[
-            { href: "/", text: "Accueil" },
-            { href: "/approches-therapeutiques", text: "Approches Thérapeutiques" },
-            { href: "/methodes", text: "Méthodes" },
-            { href: "/coaching-personnalise", text: "Coaching Personnalisé" },
-            { href: "/parcours-spirituels", text: "Parcours Spirituels" },
-            { href: "/outils-developpement", text: "Outils" },
-            { href: "/contact", text: "Contact" },
-            { href: "/reservation", text: "Réservation" }
-          ].map((link, index) => (
+          
+          <div className="flex flex-col w-full space-y-4 pb-8">
             <Link
-              key={link.href}
-              href={link.href}
+              href="/"
               prefetch
               onClick={() => setIsMenuOpen(false)}
-              className={`transform transition-all duration-300 delay-${
-                index * 100
-              } ${isActive(link.href)} text-xl py-2 px-4 rounded-lg hover:bg-purple-700 hover:text-white active:scale-95`}
+              className={`${isActive("/")} text-xl py-2 text-center`}
             >
-              {link.text}
+              Accueil
             </Link>
-          ))}
-          <Link
-            href="/contact"
-            prefetch
-            onClick={() => setIsMenuOpen(false)}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-bold transform transition-all duration-300 hover:scale-105 hover:shadow-lg animate-pulse-slow"
-          >
-            Contact
-          </Link>
+            <Link
+              href="/approches-therapeutiques"
+              prefetch
+              onClick={() => setIsMenuOpen(false)}
+              className={`${isActive("/approches-therapeutiques")} text-xl py-2 text-center`}
+            >
+              Approches Thérapeutiques
+            </Link>
+            <Link
+              href="/methodes"
+              prefetch
+              onClick={() => setIsMenuOpen(false)}
+              className={`${isActive("/methodes")} text-xl py-2 text-center`}
+            >
+              Méthodes
+            </Link>
+            <Link
+              href="/coaching-personnalise"
+              prefetch
+              onClick={() => setIsMenuOpen(false)}
+              className={`${isActive("/coaching-personnalise")} text-xl py-2 text-center`}
+            >
+              Coaching Personnalisé
+            </Link>
+            <Link
+              href="/parcours-spirituels"
+              prefetch
+              onClick={() => setIsMenuOpen(false)}
+              className={`${isActive("/parcours-spirituels")} text-xl py-2 text-center`}
+            >
+              Parcours Spirituels
+            </Link>
+            <Link
+              href="/outils"
+              prefetch
+              onClick={() => setIsMenuOpen(false)}
+              className={`${isActive("/outils")} text-xl py-2 text-center`}
+            >
+              Outils
+            </Link>
+            <a
+              href="https://new-blog-mong.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMenuOpen(false)}
+              className="text-xl py-2 text-center font-medium text-gray-100 hover:text-purple-200"
+            >
+              Blog
+            </a>
+            <Link
+              href="/contact"
+              prefetch
+              onClick={() => setIsMenuOpen(false)}
+              className={`${isActive("/contact")} text-xl py-2 text-center`}
+            >
+              Contact
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
