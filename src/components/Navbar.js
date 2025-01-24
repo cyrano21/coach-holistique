@@ -16,6 +16,10 @@ function Navbar() {
       : "font-medium text-gray-100 hover:text-purple-200 hover:scale-105 transform"; 
   };
 
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
+
   return (
     <nav className="fixed top-0 w-full bg-gradient-to-r from-purple-900 via-purple-600 to-blue-900 shadow-lg z-50 overflow-x-hidden">
       <div className="h-1 w-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500"></div>
@@ -64,15 +68,25 @@ function Navbar() {
             <svg
               className="w-6 h-6"
               fill="none"
-              stroke="white"
+              stroke="currentColor"
               viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              {isOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
             </svg>
           </button>
         </div>
@@ -81,21 +95,22 @@ function Navbar() {
         {isOpen && (
           <div className="md:hidden w-full">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              <Link href="/" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Accueil</Link>
-              <Link href="/approches-therapeutiques" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Approches Thérapeutiques</Link>
-              <Link href="/methodes" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Méthodes</Link>
-              <Link href="/coaching-personnalise" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Coaching Personnalisé</Link>
-              <Link href="/parcours-spirituels" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Parcours Spirituels</Link>
-              <Link href="/outils" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Outils</Link>
+              <Link href="/" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Accueil</Link>
+              <Link href="/approches-therapeutiques" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Approches Thérapeutiques</Link>
+              <Link href="/methodes" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Méthodes</Link>
+              <Link href="/coaching-personnalise" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Coaching Personnalisé</Link>
+              <Link href="/parcours-spirituels" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Parcours Spirituels</Link>
+              <Link href="/outils" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Outils</Link>
               <a
                 href="https://new-blog-mong.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={closeMenu}
                 className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md"
               >
                 Blog
               </a>
-              <Link href="/contact" className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Contact</Link>
+              <Link href="/contact" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Contact</Link>
             </div>
           </div>
         )}

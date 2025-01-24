@@ -1,72 +1,91 @@
 .customSlider {
-    margin: 0 -10px;
-  }
-  
-  .customSlider .slick-slide {
-    padding: 0 10px;
-  }
-  
-  .customSlider .slick-list {
-    margin: 0 -10px;
-  }
-  
-  .customSlider .slick-track {
-    display: flex !important;
-  }
-  
-  .customSlider .slick-slide {
-    height: inherit !important;
-  }
-  
-  .customSlider .slick-slide > div {
-    height: 100%;
-  }
-  
-  .videoSlider {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    gap: 40px;
-    justify-content: center;
-    align-items: stretch;
-  }
+  margin: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
 
+.customSlider .slick-slide {
+  padding: 0 10px;
+}
+
+.customSlider .slick-list {
+  margin: 0;
+  overflow: hidden;
+}
+
+.customSlider .slick-track {
+  display: flex !important;
+}
+
+.customSlider .slick-slide {
+  height: inherit !important;
+}
+
+.customSlider .slick-slide > div {
+  height: 100%;
+}
+
+.videoSlider {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .videoSlider {
+    max-width: 1200px;
+    padding: 0;
+  }
+}
+
+.videoSlider .slick-slide {
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
   .videoSlider .slick-slide {
     padding: 0 10px;
-    box-sizing: border-box;
   }
+}
 
-  .videoSlider .slick-list {
-    overflow: visible;
-  }
+.videoSlider .slick-list {
+  overflow: hidden;
+}
 
-  .videoSlider .slick-track {
-    display: flex;
-    align-items: stretch;
-  }
+.videoSlider .slick-track {
+  display: flex;
+  align-items: stretch;
+}
 
+.videoSliderItem {
+  cursor: pointer;
+  padding: 0.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
   .videoSliderItem {
-    cursor: pointer;
     padding: 1rem;
     transition: transform 0.3s ease;
     flex: 0 1 calc(33.333% - 40px);
     margin: 0 20px;
-    display: flex;
-    flex-direction: column;
     background: white;
     border-radius: 0.75rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    height: 100%;
     gap: 20px;
   }
+}
 
-  .videoSliderItem:hover {
-    transform: scale(1.05);
-  }
+.videoSliderItem:hover {
+  transform: scale(1.05);
+}
 
-  .videoSliderItem > div {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+.videoSliderItem > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
