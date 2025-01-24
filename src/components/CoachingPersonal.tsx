@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -56,16 +55,17 @@ const CoachingPersonal = () => {
       </motion.section>
 
       {/* Section Présentation du Coaching */}
-      <section className="py-20 bg-gradient-to-b from-purple-900 to-indigo-900 text-white">
+      <section className="py-20 bg-gradient-to-b from-purple-900 to-indigo-900 text-white relative">
+        <div className="absolute inset-0 bg-black/30" />
         <motion.div 
-          className="max-w-6xl mx-auto px-4"
+          className="max-w-6xl mx-auto px-4 relative z-10"
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
         >
           <motion.h2 
-            className="text-4xl font-light text-center mb-16"
+            className="text-5xl md:text-6xl font-thin italic text-center mb-16 text-purple-100"
             variants={fadeInUp}
           >
             Qu&apos;est-ce que le Coaching Personnalisé ?
@@ -73,22 +73,68 @@ const CoachingPersonal = () => {
           
           <div className="grid md:grid-cols-2 gap-12">
             <motion.div 
-              className="space-y-6"
+              className="space-y-8 bg-gradient-to-br from-purple-900/50 to-indigo-900/50 p-8 rounded-xl backdrop-blur-sm shadow-xl"
               variants={fadeInUp}
             >
-              <p className="text-lg leading-relaxed">
+              <p className="text-base md:text-lg font-serif italic text-purple-100 leading-8">
                 Le coaching personnalisé est un voyage transformateur conçu spécifiquement pour vous. C&apos;est un espace sécurisé où vous pouvez explorer vos défis, définir vos objectifs et développer votre plein potentiel.
               </p>
-              <p className="text-lg leading-relaxed">
+              <p className="text-base md:text-lg font-serif italic text-purple-100 leading-8">
                 Mon approche holistique prend en compte tous les aspects de votre vie - émotionnel, mental, physique et spirituel - pour créer un changement profond et durable.
               </p>
             </motion.div>
             <motion.div
-              className="relative h-80 rounded-lg overflow-hidden"
+              className="relative h-80 rounded-lg overflow-hidden group perspective-1000"
               variants={fadeInUp}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm rounded-lg transform rotate-3 scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm rounded-lg transform -rotate-3 scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-indigo-500/30 backdrop-blur-sm rounded-lg transform rotate-3 scale-105 z-10 group-hover:scale-110 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-indigo-500/30 backdrop-blur-sm rounded-lg transform -rotate-3 scale-105 z-10 group-hover:scale-110 transition-transform duration-500" />
+              
+              <motion.div
+                className="absolute inset-0 transform transition-all duration-700 ease-out"
+                initial={{ scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <motion.div
+                  className="absolute w-2/3 h-2/3 top-4 left-4 z-20 transform transition-all duration-500 group-hover:-translate-y-2 group-hover:-translate-x-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  <img
+                    src="/images/coaching/coaching1.jpg"
+                    alt="Coaching personnel"
+                    className="w-full h-full object-cover rounded-lg shadow-2xl ring-4 ring-purple-500/20 transform -rotate-6 hover:rotate-0 transition-all duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent rounded-lg" />
+                </motion.div>
+
+                <motion.div
+                  className="absolute w-2/3 h-2/3 bottom-4 right-4 z-30 transform transition-all duration-500 group-hover:translate-y-2 group-hover:translate-x-2"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  <img
+                    src="/images/coaching/coaching2.jpg"
+                    alt="Séance de coaching"
+                    className="w-full h-full object-cover rounded-lg shadow-2xl ring-4 ring-indigo-500/20 transform rotate-6 hover:rotate-0 transition-all duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/50 to-transparent rounded-lg" />
+                </motion.div>
+              </motion.div>
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-purple-900/60 via-purple-900/20 to-transparent z-40 group-hover:opacity-50 transition-opacity duration-500" />
+              
+              <motion.div 
+                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                initial={{ y: 20 }}
+                whileHover={{ y: 0 }}
+              >
+                <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-light tracking-wider">
+                  Découvrir le coaching
+                </span>
+              </motion.div>
             </motion.div>
           </div>
         </motion.div>
