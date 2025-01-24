@@ -259,7 +259,7 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
                         scale: 0,
                         opacity: 0,
                       }}
-                      onClick={() => setCurrentVideoIndex(index)}
+                      onClick={() => handleVideoChange(index)}
                       whileHover={{
                         scale: index === currentVideoIndex ? 1.05 : 0.75,
                         transition: { duration: 0.2 }
