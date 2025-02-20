@@ -73,15 +73,29 @@ function Services() {
     >
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <motion.h2 
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-6xl font-extrabold text-center mb-8 text-white 
-            bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70
-            drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)]"
-        >
-          Chemins de Transformation
+  initial={{ opacity: 0, y: -50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6 }}
+  className="
+    text-4xl
+    sm:text-5xl
+    md:text-6xl
+    font-extrabold
+    text-center
+    mb-8
+    text-white
+    bg-clip-text
+    text-transparent
+    bg-gradient-to-r
+    from-white
+    via-white/90
+    to-white/70
+    drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)]
+  "
+>
+  Chemins de Transformation
         </motion.h2>
+
         
         <motion.p
           initial={{ opacity: 0 }}
