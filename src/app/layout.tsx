@@ -9,14 +9,14 @@ import { ThemeProvider } from "@/context/ThemeContext";
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
-  display: "swap",
+  display: "swap", // important
 });
 
 const playfair = Playfair_Display({
   weight: ["400", "600", "700"],
   subsets: ["latin"],
+  display: "swap", // 👈 garantit le fallback si Google Fonts échoue
   variable: "--font-playfair",
-  display: "swap",
 });
 
 export const metadata: Metadata = {

@@ -133,7 +133,7 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-50">
+    <div className="fixed bottom-5 right-5 z-50 transition-all duration-500 ease-in-out">
       <Button
         onClick={toggleChatBot}
         aria-label="Toggle Chat"
@@ -142,9 +142,8 @@ const ChatBot = () => {
       >
         {isOpen ? <FaTimes /> : <FaComments />}
       </Button>
-
       {isOpen && (
-        <div className="mt-3 w-[95vw] max-w-md h-[85vh] rounded-xl shadow-2xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-all flex flex-col overflow-hidden">
+        <div className="animate-fade-in mt-3 w-[95vw] max-w-md h-[85vh] rounded-xl shadow-2xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-all flex flex-col overflow-hidden">
           {/* Header */}
           <div className="bg-purple-600 text-white p-4 flex justify-between items-center">
             <h3 className="text-lg font-semibold">
@@ -168,7 +167,7 @@ const ChatBot = () => {
                 }`}
               >
                 <div
-                  className={`inline-block p-3 rounded-lg max-w-[80%] ${
+                  className={`inline-block p-3 rounded-lg max-w-[80%] transform transition-all duration-300 animate-slide-up ${
                     msg.sender === "user"
                       ? "bg-purple-600 text-white"
                       : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white"
