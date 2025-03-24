@@ -1,0 +1,385 @@
+.stars-animation {
+  background: radial-gradient(white 1px, transparent 1px);
+  background-size: 3px 3px;
+  animation: twinkle 5s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.container {
+  position: relative;
+  color: white;
+  padding: 3rem 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  overflow: hidden;
+  transition: all 700ms;
+}
+
+.backgroundImage {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.backgroundContainer {
+  background-repeat: no-repeat;
+}
+
+.backgroundImageUrl {
+  background-image: var(--background-url);
+  background-size: cover;
+  background-position: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  padding: 2rem;
+  text-align: center;
+  max-inline-size: 800px;
+  margin: 0 auto;
+}
+
+.backgroundContainer {
+  background-size: cover;
+  background-position: center;
+  min-block-size: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background-image 1s ease-in-out;
+}
+
+.soundSelector {
+  margin-block-start: 1rem;
+  margin-block-end: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgb(167, 139, 250);
+  padding: 0.5rem 1rem;
+  color: white;
+  border-radius: 0.5rem;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: rgb(216, 180, 254);
+  margin-block-end: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mantraQuote {
+  font-size: 1.875rem; /* Taille légèrement plus grande */
+  font-weight: 600;
+  font-style: italic;
+  padding: 2rem 1rem;
+  border: 1px solid rgba(216, 180, 254, 0.4);
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #f3e8ff; /* 🌟 Texte violet pastel clair */
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  max-inline-size: 42rem;
+  margin: 0 auto;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.2); /* 💫 Glow léger */
+  transition: all 0.3s ease-in-out;
+}
+
+
+@media (min-width: 768px) {
+  .mantraQuote {
+    font-size: 1.875rem;
+  }
+}
+
+
+.buttonContainer {
+  margin-block-start: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.button {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: white;
+  transition: background-color 150ms;
+}
+
+.copyButton {
+  background-color: rgb(124, 58, 237);
+}
+
+.copyButton:hover {
+  background-color: rgb(109, 40, 217);
+}
+
+.listenButton {
+  background-color: rgb(79, 70, 229);
+}
+
+.listenButton:hover {
+  background-color: rgb(67, 56, 202);
+}
+
+.newButton {
+  background-color: rgb(22, 163, 74);
+}
+
+.newButton:hover {
+  background-color: rgb(21, 128, 61);
+}
+
+.soundButton {
+  background-color: rgb(219, 39, 119);
+}
+
+.soundButton:hover {
+  background-color: rgb(190, 24, 93);
+}
+
+.nextSoundButton {
+  background-color: rgb(234, 179, 8);
+}
+
+.nextSoundButton:hover {
+  background-color: rgb(202, 138, 4);
+}
+
+.animatePulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.backgroundImage {
+  background-image: var(--background-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.backgroundUrl {
+  background-image: var(--background-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.rhythmContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-block-start: 1.5rem;
+}
+
+.rhythmSelect {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgb(167, 139, 250);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.rhythmSelect:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgb(192, 168, 255);
+}
+
+.rhythmContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-block-start: 1.5rem;
+}
+
+.rhythmSelect {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgb(167, 139, 250);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.selectDropdown {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid rgba(216, 180, 254, 0.4);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  text-align: center;
+}
+
+.selectDropdown option {
+  background-color: #1f2937; /* fond foncé */
+  color: #fff;
+  font-weight: 500;
+}
+
+
+.quoteMark {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #d8b4fe;
+  opacity: 0.8;
+}
+
+.breathContainer {
+  margin-block-start: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  color: #f0e9ff;
+  font-family: 'Playfair Display', serif;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out forwards;
+}
+
+.breathText {
+  font-size: 1.5rem;
+  animation: fadeText 4s infinite ease-in-out;
+}
+
+@keyframes fadeText {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.breathCircleWrapper {
+  inline-size: 120px;
+  block-size: 120px;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: pulseBreath 4s ease-in-out infinite;
+}
+
+.breathCircle {
+  inline-size: 60px;
+  block-size: 60px;
+  background-color: #c084fc;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #d8b4fe;
+}
+
+.themeSelect {
+  border-color: #8b5cf6; /* violet */
+}
+
+.soundSelect {
+  border-color: #ec4899; /* rose */
+}
+
+.rhythmSelect {
+  border-color: #10b981; /* vert émeraude */
+}
+
+
+
+
+@keyframes pulseBreath {
+  0%, 100% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.breathCount {
+  font-size: 1.2rem;
+  color: #ddd;
+  opacity: 0.8;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
+
+
+
+
+

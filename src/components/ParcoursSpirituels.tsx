@@ -10,7 +10,7 @@ import {
   FaYinYang,
   FaBrain,
 } from "react-icons/fa";
-
+import MantraDuJour from "./MantraDuJour";
 // Define Question type
 type Question = {
   question: string;
@@ -1176,6 +1176,9 @@ const ParcoursSpirituels = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-yellow-500 mb-12 animate__animated animate__fadeInDown">
             Parcours Spirituels
           </h2>
+          <div className="m-12 mx-auto">
+            <MantraDuJour />
+          </div>
           <p className="select-path-text text-xl text-gray-300 mb-6">
             Sélectionnez un parcours pour commencer votre voyage intérieur
           </p>

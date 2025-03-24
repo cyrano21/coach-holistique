@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -11,39 +10,40 @@ interface Message {
 const AIChat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
-
-  const getAIResponse = (userMessage: string) => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    if (lowerMessage.includes('qui es tu') || lowerMessage.includes('qui êtes vous')) {
-      return "Je suis un guide spirituel virtuel conçu pour vous accompagner dans votre cheminement spirituel. Je peux vous aider à explorer différentes pratiques de méditation, de développement personnel et de croissance spirituelle.";
-    }
-    
-    if (lowerMessage.includes('grandir') && lowerMessage.includes('spirituel')) {
-      return "La croissance spirituelle est un voyage personnel qui peut inclure plusieurs pratiques : la méditation quotidienne, la pratique de la gratitude, l'étude des textes sacrés, la connexion avec la nature, et le développement de la compassion. Par quelle pratique souhaitez-vous commencer ?";
-    }
-
-    if (lowerMessage.includes('méditation') || lowerMessage.includes('mediter')) {
-      return "La méditation est une excellente base pour la croissance spirituelle. Je vous suggère de commencer par une simple pratique de respiration consciente pendant 5-10 minutes par jour. Souhaitez-vous que je vous guide dans un exercice ?";
-    }
-
-    return "Je suis là pour vous accompagner dans votre voyage spirituel. Quelle aspect de votre développement personnel souhaitez-vous explorer ?";
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
-    // Add user message
+    // Ajoute le message de l'utilisateur
     setMessages(prev => [...prev, { text: inputText, sender: 'user' }]);
+    setIsLoading(true);
 
-    // Get AI response
-    const aiResponse = getAIResponse(inputText);
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: inputText,
+          role: 'guide' // 🧠 On spécifie que c'est pour le guide spirituel
+        }),
+      });
+      
 
-    setTimeout(() => {
+      const data = await response.json();
+      const aiResponse = data.response || data.error || "Erreur : pas de réponse de l'API.";
+
       setMessages(prev => [...prev, { text: aiResponse, sender: 'ai' }]);
-    }, 500);
-
-    setInputText('');
+    } catch (error) {
+      console.error("Erreur lors de l'appel à l'API :", error);
+      setMessages(prev => [
+        ...prev,
+        { text: "Erreur lors de l'appel à l'API", sender: 'ai' }
+      ]);
+    } finally {
+      setIsLoading(false);
+      setInputText('');
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -61,9 +61,7 @@ const AIChat: React.FC = () => {
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`mb-4 ${
-              message.sender === 'user' ? 'text-right' : 'text-left'
-            }`}
+            className={`mb-4 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}
           >
             <div
               className={`inline-block p-3 rounded-lg ${
@@ -76,6 +74,7 @@ const AIChat: React.FC = () => {
             </div>
           </div>
         ))}
+        {isLoading && <div className="text-left text-white">Chargement...</div>}
       </div>
 
       <div className="flex gap-2">

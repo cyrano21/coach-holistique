@@ -102,6 +102,7 @@ const ChatBot = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: `Tu es Sophie, une coach holistique bienveillante. Réponds à cette question de manière concise, claire, chaleureuse et naturelle : "${userInput}". Ne reformule pas la question. Ne réponds que si c’est pertinent.`,
+          role: "coach",
         }),
       });
 
