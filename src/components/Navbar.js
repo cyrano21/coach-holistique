@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "@/components/ThemeToggle";
+
 import "./navbar.css";
 
 function Navbar() {
@@ -12,8 +14,8 @@ function Navbar() {
 
   const isActive = (path) => {
     return pathname === path
-      ? "font-medium text-yellow-300 scale-105 transform" 
-      : "font-medium text-gray-100 hover:text-purple-200 hover:scale-105 transform"; 
+      ? "font-medium text-yellow-300 scale-105 transform"
+      : "font-medium text-gray-100 hover:text-purple-200 hover:scale-105 transform";
   };
 
   const closeMenu = () => {
@@ -23,7 +25,7 @@ function Navbar() {
   return (
     <nav className="fixed top-0 w-full bg-gradient-to-r from-purple-900 via-purple-600 to-blue-900 shadow-lg z-50 overflow-x-hidden">
       <div className="h-1 w-full bg-gradient-to-r from-purple-400 via-pink-500 to-red-500"></div>
-      
+
       <div className="w-full mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -38,17 +40,44 @@ function Navbar() {
                 className="rounded-full"
               />
             </div>
-            <span className="ml-3 text-xl font-bold text-white">Coach Holistique</span>
+            <span className="ml-3 text-xl font-bold text-white">
+              Coach Holistique
+            </span>
           </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/" className={isActive("/")}>Accueil</Link>
-            <Link href="/approches-therapeutiques" className={isActive("/approches-therapeutiques")}>Approches Thérapeutiques</Link>
-            <Link href="/methodes" className={isActive("/methodes")}>Méthodes</Link>
-            <Link href="/coaching-personnalise" className={isActive("/coaching-personnalise")}>Coaching Personnalisé</Link>
-            <Link href="/parcours-spirituels" className={isActive("/parcours-spirituels")}>Parcours Spirituels</Link>
-            <Link href="/outils-developpement" className={isActive("/outils-developpement")}>Outils</Link>
+            <ThemeToggle />
+            <Link href="/" className={isActive("/")}>
+              Accueil
+            </Link>
+            <Link
+              href="/approches-therapeutiques"
+              className={isActive("/approches-therapeutiques")}
+            >
+              Approches Thérapeutiques
+            </Link>
+            <Link href="/methodes" className={isActive("/methodes")}>
+              Méthodes
+            </Link>
+            <Link
+              href="/coaching-personnalise"
+              className={isActive("/coaching-personnalise")}
+            >
+              Coaching Personnalisé
+            </Link>
+            <Link
+              href="/parcours-spirituels"
+              className={isActive("/parcours-spirituels")}
+            >
+              Parcours Spirituels
+            </Link>
+            <Link
+              href="/outils-developpement"
+              className={isActive("/outils-developpement")}
+            >
+              Outils
+            </Link>
             <a
               href="https://new-blog-mong.vercel.app/"
               target="_blank"
@@ -57,7 +86,9 @@ function Navbar() {
             >
               Blog
             </a>
-            <Link href="/contact" className={isActive("/contact")}>Contact</Link>
+            <Link href="/contact" className={isActive("/contact")}>
+              Contact
+            </Link>
           </div>
 
           {/* Burger Menu Button */}
@@ -97,12 +128,51 @@ function Navbar() {
         {isOpen && (
           <div className="md:hidden w-full">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              <Link href="/" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Accueil</Link>
-              <Link href="/approches-therapeutiques" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Approches Thérapeutiques</Link>
-              <Link href="/methodes" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Méthodes</Link>
-              <Link href="/coaching-personnalise" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Coaching Personnalisé</Link>
-              <Link href="/parcours-spirituels" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Parcours Spirituels</Link>
-              <Link href="/outils-developpement" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Outils</Link>
+              <div className="px-3 py-2">
+                <ThemeToggle />
+              </div>
+              <Link
+                href="/"
+                onClick={closeMenu}
+                className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md"
+              >
+                Accueil
+              </Link>
+              <Link
+                href="/approches-therapeutiques"
+                onClick={closeMenu}
+                className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md"
+              >
+                Approches Thérapeutiques
+              </Link>
+              <Link
+                href="/methodes"
+                onClick={closeMenu}
+                className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md"
+              >
+                Méthodes
+              </Link>
+              <Link
+                href="/coaching-personnalise"
+                onClick={closeMenu}
+                className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md"
+              >
+                Coaching Personnalisé
+              </Link>
+              <Link
+                href="/parcours-spirituels"
+                onClick={closeMenu}
+                className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md"
+              >
+                Parcours Spirituels
+              </Link>
+              <Link
+                href="/outils-developpement"
+                onClick={closeMenu}
+                className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md"
+              >
+                Outils
+              </Link>
               <a
                 href="https://new-blog-mong.vercel.app/"
                 target="_blank"
@@ -112,7 +182,13 @@ function Navbar() {
               >
                 Blog
               </a>
-              <Link href="/contact" onClick={closeMenu} className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md">Contact</Link>
+              <Link
+                href="/contact"
+                onClick={closeMenu}
+                className="block px-3 py-2 text-white hover:bg-purple-800 rounded-md"
+              >
+                Contact
+              </Link>
             </div>
           </div>
         )}

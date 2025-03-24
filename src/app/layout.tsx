@@ -4,18 +4,19 @@ import "./globals.css";
 import { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
 import RootLayoutClient from "./RootLayoutClient";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
-  display: 'swap',
+  display: "swap",
 });
 
 const playfair = Playfair_Display({
   weight: ["400", "600", "700"],
   subsets: ["latin"],
-  variable: '--font-playfair',
-  display: 'swap',
+  variable: "--font-playfair",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -30,12 +31,16 @@ export default function RootLayout({
 }): React.JSX.Element {
   return (
     <html lang="fr">
-      <body className={`min-h-screen flex flex-col ${poppins.className} ${playfair.variable}`}>
-        <Navbar />
-        <RootLayoutClient>
-          <main className="flex-grow">{children}</main>
-        </RootLayoutClient>
-        <Footer />
+      <body
+        className={`min-h-screen flex flex-col ${poppins.className} ${playfair.variable}`}
+      >
+        <ThemeProvider>
+          <Navbar />
+          <RootLayoutClient>
+            <main className="flex-grow">{children}</main>
+          </RootLayoutClient>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

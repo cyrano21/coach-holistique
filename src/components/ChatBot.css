@@ -12,3 +12,23 @@
   right: 20px;
   z-index: 9999;
 }
+
+@media (max-width: 640px) {
+  .chat-window {
+    right: 5%;
+    bottom: 5%;
+    width: 90vw !important;
+    height: 85vh !important;
+    border-radius: 1rem;
+  }
+
+  .chat-window .h-80 {
+    height: 55vh;
+  }
+
+  .chat-window input,
+  .chat-window textarea {
+    font-size: 0.875rem;
+  }
+}
+

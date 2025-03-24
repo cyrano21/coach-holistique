@@ -18,7 +18,9 @@ export async function POST(req: Request) {
     });
 
     // Nettoyer la réponse en enlevant le prompt
-    const cleanedResponse = result.generated_text.replace(/^[^]*?[?]\s*/, '');
+  const cleanedResponse = result.generated_text
+  .replace(prompt, "") // Supprime le prompt brut
+  .trimStart();         // Nettoie le début de la réponse
     return new Response(JSON.stringify({ response: cleanedResponse }), {
       headers: { 'Content-Type': 'application/json' },
     });
