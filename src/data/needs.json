@@ -69,6 +69,12 @@
           "image": "/images/points/point-gamme.jpg",
           "phrase": "Je suis maître de mes émotions.",
           "audio": "/audio/colere/point-gamme.mp3"
+        },
+        {
+          "name": "Point Karaté",
+          "image": "/images/points/point-karate.jpg",
+          "phrase": "Je transforme ma colère en force positive.",
+          "audio": "/audio/colere/point-karate.mp3"
         }
       ]
     },
@@ -141,6 +147,12 @@
           "image": "/images/points/point-gamme.jpg",
           "phrase": "Je suis calme et centré(e).",
           "audio": "/audio/anxiete/point-gamme.mp3"
+        },
+        {
+          "name": "Point Karaté",
+          "image": "/images/points/point-karate.jpg",
+          "phrase": "Je dissipe mon anxiété et retrouve ma sérénité.",
+          "audio": "/audio/anxiete/point-karate.mp3"
         }
       ]
     },
@@ -213,6 +225,12 @@
           "image": "/images/points/point-gamme.jpg",
           "phrase": "Je m'autorise à ressentir la joie à nouveau.",
           "audio": "/audio/tristesse/point-gamme.mp3"
+        },
+        {
+          "name": "Point Karaté",
+          "image": "/images/points/point-karate.jpg",
+          "phrase": "Je transforme ma tristesse en acceptation et guérison.",
+          "audio": "/audio/tristesse/point-karate.mp3"
         }
       ]
     },
@@ -285,6 +303,12 @@
           "image": "/images/points/point-gamme.jpg",
           "phrase": "J'avance avec confiance dans ma vie.",
           "audio": "/audio/peur/point-gamme.mp3"
+        },
+        {
+          "name": "Point Karaté",
+          "image": "/images/points/point-karate.jpg",
+          "phrase": "Je transforme ma peur en courage et détermination.",
+          "audio": "/audio/peur/point-karate.mp3"
         }
       ]
     },
@@ -357,6 +381,12 @@
           "image": "/images/points/point-gamme.jpg",
           "phrase": "Je suis calme face aux défis de la vie.",
           "audio": "/audio/stress/point-gamme.mp3"
+        },
+        {
+          "name": "Point Karaté",
+          "image": "/images/points/point-karate.jpg",
+          "phrase": "Je relâche mon stress et accueille la paix intérieure.",
+          "audio": "/audio/stress/point-karate.mp3"
         }
       ]
     },
@@ -429,6 +459,12 @@
           "image": "/images/points/point-gamme.jpg",
           "phrase": "Je suis libre de toute culpabilité.",
           "audio": "/audio/culpabilite/point-gamme.mp3"
+        },
+        {
+          "name": "Point Karaté",
+          "image": "/images/points/point-karate.jpg",
+          "phrase": "Je me pardonne et libère ma culpabilité.",
+          "audio": "/audio/culpabilite/point-karate.mp3"
         }
       ]
     },
@@ -501,6 +537,12 @@
           "image": "/images/points/point-gamme.jpg",
           "phrase": "Je marche avec dignité dans ma vie.",
           "audio": "/audio/honte/point-gamme.mp3"
+        },
+        {
+          "name": "Point Karaté",
+          "image": "/images/points/point-karate.jpg",
+          "phrase": "Je m'accepte pleinement et laisse partir la honte.",
+          "audio": "/audio/honte/point-karate.mp3"
         }
       ]
     },
@@ -573,6 +615,12 @@
           "image": "/images/points/point-gamme.jpg",
           "phrase": "Je vis dans la paix et l'harmonie.",
           "audio": "/audio/ressentiment/point-gamme.mp3"
+        },
+        {
+          "name": "Point Karaté",
+          "image": "/images/points/point-karate.jpg",
+          "phrase": "Je libère mon ressentiment et choisis le pardon.",
+          "audio": "/audio/ressentiment/point-karate.mp3"
         }
       ]
     }
