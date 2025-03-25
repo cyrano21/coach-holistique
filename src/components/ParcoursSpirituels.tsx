@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa";
 import MantraDuJour from "./MantraDuJour";
 import EFT from "@/components/EFT";
+import BonshommesAllumettes from "@/components/spirituels/BonshommesAllumettes";
 
 // Define Question type
 type Question = {
@@ -1560,6 +1561,10 @@ const ParcoursSpirituels = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="mt-16">
+          <BonshommesAllumettes isEmbedded={true} />
         </div>
 
         {/* Section Analyse Numérologique */}
