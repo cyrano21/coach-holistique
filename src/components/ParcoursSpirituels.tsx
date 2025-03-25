@@ -1422,7 +1422,7 @@ const ParcoursSpirituels = () => {
           })}
         </div>
 
-        <div className="mt-12 bg-gray-800 rounded-xl p-8">
+        <div className="mt-12 bg-gray-800 rounded-xl">
           <div className="text-center"></div>
           {selectedGame && (
             <div>

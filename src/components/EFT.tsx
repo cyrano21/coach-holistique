@@ -14,7 +14,9 @@ export default function EFT() {
   const [selected, setSelected] = useState<Need | null>(null);
   const [step, setStep] = useState(0);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-  const [mode, setMode] = useState<"visualisation" | "phrases" | "audio">("visualisation");
+  const [mode, setMode] = useState<"visualisation" | "phrases" | "audio">(
+    "visualisation"
+  );
   const [imageError, setImageError] = useState(false);
 
   const speak = (text: string) => {
@@ -36,7 +38,7 @@ export default function EFT() {
 
     if (found?.points?.[0]) {
       const point = found.points[0];
-      
+
       if (mode === "audio") {
         try {
           const sound = new Audio(point.audio);
@@ -46,13 +48,13 @@ export default function EFT() {
             // Utiliser la synthèse vocale comme fallback
             speak(point.phrase);
           };
-          
-          sound.play().catch(err => {
+
+          sound.play().catch((err) => {
             console.log("Erreur de lecture audio:", err);
             // Utiliser la synthèse vocale comme fallback
             speak(point.phrase);
           });
-          
+
           setAudio(sound);
         } catch (err) {
           console.log("Erreur lors de la création de l'audio:", err);
@@ -74,20 +76,20 @@ export default function EFT() {
         try {
           audio?.pause();
           const newAudio = new Audio(nextPoint.audio);
-          
+
           // Ajouter un gestionnaire d'erreur pour l'audio
           newAudio.onerror = () => {
             console.log("Erreur de chargement audio:", nextPoint.audio);
             // Utiliser la synthèse vocale comme fallback
             speak(nextPoint.phrase);
           };
-          
-          newAudio.play().catch(err => {
+
+          newAudio.play().catch((err) => {
             console.log("Erreur de lecture audio:", err);
             // Utiliser la synthèse vocale comme fallback
             speak(nextPoint.phrase);
           });
-          
+
           setAudio(newAudio);
         } catch (err) {
           console.log("Erreur lors de la création de l'audio:", err);
@@ -99,28 +101,28 @@ export default function EFT() {
 
   const handleModeChange = (newMode: "visualisation" | "phrases" | "audio") => {
     setMode(newMode);
-    
+
     if (selected && selected.points && selected.points.length > 0) {
       const currentPoint = selected.points[step];
-      
+
       if (newMode === "audio" && currentPoint) {
         try {
           audio?.pause();
           const newAudio = new Audio(currentPoint.audio);
-          
+
           // Ajouter un gestionnaire d'erreur pour l'audio
           newAudio.onerror = () => {
             console.log("Erreur de chargement audio:", currentPoint.audio);
             // Utiliser la synthèse vocale comme fallback
             speak(currentPoint.phrase);
           };
-          
-          newAudio.play().catch(err => {
+
+          newAudio.play().catch((err) => {
             console.log("Erreur de lecture audio:", err);
             // Utiliser la synthèse vocale comme fallback
             speak(currentPoint.phrase);
           });
-          
+
           setAudio(newAudio);
         } catch (err) {
           console.log("Erreur lors de la création de l'audio:", err);
@@ -144,9 +146,9 @@ export default function EFT() {
   if (!selected) {
     return (
       <div className="p-6 bg-white/10 rounded-lg shadow-xl text-white">
-      <h2 className="text-3xl font-extrabold mb-4 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 bg-clip-text text-transparent drop-shadow-lg tracking-tight">
-  Choisissez ce que vous souhaitez libérer
-</h2>
+        <h2 className="text-3xl font-extrabold mb-4 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 bg-clip-text text-transparent drop-shadow-lg tracking-tight">
+          Choisissez ce que vous souhaitez libérer
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {allNeeds.map((need) => (
@@ -180,34 +182,37 @@ export default function EFT() {
       </h2>
 
       {/* Mode selector */}
-      <div className="flex justify-center mb-6 space-x-2">
+      <div className="flex flex-wrap justify-center mb-6 gap-2">
         <button
           onClick={() => handleModeChange("visualisation")}
-          className={`px-4 py-2 rounded-full transition ${
-            mode === "visualisation"
-              ? "bg-yellow-600 text-white"
-              : "bg-white/20 text-white/80 hover:bg-white/30"
-          }`}
+          className={`px-[1.5rem] py-[0.6rem] text-[0.9rem] rounded-full transition 
+      ${
+        mode === "visualisation"
+          ? "bg-yellow-600 text-white"
+          : "bg-white/20 text-white/80 hover:bg-white/30"
+      }`}
         >
           Visualisation
         </button>
         <button
           onClick={() => handleModeChange("phrases")}
-          className={`px-4 py-2 rounded-full transition ${
-            mode === "phrases"
-              ? "bg-yellow-600 text-white"
-              : "bg-white/20 text-white/80 hover:bg-white/30"
-          }`}
+          className={`px-[1.5rem] py-[0.6rem] text-[0.9rem] rounded-full transition 
+      ${
+        mode === "phrases"
+          ? "bg-yellow-600 text-white"
+          : "bg-white/20 text-white/80 hover:bg-white/30"
+      }`}
         >
           Phrases
         </button>
         <button
           onClick={() => handleModeChange("audio")}
-          className={`px-4 py-2 rounded-full transition ${
-            mode === "audio"
-              ? "bg-yellow-600 text-white"
-              : "bg-white/20 text-white/80 hover:bg-white/30"
-          }`}
+          className={`px-[1.5rem] py-[0.6rem] text-[0.9rem] rounded-full transition 
+      ${
+        mode === "audio"
+          ? "bg-yellow-600 text-white"
+          : "bg-white/20 text-white/80 hover:bg-white/30"
+      }`}
         >
           Audio guidé
         </button>
@@ -231,7 +236,12 @@ export default function EFT() {
                     alt={`Point de tapotement: ${point.name}`}
                     width={250}
                     height={250}
-                    style={{ inlineSize: "auto", blockSize: "auto", maxInlineSize: "100%", maxBlockSize: "100%" }}
+                    style={{
+                      inlineSize: "auto",
+                      blockSize: "auto",
+                      maxInlineSize: "100%",
+                      maxBlockSize: "100%",
+                    }}
                     className="animate-pulse-circle object-contain"
                     onError={() => setImageError(true)}
                   />
@@ -251,9 +261,12 @@ export default function EFT() {
           {mode === "phrases" && (
             <div className="flex flex-col items-center">
               <div className="bg-white/10 p-6 rounded-lg max-w-md">
-                <p className="text-xl text-white font-medium italic">&ldquo;{point.phrase}&rdquo;</p>
+                <p className="text-xl text-white font-medium italic">
+                  &ldquo;{point.phrase}&rdquo;
+                </p>
                 <p className="text-white/80 mt-4">
-                  Répétez cette phrase 3 fois tout en tapotant le point {point.name}
+                  Répétez cette phrase 3 fois tout en tapotant le point{" "}
+                  {point.name}
                 </p>
               </div>
               {!imageError ? (
@@ -263,7 +276,12 @@ export default function EFT() {
                     alt={`Point de tapotement: ${point.name}`}
                     width={200}
                     height={200}
-                    style={{ inlineSize: "auto", blockSize: "auto", maxInlineSize: "100%", maxBlockSize: "100%" }}
+                    style={{
+                      inlineSize: "auto",
+                      blockSize: "auto",
+                      maxInlineSize: "100%",
+                      maxBlockSize: "100%",
+                    }}
                     className="animate-pulse-circle object-contain"
                     onError={() => setImageError(true)}
                   />
@@ -285,7 +303,12 @@ export default function EFT() {
                     alt={point.name}
                     width={200}
                     height={200}
-                    style={{ inlineSize: "auto", blockSize: "auto", maxInlineSize: "100%", maxBlockSize: "100%" }}
+                    style={{
+                      inlineSize: "auto",
+                      blockSize: "auto",
+                      maxInlineSize: "100%",
+                      maxBlockSize: "100%",
+                    }}
                     className="animate-pulse-circle object-contain"
                     onError={() => setImageError(true)}
                   />
@@ -302,14 +325,14 @@ export default function EFT() {
                     try {
                       audio?.pause();
                       const newAudio = new Audio(point.audio);
-                      
+
                       // Ajouter un gestionnaire d'erreur pour l'audio
                       newAudio.onerror = () => {
                         console.log("Erreur de chargement audio:", point.audio);
                         // Utiliser la synthèse vocale comme fallback
                         speak(point.phrase);
                       };
-                      
+
                       newAudio.oncanplaythrough = () => {
                         newAudio.play();
                         setAudio(newAudio);
@@ -359,7 +382,14 @@ export default function EFT() {
                     strokeLinejoin="round"
                     className="text-white"
                   >
-                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                    <rect
+                      x="4"
+                      y="4"
+                      width="16"
+                      height="16"
+                      rx="2"
+                      ry="2"
+                    ></rect>
                   </svg>
                 </button>
               </div>
@@ -374,7 +404,14 @@ export default function EFT() {
 
       <div className={styles.progressBar}>
         <div
-          className={`${styles.progressFill} ${styles[`progress-${Math.round(((step + 1) / selected.points.length) * 100 / 10) * 10}`]}`}
+          className={`${styles.progressFill} ${
+            styles[
+              `progress-${
+                Math.round((((step + 1) / selected.points.length) * 100) / 10) *
+                10
+              }`
+            ]
+          }`}
         />
       </div>
 
