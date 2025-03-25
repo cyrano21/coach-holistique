@@ -4,69 +4,15 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { FaSyncAlt, FaVolumeUp, FaVolumeMute, FaSpa } from "react-icons/fa";
 import styles from "./MantraDuJour.module.css";
+import { mantraThemes, backgroundImages, relaxingSounds } from "../data/mantras";
 
 const getRandom = <T,>(arr: T[]): T =>
   arr[Math.floor(Math.random() * arr.length)];
 
-const mantraThemes: Record<string, string[]> = {
-  tous: [
-    "Je suis paix intérieure",
-    "Je suis lumière et amour",
-    "Je suis force tranquille",
-    "Je suis digne d’amour et de respect",
-    "Je suis confiance et clarté",
-    "Je suis aligné(e) avec mon âme",
-    "Je suis libre de toute peur",
-    "Je suis calme et enraciné(e)",
-    "Je suis énergie pure et bienveillante",
-    "Je suis harmonie entre mon corps et mon esprit",
-    "Je suis guidé(e) par la sagesse intérieure",
-    "Je suis lumière dans l’obscurité",
-    "Je suis ouverture à la transformation",
-    "Je suis présence consciente",
-    "Je suis gratitude incarnée",
-  ],
-  paix: [
-    "Je suis paix intérieure",
-    "Je suis calme et enraciné(e)",
-    "Je suis présence consciente",
-  ],
-  énergie: [
-    "Je suis force tranquille",
-    "Je suis énergie pure et bienveillante",
-    "Je suis aligné(e) avec mon âme",
-  ],
-  confiance: [
-    "Je suis digne d’amour et de respect",
-    "Je suis confiance et clarté",
-    "Je suis lumière dans l’obscurité",
-  ],
-  gratitude: [
-    "Je suis gratitude incarnée",
-    "Je suis ouverture à la transformation",
-  ],
-};
-
-const images = [
-  "/backgrounds/mountain.jpg",
-  "/backgrounds/zen.jpg",
-  "/backgrounds/lotus.jpg",
-  "/backgrounds/forest.jpg",
-  "/backgrounds/clouds.jpg",
-];
-
-const relaxingSounds = [
-  { label: "Sons doux", path: "/sounds/relax1.mp3" },
-  { label: "Sons relaxants", path: "/sounds/relax.mp3" },
-  { label: "Nature - Océan", path: "/sounds/ocean.mp3" },
-  { label: "Flûte zen", path: "/sounds/flute.mp3" },
-  { label: "Bol tibétain", path: "/sounds/tibetan.mp3" },
-];
-
 const MantraDuJour = () => {
   const [theme, setTheme] = useState("tous");
-  const [mantra, setMantra] = useState(() => getRandom(mantraThemes["tous"]));
-  const [background, setBackground] = useState(() => getRandom(images));
+  const [mantra, setMantra] = useState("");
+  const [backgroundClass, setBackgroundClass] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPlayingSound, setIsPlayingSound] = useState(false);
   const [soundIndex, setSoundIndex] = useState(0);
@@ -139,7 +85,6 @@ const MantraDuJour = () => {
     stopSpeaking();
     const newMantra = getRandom(getMantras());
     setMantra(newMantra);
-    setBackground(getRandom(images));
   };
 
   const handleSoundChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -150,6 +95,21 @@ const MantraDuJour = () => {
       audioRef.current.play();
     }
   };
+
+  useEffect(() => {
+    // Générer un mantra aléatoire et un arrière-plan au chargement
+    const randomMantra = getRandom(getMantras());
+    setMantra(randomMantra);
+    
+    const randomBackground = getRandom(backgroundImages);
+    
+    // Extraire le nom de fichier sans extension et sans chemin
+    const backgroundName = randomBackground.split('/').pop()?.split('.')[0] || '';
+    setBackgroundClass(`background${backgroundName.charAt(0).toUpperCase() + backgroundName.slice(1)}`);
+    
+    // Initialisation d'AOS pour les animations
+    // AOS.init();
+  }, [getMantras]);
 
   useEffect(() => {
     speechSynthesis.onvoiceschanged = () => {};
@@ -216,25 +176,28 @@ const MantraDuJour = () => {
 
   useEffect(() => {
     if (!autoZen) return;
+
     const interval = setInterval(() => {
       const newMantra = getRandom(getMantras());
       setMantra(newMantra);
-      setBackground(getRandom(images));
+      
+      const newBackground = getRandom(backgroundImages);
+      
+      // Mettre à jour la classe d'arrière-plan
+      const backgroundName = newBackground.split('/').pop()?.split('.')[0] || '';
+      setBackgroundClass(`background${backgroundName.charAt(0).toUpperCase() + backgroundName.slice(1)}`);
+      
       stopSpeaking();
       speakMantra(newMantra);
-    }, 15000);
+    }, 8000); // Réduit à 8000ms pour des transitions plus rapides
 
     return () => clearInterval(interval);
   }, [autoZen, speakMantra, theme, getMantras]);
 
-  
-
   return (
     <div
-    className={styles.backgroundContainer}
-    style={{ backgroundImage: `url(${background})` }}
-  >
-  
+      className={`${styles.backgroundContainer} ${styles[backgroundClass]}`}
+    >
       <div className={styles.overlay} />
       <div className={`${styles["stars-animation"]} absolute inset-0`} />
 
@@ -249,7 +212,6 @@ const MantraDuJour = () => {
             setTheme(newTheme);
             const list = mantraThemes[newTheme];
             setMantra(getRandom(list));
-            setBackground(getRandom(images));
           }}
           className={`${styles.selectDropdown} ${styles.themeSelect}`}
         >

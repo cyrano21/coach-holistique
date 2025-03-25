@@ -29,16 +29,38 @@ const AIChat: React.FC = () => {
         }),
       });
       
+      if (!response.ok) {
+        const errorData = await response.json();
+        
+        if (response.status === 429 && errorData.error === 'CREDIT_LIMIT_EXCEEDED') {
+          // Message spécifique pour le dépassement de crédits
+          setMessages(prev => [
+            ...prev,
+            { 
+              text: "Le service de chat est temporairement indisponible en raison de limitations de l'API. Veuillez réessayer plus tard ou contacter l'administrateur.", 
+              sender: 'ai' 
+            }
+          ]);
+          return;
+        }
+        
+        throw new Error(errorData.message || "Erreur lors de l'appel à l'API");
+      }
 
       const data = await response.json();
-      const aiResponse = data.response || data.error || "Erreur : pas de réponse de l'API.";
+      const aiResponse = data.response || "Erreur : pas de réponse de l'API.";
 
       setMessages(prev => [...prev, { text: aiResponse, sender: 'ai' }]);
     } catch (error) {
       console.error("Erreur lors de l'appel à l'API :", error);
       setMessages(prev => [
         ...prev,
-        { text: "Erreur lors de l'appel à l'API", sender: 'ai' }
+        { 
+          text: error instanceof Error 
+            ? `Erreur : ${error.message}` 
+            : "Erreur lors de l'appel à l'API. Veuillez réessayer plus tard.", 
+          sender: 'ai' 
+        }
       ]);
     } finally {
       setIsLoading(false);

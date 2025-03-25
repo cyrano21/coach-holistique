@@ -1,0 +1,27 @@
+.progressBar {
+  width: 100%;
+  height: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  margin-top: 1.5rem;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #FACC15;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+}
+
+/* Classes dynamiques pour la barre de progression */
+.progress-0 { inline-size: 0%; }
+.progress-10 { inline-size: 10%; }
+.progress-20 { inline-size: 20%; }
+.progress-30 { inline-size: 30%; }
+.progress-40 { inline-size: 40%; }
+.progress-50 { inline-size: 50%; }
+.progress-60 { inline-size: 60%; }
+.progress-70 { inline-size: 70%; }
+.progress-80 { inline-size: 80%; }
+.progress-90 { inline-size: 90%; }
+.progress-100 { inline-size: 100%; }

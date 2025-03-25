@@ -1,3 +1,10 @@
+/* 
+ * Les directives @tailwind sont utilisées par le framework Tailwind CSS
+ * et sont traitées par PostCSS lors de la compilation.
+ * Ces avertissements peuvent être ignorés car ils sont normaux dans l'éditeur
+ * mais ne causent pas de problèmes lors de la compilation.
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -200,8 +207,6 @@
   backface-visibility: hidden;
 }
 
-
-
 /* Corps du texte global */
 :global(html), :global(body) {
   font-family: 'Poppins', sans-serif;
@@ -215,18 +220,16 @@
   background-color: #1A1A2E; /* Deep dark background */
   color: #ffffff;
   -webkit-transition: background-color 0.5s ease-in-out;
-  -moz-transition: background-color 0.5s ease-in-out;
-  -o-transition: background-color 0.5s ease-in-out;
   transition: background-color 0.5s ease-in-out;
-  scroll-behavior: smooth;
   -webkit-scroll-behavior: smooth;
+  scroll-behavior: smooth;
   scroll-padding-block-start: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :global(html), :global(body) {
-    scroll-behavior: auto;
     -webkit-scroll-behavior: auto;
+    scroll-behavior: auto;
   }
   
   .animate-fadeIn,
@@ -248,24 +251,25 @@
 
 :global(html) {
   /* Scrollbar styling with fallbacks */
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
   -webkit-scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
-  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
   -webkit-scrollbar-width: thin;
-  scroll-behavior: smooth;
+  scrollbar-width: thin;
   -webkit-scroll-behavior: smooth;
-  overscroll-behavior-block: none;
+  scroll-behavior: smooth;
   -webkit-overscroll-behavior-block: none;
+  overscroll-behavior-block: none;
   -ms-overflow-style: thin;
 }
 
 /* Ensure page always starts at top */
 :global(body) {
   position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  min-height: 100vh;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  min-block-size: 100vh;
+  -webkit-scroll-behavior: smooth;
   scroll-behavior: smooth;
 }
 
@@ -277,10 +281,10 @@
 
 /* Container général */
 .container {
-  width: 100%;
-  max-width: 1400px;
-  margin-inline: auto;
-  padding-inline: 20px;
+  inline-size: 100%;
+  max-inline-size: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
   position: relative;
   z-index: 1;
 }
@@ -384,7 +388,7 @@ p {
   font-family: 'Poppins', sans-serif;
   font-size: 0.95rem;
   line-height: 1.7;
-  margin-bottom: 15px;
+  margin-block-end: 15px;
   color: #555;
   text-align: justify;
 }
@@ -393,7 +397,7 @@ p {
 :global(section) {
   background-color: #1A1A2E;
   transition: background-color 0.5s ease-in-out, opacity 0.5s ease-in-out;
-  min-height: 100vh;
+  min-block-size: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -401,8 +405,11 @@ p {
 
 /* Prevent white flashes during scroll */
 :global(html) {
+  -webkit-scrollbar-color: #4A4E69 #1A1A2E;
   scrollbar-color: #4A4E69 #1A1A2E;
+  -webkit-scrollbar-width: thin;
   scrollbar-width: thin;
+  -webkit-scroll-behavior: smooth;
   scroll-behavior: smooth;
 }
 
@@ -434,10 +441,10 @@ p {
 .gradient-title::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  inset-block-end: 0;
   background: linear-gradient(180deg, #156F59, #e6f3ff, #156F59, #e6f3ff, #156F59); /* Dégradé autour */
   border-radius: 10px;
   z-index: -1;
@@ -584,4 +591,49 @@ p {
 
 .animate-pulse-slow {
   animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes text-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.7));
+  }
+}
+
+.animate-text-glow {
+  animation: text-glow 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.5); }
+  70% { box-shadow: 0 0 0 20px rgba(59,130,246,0); }
+  100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+}
+.animate-pulse-circle {
+  animation: pulse 2s infinite;
+  border-radius: 50%;
+}
+
+.overlay {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  inset-block-end: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.chakra-background {
+  block-size: 40vh;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  margin-block-end: 1.5rem;
+  position: relative;
 }

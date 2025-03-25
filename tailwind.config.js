@@ -10,6 +10,7 @@ module.exports = {
         "slide-up": "slideUp 0.5s ease-out",
         "carousel-slide": "carouselSlide 20s linear infinite",
         "pause": "none",
+        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -24,11 +25,18 @@ module.exports = {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-100%)" },
         },
+        pulseGlow: {
+          '0%, 100%': {
+            opacity: '0.25',
+            transform: 'scale(1)',
+          },
+          '50%': {
+            opacity: '0.5',
+            transform: 'scale(1.2)',
+          },
+        },
       },
     },
   },
-  plugins: [
-    '@tailwindcss/forms',
-    '@tailwindcss/typography',
-  ],
+  plugins: [],
 };

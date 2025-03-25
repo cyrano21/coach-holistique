@@ -106,11 +106,23 @@ const ChatBot = () => {
         }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        
+        if (response.status === 429 && errorData.error === 'CREDIT_LIMIT_EXCEEDED') {
+          return "Le service de chat est temporairement indisponible. Veuillez réessayer plus tard ou me contacter directement par email.";
+        }
+        
+        throw new Error(errorData.message || "Erreur lors de l'appel à l'API");
+      }
+
       const data = await response.json();
       return data.response;
     } catch (error) {
       console.error("Erreur chat:", error);
-      return "Désolé, je rencontre un souci technique. Essaie plus tard 🙏";
+      return error instanceof Error 
+        ? `Désolé, je rencontre un souci technique : ${error.message}. Essaie plus tard 🙏` 
+        : "Désolé, je rencontre un souci technique. Essaie plus tard 🙏";
     }
   };
 

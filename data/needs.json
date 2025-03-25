@@ -1,0 +1,18 @@
+{
+  "id": "colere",
+  "title": "Colère",
+  "points": [
+    {
+      "name": "Sommet",
+      "image": "/images/points/sommet.webp",
+      "phrase": "Je libère la colère en moi.",
+      "audio": "/audio/colere/sommet.mp3"
+    },
+    {
+      "name": "Sourcil",
+      "image": "/images/points/sourcil.jpg",
+      "phrase": "Je retrouve mon calme intérieur.",
+      "audio": "/audio/colere/sourcil.mp3"
+    }
+  ]
+}

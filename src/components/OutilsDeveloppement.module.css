@@ -1,0 +1,35 @@
+/* Styles pour la section hero */
+.heroBackground {
+  background-image: url('/images/outils/hero.jpg');
+}
+
+.heroTitle {
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.heroDescription {
+  text-shadow: 1px 1px 2px #000000;
+}
+
+/* Styles pour les méthodes thérapeutiques */
+.methodBackground {
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay;
+}
+
+/* Styles pour les bordures colorées */
+.coloredBorder0 { border-color: #9333ea; } /* purple-600 */
+.coloredBorder1 { border-color: #3b82f6; } /* blue-500 */
+.coloredBorder2 { border-color: #10b981; } /* emerald-500 */
+.coloredBorder3 { border-color: #f59e0b; } /* amber-500 */
+.coloredBorder4 { border-color: #ef4444; } /* red-500 */
+
+/* Styles pour les ombres de texte */
+.textShadowMedium {
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.textShadowLight {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}

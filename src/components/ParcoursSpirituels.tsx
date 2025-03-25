@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
+import ParticleBackground from "@/components/ParticleBackground";
 import AIGameDialog from "./AIGameDialog";
 import AIChat from "./AIChat";
 import {
@@ -11,6 +12,8 @@ import {
   FaBrain,
 } from "react-icons/fa";
 import MantraDuJour from "./MantraDuJour";
+import EFT from "@/components/EFT";
+
 // Define Question type
 type Question = {
   question: string;
@@ -43,14 +46,32 @@ const getEmotionalQuestions = async (): Promise<string[]> => {
       }),
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+
+      if (
+        response.status === 429 &&
+        errorData.error === "CREDIT_LIMIT_EXCEEDED"
+      ) {
+        return [
+          "Comment vos émotions influencent-elles vos décisions quotidiennes ?",
+          "Quelle est la dernière situation où vous avez ressenti une émotion forte et comment l'avez-vous gérée ?",
+          "Quelles pratiques vous aident à maintenir votre équilibre émotionnel ?",
+        ];
+      }
+
+      throw new Error(errorData.message || "Erreur lors de l'appel à l'API");
+    }
+
     const data = await response.json();
     return data.response.split("\n").filter((q: string) => q.trim());
   } catch (error) {
-    console.error("Erreur génération questions émotionnelles:", error);
+    console.error("Erreur lors de la génération des questions:", error);
+    // Questions de secours en cas d'erreur
     return [
-      "Quelle émotion vous a le plus marqué récemment ?",
-      "Comment votre passé influence-t-il vos réactions émotionnelles ?",
-      "Quels sont vos mécanismes de défense émotionnels ?",
+      "Comment vos émotions influencent-elles vos décisions quotidiennes ?",
+      "Quelle est la dernière situation où vous avez ressenti une émotion forte et comment l'avez-vous gérée ?",
+      "Quelles pratiques vous aident à maintenir votre équilibre émotionnel ?",
     ];
   }
 };
@@ -97,37 +118,51 @@ const getChakraQuestions = async (currentPath?: string): Promise<string> => {
       }),
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+
+      if (
+        response.status === 429 &&
+        errorData.error === "CREDIT_LIMIT_EXCEEDED"
+      ) {
+        console.log("API credit limit exceeded, using fallback question");
+        // Utiliser une question de secours générique si le chemin n'est pas reconnu
+        return fallbackQuestions["Quiz des Traditions Spirituelles"];
+      }
+
+      throw new Error(errorData.message || "Erreur lors de l'appel à l'API");
+    }
+
     const data = await response.json();
 
     if (!data.response) {
-      throw new Error("Réponse IA vide");
+      throw new Error("Réponse vide de l'API");
     }
 
-    const validateQuestion = (question: string): boolean => {
-      const parts = question.split("|");
-      if (parts.length !== 3) return false;
-
-      const [, options, correctIndex] = parts;
-      const optionsArray = options.split(",");
-      const index = parseInt(correctIndex);
-
-      return (
-        optionsArray.length === 4 && !isNaN(index) && index >= 0 && index <= 3
-      );
-    };
-
-    // Valider la réponse de l'IA
-    if (validateQuestion(data.response)) {
-      return data.response;
+    // Vérifier si la réponse est au bon format
+    const formattedResponse = data.response.trim();
+    if (
+      !formattedResponse.includes("|") ||
+      formattedResponse.split("|").length !== 3
+    ) {
+      console.error("Format de réponse incorrect:", formattedResponse);
+      throw new Error("Format de réponse incorrect");
     }
 
-    console.warn("Format de question IA incorrect, utilisation du fallback");
+    return formattedResponse;
   } catch (error) {
-    console.error("Erreur lors de la génération de la question:", error);
-  }
+    console.error("Erreur lors de la génération de question:", error);
+    // Utiliser une question de secours en fonction du chemin ou une question générique
+    if (
+      currentPath &&
+      fallbackQuestions[currentPath as keyof typeof fallbackQuestions]
+    ) {
+      return fallbackQuestions[currentPath as keyof typeof fallbackQuestions];
+    }
 
-  // En cas d'erreur ou de format incorrect, retourner une question par défaut
-  return "Quelle est l'essence de votre quête spirituelle?|Connaissance,Paix,Transformation,Connexion|1";
+    // Question de secours générique si aucun chemin n'est reconnu
+    return fallbackQuestions["Quiz des Traditions Spirituelles"];
+  }
 };
 
 const spiritualPaths = [
@@ -257,6 +292,29 @@ const spiritualPaths = [
         titleText: "text-white",
         paragraphText: "text-white/80",
         buttonBg: "bg-orange-600 hover:bg-orange-500",
+      },
+    },
+  },
+  {
+    id: 6,
+    title: "EFT - Libération Émotionnelle",
+    icon: FaHandHoldingHeart,
+    color: "from-yellow-600 to-orange-600",
+    description: "Guérison émotionnelle par le tapotement guidé (EFT)",
+    details: [
+      "Visualisation des points de tapotement",
+      "Phrases de libération émotionnelle",
+      "Voix et audio guidés",
+    ],
+    game: {
+      title: "EFT",
+      description: "Suivez une séance de libération émotionnelle guidée",
+      component: () => <EFT />,
+      color: {
+        background: "from-yellow-600 to-orange-600",
+        titleText: "text-white",
+        paragraphText: "text-white/80",
+        buttonBg: "bg-yellow-600 hover:bg-orange-500",
       },
     },
   },
@@ -451,9 +509,10 @@ const SpiritualQuiz = ({ theme, path }: { theme: string; path?: string }) => {
         <div>
           {questions.length > 0 && (
             <div>
-              <h3 className="text-2xl font-bold mb-6">
+              <h3 className="text-2xl font-bold mb-6 text-yellow-400 drop-shadow-lg tracking-wide animate-pulse">
                 {questions[currentQuestionIndex].question}
               </h3>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {questions[currentQuestionIndex].options.map(
                   (option, index) => (
@@ -679,14 +738,33 @@ const ChakraBalance = ({ onAnswer }: ChakraBalanceProps) => {
   };
 
   const loadNewQuestion = useCallback(async () => {
+    if (loading) return; // évite les appels multiples
+
     setLoading(true);
-    const question = await getChakraQuestions(currentPath);
-    const parsedQuestion = question ? parseChakraQuestion(question) : null;
-    if (parsedQuestion) {
-      setCurrentQuestion(parsedQuestion);
+
+    try {
+      const question = await getChakraQuestions(currentPath);
+      const parsedQuestion = question ? parseChakraQuestion(question) : null;
+
+      // Compare l'ancienne et la nouvelle question pour éviter les updates infinis
+      if (
+        parsedQuestion &&
+        JSON.stringify(parsedQuestion) !== JSON.stringify(currentQuestion)
+      ) {
+        setCurrentQuestion(parsedQuestion);
+      }
+    } catch (error) {
+      console.error("Erreur lors du chargement de la question chakra:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  }, [currentPath, parseChakraQuestion]);
+  }, [currentPath, currentQuestion, parseChakraQuestion, loading]);
+
+  useEffect(() => {
+    if (!currentQuestion) {
+      loadNewQuestion();
+    }
+  }, [loadNewQuestion, currentQuestion]);
 
   useEffect(() => {
     loadNewQuestion();
@@ -803,13 +881,35 @@ Note: Utilise ces balises de couleur pour chaque section.`;
         }),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
 
+        if (
+          response.status === 429 &&
+          errorData.error === "CREDIT_LIMIT_EXCEEDED"
+        ) {
+          setResult(
+            "Le service d'interprétation numérique est temporairement indisponible. " +
+              "Votre nombre de vie " +
+              lifePathNumber +
+              " représente votre essence et votre mission de vie. " +
+              "Pour une interprétation complète, veuillez réessayer plus tard ou consulter un spécialiste en numérologie."
+          );
+          return;
+        }
+
+        throw new Error(errorData.message || "Erreur lors de l'appel à l'API");
+      }
+
+      const data = await response.json();
       setResult(data.response);
     } catch (error) {
       console.error("Error:", error);
       setResult(
-        "Une erreur est survenue lors de la génération de l'interprétation."
+        "Une erreur est survenue lors de la génération de l'interprétation. " +
+          "Votre nombre de vie " +
+          lifePathNumber +
+          " est néanmoins un indicateur important de votre chemin spirituel."
       );
     }
   };
@@ -833,7 +933,6 @@ Note: Utilise ces balises de couleur pour chaque section.`;
         </div>
 
         <div>
-          <label className="block text-white mb-2">Date de naissance</label>
           <div className="form-group">
             <label htmlFor="birth-date-input" className="block text-white mb-2">
               Date de naissance
@@ -916,45 +1015,111 @@ const EnneagramCalculator: React.FC = () => {
   const [result, setResult] = useState<string | null>(null);
   const [questions, setQuestions] = useState<string[]>([]);
 
+  // Questions par défaut pour l'ennéagramme - mémorisées pour éviter les recréations
+  const defaultQuestions = useMemo(() => [
+    "Quel est votre plus grand désir intérieur ?",
+    "Comment gérez-vous vos relations dans les moments difficiles ?",
+    "Quelles sont les peurs qui influencent vos décisions ?",
+    "Comment réagissez-vous face à l'échec ?",
+    "Qu'est-ce qui vous motive vraiment chaque jour ?",
+  ], []);
+
   useEffect(() => {
     const generateQuestions = async () => {
       try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt:
-              "Génère 5 questions différentes pour un test d'ennéagramme qui aide à découvrir son type de personnalité. Les questions doivent être introspectives et varier à chaque fois.",
-          }),
-        });
+        // Ajout d'un contrôleur d'abandon pour le timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+          controller.abort('Timeout de la requête après 10 secondes');
+        }, 10000); // Augmentation du timeout à 10 secondes
+        
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              prompt:
+                "Génère 5 questions différentes pour un test d&apos;ennéagramme qui aide à découvrir son type de personnalité. Les questions doivent être introspectives et varier à chaque fois. Réponds uniquement avec les questions, une par ligne.",
+            }),
+            signal: controller.signal,
+          });
+          
+          // Nettoyage du timeout seulement si la requête a réussi
+          clearTimeout(timeoutId);
 
-        const data = await response.json();
-        if (!data || !data.response) {
-          throw new Error("Réponse invalide du serveur");
+          if (!response.ok) {
+            // Utiliser les questions par défaut en cas d'erreur HTTP
+            console.info(`Réponse HTTP non valide: ${response.status} - Utilisation des questions par défaut`);
+            setQuestions(defaultQuestions);
+            return;
+          }
+
+          let data;
+          try {
+            data = await response.json();
+          } catch {
+            console.info("Erreur lors du parsing de la réponse JSON - Utilisation des questions par défaut");
+            setQuestions(defaultQuestions);
+            return;
+          }
+
+          if (!data || typeof data.response !== "string") {
+            console.info("Format de réponse invalide - Utilisation des questions par défaut");
+            setQuestions(defaultQuestions);
+            return;
+          }
+
+          // Traiter la réponse pour extraire les questions
+          let questions = data.response
+            .split("\n")
+            .filter((q: string) => q.trim().length > 0)
+            .map((q: string) => q.replace(/^\d+[\.\)]\s*/, "").trim()) // Supprimer les numéros au début (1., 2., etc.)
+            .filter((q: string) => q.endsWith("?") || q.length > 20); // Garder seulement les questions valides
+
+          // S'assurer d'avoir au moins 5 questions
+          if (questions.length < 5) {
+            // Compléter avec des questions par défaut si nécessaire
+            const questionsManquantes = 5 - questions.length;
+            if (questions.length > 0) {
+              console.info(`Nombre insuffisant de questions générées (${questions.length}/5) - Complément avec des questions par défaut`);
+              // Ajouter uniquement le nombre de questions manquantes
+              questions = [
+                ...questions,
+                ...defaultQuestions.slice(0, questionsManquantes)
+              ];
+            } else {
+              console.info("Aucune question valide générée - Utilisation des questions par défaut");
+              questions = defaultQuestions;
+            }
+          }
+
+          // Limiter à 5 questions maximum
+          questions = questions.slice(0, 5);
+          
+          setQuestions(questions);
+        } catch (error) {
+          // Vérifier si l'erreur est due à un timeout ou à une annulation
+          if (error && 
+              typeof error === 'object' && 
+              'name' in error && 
+              error.name === 'AbortError') {
+            console.info("La requête a été interrompue (timeout) - Utilisation des questions par défaut");
+          } else {
+            console.info("Erreur lors de la génération des questions - Utilisation des questions par défaut");
+          }
+          // Utilisation d'un ensemble fixe de questions en cas d'erreur
+          setQuestions(defaultQuestions);
         }
-        const generatedQuestions = data.response
-          .split("\n")
-          .filter((q: string) => q.trim().length > 0)
-          .slice(0, 5);
-
-        setQuestions(generatedQuestions);
-      } catch (error) {
-        console.error("Erreur lors de la génération des questions:", error);
-        // Questions de secours en cas d'erreur
-        setQuestions([
-          "Comment réagissez-vous face aux défis ?",
-          "Quelle est votre plus grande motivation ?",
-          "Comment gérez-vous vos émotions ?",
-          "Que recherchez-vous dans vos relations ?",
-          "Comment prenez-vous vos décisions ?",
-        ]);
+      } catch {
+        console.info("Erreur inattendue - Utilisation des questions par défaut");
+        setQuestions(defaultQuestions);
       }
     };
 
     generateQuestions();
-  }, []);
+  }, [defaultQuestions]);
 
   const enneagramTypes = {
     1: {
@@ -1170,67 +1335,91 @@ const ParcoursSpirituels = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16">
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-800 py-16 px-4 md:px-8 lg:px-16 overflow-hidden">
+      {/* Arrière-plan animé toujours visible */}
+      <div className="absolute inset-0 z-[-1]">
+        <ParticleBackground />
+      </div>
+
+      {/* Animation ou décor flottant */}
+      <div className="absolute inset-0 pointer-events-none opacity-20">
+        <div className="absolute top-10 left-10 w-96 h-96 bg-purple-700 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-700 rounded-full blur-3xl animate-pulse delay-2000" />
+      </div>
+
       <div className="container mx-auto mt-20">
         <div className="initial-text-container text-center mb-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-yellow-500 mb-12 animate__animated animate__fadeInDown">
+          <h2 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 animate-text-glow">
             Parcours Spirituels
           </h2>
           <div className="m-12 mx-auto">
             <MantraDuJour />
           </div>
-          <p className="select-path-text text-xl text-gray-300 mb-6">
+          <p className="select-path-text text-xl font-medium mb-6 text-transparent bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 bg-clip-text animate-fade-in">
             Sélectionnez un parcours pour commencer votre voyage intérieur
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {spiritualPaths.map((path) => (
-            <div
-              key={path.id}
-              onClick={() => {
-                setSelectedGame(path.game);
-                hideInitialText(); // Call hideInitialText when a game is selected
-              }}
-              className={`
-                relative group transform transition-all duration-500 
-                ${
-                  activeCard === path.id
-                    ? "scale-105 rotate-3 z-50"
-                    : "hover:scale-105 hover:rotate-3"
-                }
-                bg-gradient-to-br ${path.color} 
-                rounded-2xl shadow-2xl overflow-hidden
-                cursor-pointer
-              `}
-              onMouseEnter={() => setActiveCard(path.id)}
-              onMouseLeave={() => setActiveCard(null)}
-            >
-              <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-20 transition-opacity"></div>
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-12">
+          {spiritualPaths.map((path, index) => {
+            const isActive = activeCard === path.id;
 
-              <div className="relative p-6 text-white">
-                <div className="flex items-center mb-4">
-                  <path.icon className="w-12 h-12 mr-4 text-white/80 group-hover:text-white transition-colors" />
-                  <h3 className="text-2xl font-bold">{path.title}</h3>
+            return (
+              <motion.div
+                key={path.id}
+                onClick={() => {
+                  setSelectedGame(path.game);
+                  hideInitialText();
+                }}
+                onMouseEnter={() => setActiveCard(path.id)}
+                onMouseLeave={() => setActiveCard(null)}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={`
+          relative group cursor-pointer rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 ring-1 ring-white/10
+          ${
+            isActive
+              ? "scale-105 rotate-3 z-50"
+              : "hover:scale-105 hover:rotate-3"
+          }
+          bg-gradient-to-br ${path.color}
+        `}
+              >
+                {/* Overlay sombre */}
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-opacity duration-300 backdrop-blur-sm" />
+
+                <div className="relative p-6 flex flex-col h-full z-10 text-white drop-shadow">
+                  {/* Icône et titre */}
+                  <div className="flex items-center mb-4">
+                    <path.icon className="w-12 h-12 mr-4 text-white/90 group-hover:text-white transition-colors drop-shadow" />
+                    <h3 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-yellow-300 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
+                      {path.title}
+                    </h3>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-sm mb-6 leading-relaxed text-white drop-shadow-sm">
+                    {path.description}
+                  </p>
+
+                  {/* Liste des détails */}
+                  <ul className="mt-auto space-y-2 text-sm opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500">
+                    {path.details.map((detail, index) => (
+                      <li
+                        key={index}
+                        onClick={() => setSelectedGame(path.game)}
+                        className="flex items-center text-white hover:text-yellow-300 transition-colors duration-300"
+                      >
+                        <span className="mr-2">•</span>
+                        {detail}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-
-                <p className="text-sm text-white/80 mb-4">{path.description}</p>
-
-                <ul className="space-y-2 text-sm md:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500">
-                  {path.details.map((detail, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center text-white/90 hover:text-yellow-300 transition-colors duration-300"
-                      onClick={() => setSelectedGame(path.game)}
-                    >
-                      <span className="mr-2">•</span>
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
 
         <div className="mt-12 bg-gray-800 rounded-xl p-8">
@@ -1396,6 +1585,17 @@ const ParcoursSpirituels = () => {
           </motion.div>
         </div>
       </div>
+      <audio
+        autoPlay
+        loop
+        ref={(audio) => {
+          if (audio) {
+            audio.volume = 0.2;
+          }
+        }}
+      >
+        <source src="/audio/ambient-spirit.mp3" type="audio/mpeg" />
+      </audio>
     </div>
   );
 };

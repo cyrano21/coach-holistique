@@ -35,12 +35,56 @@
 
 .backgroundContainer {
   background-repeat: no-repeat;
-}
-
-.backgroundImageUrl {
-  background-image: var(--background-url);
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-size: cover;
   background-position: center;
+  transition: background-image 1s ease-in-out;
+}
+
+.backgroundMountain {
+  background-image: url('/backgrounds/mountain.jpg');
+}
+
+.backgroundZen {
+  background-image: url('/backgrounds/zen.jpg');
+}
+
+.backgroundLotus {
+  background-image: url('/backgrounds/lotus.jpg');
+}
+
+.backgroundForest {
+  background-image: url('/backgrounds/forest.jpg');
+}
+
+.backgroundClouds {
+  background-image: url('/backgrounds/clouds.jpg');
+}
+
+.backgroundSunset {
+  background-image: url('/backgrounds/sunset.jpg');
+}
+
+.backgroundOcean {
+  background-image: url('/backgrounds/ocean.jpg');
+}
+
+.backgroundStars {
+  background-image: url('/backgrounds/stars.jpg');
+}
+
+.backgroundWaterfall {
+  background-image: url('/backgrounds/waterfall.jpg');
+}
+
+.backgroundSunrise {
+  background-image: url('/backgrounds/sunrise.jpg');
 }
 
 .overlay {
@@ -102,13 +146,13 @@
   border: 1px solid rgba(216, 180, 254, 0.4);
   border-radius: 0.75rem;
   background-color: rgba(255, 255, 255, 0.05);
-  color: #f3e8ff; /* 🌟 Texte violet pastel clair */
+  color: #f3e8ff; /* Texte violet pastel clair */
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   max-inline-size: 42rem;
   margin: 0 auto;
-  text-shadow: 0 0 6px rgba(255, 255, 255, 0.2); /* 💫 Glow léger */
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.2); /* Glow léger */
   transition: all 0.3s ease-in-out;
 }
 
@@ -189,18 +233,11 @@
   }
 }
 
-.backgroundImage {
-  background-image: var(--background-url);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
 .backgroundUrl {
-  background-image: var(--background-url);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  transition: background-image 1s ease-in-out;
 }
 
 .rhythmContainer {
@@ -224,23 +261,6 @@
   background-color: rgba(255, 255, 255, 0.15);
   border-color: rgb(192, 168, 255);
 }
-
-.rhythmContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-block-start: 1.5rem;
-}
-
-.rhythmSelect {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgb(167, 139, 250);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-}
-
 
 @keyframes breathe {
   0%, 100% {
@@ -376,10 +396,3 @@
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
-
-
-
-
-
-
-

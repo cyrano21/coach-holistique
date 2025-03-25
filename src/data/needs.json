@@ -1,0 +1,580 @@
+{
+  "needs": [
+    {
+      "id": "colere",
+      "title": "Colère",
+      "points": [
+        {
+          "name": "Sommet",
+          "image": "/images/points/sommet.webp",
+          "phrase": "Je libère la colère en moi.",
+          "audio": "/audio/colere/sommet.mp3"
+        },
+        {
+          "name": "Sourcil",
+          "image": "/images/points/sourcil.jpg",
+          "phrase": "Je retrouve mon calme intérieur.",
+          "audio": "/audio/colere/sourcil.mp3"
+        },
+        {
+          "name": "Coin de l'œil",
+          "image": "/images/points/coin-oeil.jpg",
+          "phrase": "Je choisis de voir la situation avec clarté.",
+          "audio": "/audio/colere/coin-oeil.mp3"
+        },
+        {
+          "name": "Sous l'œil",
+          "image": "/images/points/sous-oeil.jpg",
+          "phrase": "Je laisse partir cette émotion négative.",
+          "audio": "/audio/colere/sous-oeil.mp3"
+        },
+        {
+          "name": "Sous le nez",
+          "image": "/images/points/sous-nez.jpg",
+          "phrase": "Je respire profondément et me calme.",
+          "audio": "/audio/colere/sous-nez.mp3"
+        },
+        {
+          "name": "Menton",
+          "image": "/images/points/menton.jpg",
+          "phrase": "Je suis en paix avec moi-même.",
+          "audio": "/audio/colere/menton.mp3"
+        },
+        {
+          "name": "Clavicule",
+          "image": "/images/points/clavicule.jpg",
+          "phrase": "Je m'ouvre à la tranquillité.",
+          "audio": "/audio/colere/clavicule.mp3"
+        },
+        {
+          "name": "Sous le sein",
+          "image": "/images/points/sous-sein.jpg",
+          "phrase": "Je libère la colère de mon cœur.",
+          "audio": "/audio/colere/sous-sein.mp3"
+        },
+        {
+          "name": "Sous le bras",
+          "image": "/images/points/sous-bras.jpg",
+          "phrase": "Je relâche toute tension.",
+          "audio": "/audio/colere/sous-bras.mp3"
+        },
+        {
+          "name": "Sur le pouce",
+          "image": "/images/points/sur-pouce.jpg",
+          "phrase": "Je retrouve mon équilibre émotionnel.",
+          "audio": "/audio/colere/sur-pouce.mp3"
+        },
+        {
+          "name": "Point de Gamme",
+          "image": "/images/points/point-gamme.jpg",
+          "phrase": "Je suis maître de mes émotions.",
+          "audio": "/audio/colere/point-gamme.mp3"
+        }
+      ]
+    },
+    {
+      "id": "anxiete",
+      "title": "Anxiété",
+      "points": [
+        {
+          "name": "Sommet",
+          "image": "/images/points/sommet.webp",
+          "phrase": "Je libère mon anxiété et mes inquiétudes.",
+          "audio": "/audio/anxiete/sommet.mp3"
+        },
+        {
+          "name": "Sourcil",
+          "image": "/images/points/sourcil.jpg",
+          "phrase": "Je me sens en sécurité ici et maintenant.",
+          "audio": "/audio/anxiete/sourcil.mp3"
+        },
+        {
+          "name": "Coin de l'œil",
+          "image": "/images/points/coin-oeil.jpg",
+          "phrase": "Je vois au-delà de mes peurs.",
+          "audio": "/audio/anxiete/coin-oeil.mp3"
+        },
+        {
+          "name": "Sous l'œil",
+          "image": "/images/points/sous-oeil.jpg",
+          "phrase": "Je laisse partir cette anxiété.",
+          "audio": "/audio/anxiete/sous-oeil.mp3"
+        },
+        {
+          "name": "Sous le nez",
+          "image": "/images/points/sous-nez.jpg",
+          "phrase": "Je respire calmement et profondément.",
+          "audio": "/audio/anxiete/sous-nez.mp3"
+        },
+        {
+          "name": "Menton",
+          "image": "/images/points/menton.jpg",
+          "phrase": "Je m'accorde confiance et sérénité.",
+          "audio": "/audio/anxiete/menton.mp3"
+        },
+        {
+          "name": "Clavicule",
+          "image": "/images/points/clavicule.jpg",
+          "phrase": "Je m'ouvre à la paix intérieure.",
+          "audio": "/audio/anxiete/clavicule.mp3"
+        },
+        {
+          "name": "Sous le sein",
+          "image": "/images/points/sous-sein.jpg",
+          "phrase": "Je calme les battements de mon cœur.",
+          "audio": "/audio/anxiete/sous-sein.mp3"
+        },
+        {
+          "name": "Sous le bras",
+          "image": "/images/points/sous-bras.jpg",
+          "phrase": "Je relâche toutes mes tensions.",
+          "audio": "/audio/anxiete/sous-bras.mp3"
+        },
+        {
+          "name": "Sur le pouce",
+          "image": "/images/points/sur-pouce.jpg",
+          "phrase": "Je m'ancre dans le moment présent.",
+          "audio": "/audio/anxiete/sur-pouce.mp3"
+        },
+        {
+          "name": "Poignet",
+          "image": "/images/points/point-gamme.jpg",
+          "phrase": "Je suis calme et centré(e).",
+          "audio": "/audio/anxiete/point-gamme.mp3"
+        }
+      ]
+    },
+    {
+      "id": "tristesse",
+      "title": "Tristesse",
+      "points": [
+        {
+          "name": "Sommet",
+          "image": "/images/points/sommet.webp",
+          "phrase": "Je libère ma tristesse avec compassion.",
+          "audio": "/audio/tristesse/sommet.mp3"
+        },
+        {
+          "name": "Sourcil",
+          "image": "/images/points/sourcil.jpg",
+          "phrase": "J'accueille mes émotions avec bienveillance.",
+          "audio": "/audio/tristesse/sourcil.mp3"
+        },
+        {
+          "name": "Coin de l'œil",
+          "image": "/images/points/coin-oeil.jpg",
+          "phrase": "Je vois la lumière au-delà de ma tristesse.",
+          "audio": "/audio/tristesse/coin-oeil.mp3"
+        },
+        {
+          "name": "Sous l'œil",
+          "image": "/images/points/sous-oeil.jpg",
+          "phrase": "Je laisse couler mes larmes et les honore.",
+          "audio": "/audio/tristesse/sous-oeil.mp3"
+        },
+        {
+          "name": "Sous le nez",
+          "image": "/images/points/sous-nez.jpg",
+          "phrase": "Je respire l'espoir et la joie.",
+          "audio": "/audio/tristesse/sous-nez.mp3"
+        },
+        {
+          "name": "Menton",
+          "image": "/images/points/menton.jpg",
+          "phrase": "Je m'ouvre à la guérison émotionnelle.",
+          "audio": "/audio/tristesse/menton.mp3"
+        },
+        {
+          "name": "Clavicule",
+          "image": "/images/points/clavicule.jpg",
+          "phrase": "Je m'ouvre à la légèreté de l'être.",
+          "audio": "/audio/tristesse/clavicule.mp3"
+        },
+        {
+          "name": "Sous le sein",
+          "image": "/images/points/sous-sein.jpg",
+          "phrase": "Je soulage mon cœur de sa peine.",
+          "audio": "/audio/tristesse/sous-sein.mp3"
+        },
+        {
+          "name": "Sous le bras",
+          "image": "/images/points/sous-bras.jpg",
+          "phrase": "Je libère le poids de ma tristesse.",
+          "audio": "/audio/tristesse/sous-bras.mp3"
+        },
+        {
+          "name": "Sur le pouce",
+          "image": "/images/points/sur-pouce.jpg",
+          "phrase": "Je me reconnecte à ma joie intérieure.",
+          "audio": "/audio/tristesse/sur-pouce.mp3"
+        },
+        {
+          "name": "Poignet",
+          "image": "/images/points/point-gamme.jpg",
+          "phrase": "Je m'autorise à ressentir la joie à nouveau.",
+          "audio": "/audio/tristesse/point-gamme.mp3"
+        }
+      ]
+    },
+    {
+      "id": "peur",
+      "title": "Peur",
+      "points": [
+        {
+          "name": "Sommet",
+          "image": "/images/points/sommet.webp",
+          "phrase": "Je libère mes peurs et mes appréhensions.",
+          "audio": "/audio/peur/sommet.mp3"
+        },
+        {
+          "name": "Sourcil",
+          "image": "/images/points/sourcil.jpg",
+          "phrase": "Je suis en sécurité, ici et maintenant.",
+          "audio": "/audio/peur/sourcil.mp3"
+        },
+        {
+          "name": "Coin de l'œil",
+          "image": "/images/points/coin-oeil.jpg",
+          "phrase": "Je vois au-delà de mes craintes.",
+          "audio": "/audio/peur/coin-oeil.mp3"
+        },
+        {
+          "name": "Sous l'œil",
+          "image": "/images/points/sous-oeil.jpg",
+          "phrase": "Je laisse partir cette peur qui me limite.",
+          "audio": "/audio/peur/sous-oeil.mp3"
+        },
+        {
+          "name": "Sous le nez",
+          "image": "/images/points/sous-nez.jpg",
+          "phrase": "Je respire le courage et la confiance.",
+          "audio": "/audio/peur/sous-nez.mp3"
+        },
+        {
+          "name": "Menton",
+          "image": "/images/points/menton.jpg",
+          "phrase": "Je suis plus fort(e) que mes peurs.",
+          "audio": "/audio/peur/menton.mp3"
+        },
+        {
+          "name": "Clavicule",
+          "image": "/images/points/clavicule.jpg",
+          "phrase": "Je m'ouvre au courage et à l'audace.",
+          "audio": "/audio/peur/clavicule.mp3"
+        },
+        {
+          "name": "Sous le sein",
+          "image": "/images/points/sous-sein.jpg",
+          "phrase": "Je ressens le courage au plus profond de mon être.",
+          "audio": "/audio/peur/sous-sein.mp3"
+        },
+        {
+          "name": "Sous le bras",
+          "image": "/images/points/sous-bras.jpg",
+          "phrase": "Je relâche toutes mes peurs.",
+          "audio": "/audio/peur/sous-bras.mp3"
+        },
+        {
+          "name": "Sur le pouce",
+          "image": "/images/points/sur-pouce.jpg",
+          "phrase": "Je suis ancré(e) dans ma force intérieure.",
+          "audio": "/audio/peur/sur-pouce.mp3"
+        },
+        {
+          "name": "Poignet",
+          "image": "/images/points/point-gamme.jpg",
+          "phrase": "J'avance avec confiance dans ma vie.",
+          "audio": "/audio/peur/point-gamme.mp3"
+        }
+      ]
+    },
+    {
+      "id": "stress",
+      "title": "Stress",
+      "points": [
+        {
+          "name": "Sommet",
+          "image": "/images/points/sommet.webp",
+          "phrase": "Je libère le stress accumulé en moi.",
+          "audio": "/audio/stress/sommet.mp3"
+        },
+        {
+          "name": "Sourcil",
+          "image": "/images/points/sourcil.jpg",
+          "phrase": "Je me détends profondément.",
+          "audio": "/audio/stress/sourcil.mp3"
+        },
+        {
+          "name": "Coin de l'œil",
+          "image": "/images/points/coin-oeil.jpg",
+          "phrase": "Je vois les situations avec clarté et calme.",
+          "audio": "/audio/stress/coin-oeil.mp3"
+        },
+        {
+          "name": "Sous l'œil",
+          "image": "/images/points/sous-oeil.jpg",
+          "phrase": "Je laisse partir cette tension.",
+          "audio": "/audio/stress/sous-oeil.mp3"
+        },
+        {
+          "name": "Sous le nez",
+          "image": "/images/points/sous-nez.jpg",
+          "phrase": "Je respire la tranquillité et la paix.",
+          "audio": "/audio/stress/sous-nez.mp3"
+        },
+        {
+          "name": "Menton",
+          "image": "/images/points/menton.jpg",
+          "phrase": "Je suis en harmonie avec moi-même.",
+          "audio": "/audio/stress/menton.mp3"
+        },
+        {
+          "name": "Clavicule",
+          "image": "/images/points/clavicule.jpg",
+          "phrase": "Je m'ouvre à la détente et au bien-être.",
+          "audio": "/audio/stress/clavicule.mp3"
+        },
+        {
+          "name": "Sous le sein",
+          "image": "/images/points/sous-sein.jpg",
+          "phrase": "Je libère mon cœur de toute tension.",
+          "audio": "/audio/stress/sous-sein.mp3"
+        },
+        {
+          "name": "Sous le bras",
+          "image": "/images/points/sous-bras.jpg",
+          "phrase": "Je relâche toutes les pressions.",
+          "audio": "/audio/stress/sous-bras.mp3"
+        },
+        {
+          "name": "Sur le pouce",
+          "image": "/images/points/sur-pouce.jpg",
+          "phrase": "Je retrouve mon équilibre naturel.",
+          "audio": "/audio/stress/sur-pouce.mp3"
+        },
+        {
+          "name": "Poignet",
+          "image": "/images/points/point-gamme.jpg",
+          "phrase": "Je suis calme face aux défis de la vie.",
+          "audio": "/audio/stress/point-gamme.mp3"
+        }
+      ]
+    },
+    {
+      "id": "culpabilite",
+      "title": "Culpabilité",
+      "points": [
+        {
+          "name": "Sommet",
+          "image": "/images/points/sommet.webp",
+          "phrase": "Je libère le poids de la culpabilité.",
+          "audio": "/audio/culpabilite/sommet.mp3"
+        },
+        {
+          "name": "Sourcil",
+          "image": "/images/points/sourcil.jpg",
+          "phrase": "Je me pardonne pleinement.",
+          "audio": "/audio/culpabilite/sourcil.mp3"
+        },
+        {
+          "name": "Coin de l'œil",
+          "image": "/images/points/coin-oeil.jpg",
+          "phrase": "Je vois mes actions avec compassion.",
+          "audio": "/audio/culpabilite/coin-oeil.mp3"
+        },
+        {
+          "name": "Sous l'œil",
+          "image": "/images/points/sous-oeil.jpg",
+          "phrase": "Je laisse partir ce sentiment de culpabilité.",
+          "audio": "/audio/culpabilite/sous-oeil.mp3"
+        },
+        {
+          "name": "Sous le nez",
+          "image": "/images/points/sous-nez.jpg",
+          "phrase": "Je respire le pardon et l'acceptation.",
+          "audio": "/audio/culpabilite/sous-nez.mp3"
+        },
+        {
+          "name": "Menton",
+          "image": "/images/points/menton.jpg",
+          "phrase": "Je mérite la paix intérieure.",
+          "audio": "/audio/culpabilite/menton.mp3"
+        },
+        {
+          "name": "Clavicule",
+          "image": "/images/points/clavicule.jpg",
+          "phrase": "Je m'ouvre à la bienveillance envers moi-même.",
+          "audio": "/audio/culpabilite/clavicule.mp3"
+        },
+        {
+          "name": "Sous le sein",
+          "image": "/images/points/sous-sein.jpg",
+          "phrase": "Je libère mon cœur de tout remords.",
+          "audio": "/audio/culpabilite/sous-sein.mp3"
+        },
+        {
+          "name": "Sous le bras",
+          "image": "/images/points/sous-bras.jpg",
+          "phrase": "Je relâche tout jugement envers moi-même.",
+          "audio": "/audio/culpabilite/sous-bras.mp3"
+        },
+        {
+          "name": "Sur le pouce",
+          "image": "/images/points/sur-pouce.jpg",
+          "phrase": "Je m'accepte tel(le) que je suis.",
+          "audio": "/audio/culpabilite/sur-pouce.mp3"
+        },
+        {
+          "name": "Poignet",
+          "image": "/images/points/point-gamme.jpg",
+          "phrase": "Je suis libre de toute culpabilité.",
+          "audio": "/audio/culpabilite/point-gamme.mp3"
+        }
+      ]
+    },
+    {
+      "id": "honte",
+      "title": "Honte",
+      "points": [
+        {
+          "name": "Sommet",
+          "image": "/images/points/sommet.webp",
+          "phrase": "Je libère toute honte de mon être.",
+          "audio": "/audio/honte/sommet.mp3"
+        },
+        {
+          "name": "Sourcil",
+          "image": "/images/points/sourcil.jpg",
+          "phrase": "Je reconnais ma valeur intrinsèque.",
+          "audio": "/audio/honte/sourcil.mp3"
+        },
+        {
+          "name": "Coin de l'œil",
+          "image": "/images/points/coin-oeil.jpg",
+          "phrase": "Je vois ma beauté intérieure.",
+          "audio": "/audio/honte/coin-oeil.mp3"
+        },
+        {
+          "name": "Sous l'œil",
+          "image": "/images/points/sous-oeil.jpg",
+          "phrase": "Je laisse partir ce sentiment de honte.",
+          "audio": "/audio/honte/sous-oeil.mp3"
+        },
+        {
+          "name": "Sous le nez",
+          "image": "/images/points/sous-nez.jpg",
+          "phrase": "Je respire la dignité et l'estime de soi.",
+          "audio": "/audio/honte/sous-nez.mp3"
+        },
+        {
+          "name": "Menton",
+          "image": "/images/points/menton.jpg",
+          "phrase": "Je suis digne d'amour et de respect.",
+          "audio": "/audio/honte/menton.mp3"
+        },
+        {
+          "name": "Clavicule",
+          "image": "/images/points/clavicule.jpg",
+          "phrase": "Je m'ouvre à l'acceptation de moi-même.",
+          "audio": "/audio/honte/clavicule.mp3"
+        },
+        {
+          "name": "Sous le sein",
+          "image": "/images/points/sous-sein.jpg",
+          "phrase": "Je ressens la fierté au plus profond de mon être.",
+          "audio": "/audio/honte/sous-sein.mp3"
+        },
+        {
+          "name": "Sous le bras",
+          "image": "/images/points/sous-bras.jpg",
+          "phrase": "Je relâche toute honte de mon passé.",
+          "audio": "/audio/honte/sous-bras.mp3"
+        },
+        {
+          "name": "Sur le pouce",
+          "image": "/images/points/sur-pouce.jpg",
+          "phrase": "Je m'honore pleinement.",
+          "audio": "/audio/honte/sur-pouce.mp3"
+        },
+        {
+          "name": "Poignet",
+          "image": "/images/points/point-gamme.jpg",
+          "phrase": "Je marche avec dignité dans ma vie.",
+          "audio": "/audio/honte/point-gamme.mp3"
+        }
+      ]
+    },
+    {
+      "id": "ressentiment",
+      "title": "Ressentiment",
+      "points": [
+        {
+          "name": "Sommet",
+          "image": "/images/points/sommet.webp",
+          "phrase": "Je libère tout ressentiment de mon esprit.",
+          "audio": "/audio/ressentiment/sommet.mp3"
+        },
+        {
+          "name": "Sourcil",
+          "image": "/images/points/sourcil.jpg",
+          "phrase": "Je choisis de pardonner et d'avancer.",
+          "audio": "/audio/ressentiment/sourcil.mp3"
+        },
+        {
+          "name": "Coin de l'œil",
+          "image": "/images/points/coin-oeil.jpg",
+          "phrase": "Je vois au-delà des blessures passées.",
+          "audio": "/audio/ressentiment/coin-oeil.mp3"
+        },
+        {
+          "name": "Sous l'œil",
+          "image": "/images/points/sous-oeil.jpg",
+          "phrase": "Je laisse partir cette rancœur qui me blesse.",
+          "audio": "/audio/ressentiment/sous-oeil.mp3"
+        },
+        {
+          "name": "Sous le nez",
+          "image": "/images/points/sous-nez.jpg",
+          "phrase": "Je respire la compassion et la compréhension.",
+          "audio": "/audio/ressentiment/sous-nez.mp3"
+        },
+        {
+          "name": "Menton",
+          "image": "/images/points/menton.jpg",
+          "phrase": "Je suis en paix avec mon passé.",
+          "audio": "/audio/ressentiment/menton.mp3"
+        },
+        {
+          "name": "Clavicule",
+          "image": "/images/points/clavicule.jpg",
+          "phrase": "Je m'ouvre au pardon véritable.",
+          "audio": "/audio/ressentiment/clavicule.mp3"
+        },
+        {
+          "name": "Sous le sein",
+          "image": "/images/points/sous-sein.jpg",
+          "phrase": "Je libère mon cœur de toute rancune.",
+          "audio": "/audio/ressentiment/sous-sein.mp3"
+        },
+        {
+          "name": "Sous le bras",
+          "image": "/images/points/sous-bras.jpg",
+          "phrase": "Je relâche toute amertume.",
+          "audio": "/audio/ressentiment/sous-bras.mp3"
+        },
+        {
+          "name": "Sur le pouce",
+          "image": "/images/points/sur-pouce.jpg",
+          "phrase": "Je choisis la liberté émotionnelle.",
+          "audio": "/audio/ressentiment/sur-pouce.mp3"
+        },
+        {
+          "name": "Poignet",
+          "image": "/images/points/point-gamme.jpg",
+          "phrase": "Je vis dans la paix et l'harmonie.",
+          "audio": "/audio/ressentiment/point-gamme.mp3"
+        }
+      ]
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import {
 import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import styles from './OutilsDeveloppement.module.css';
 
 const OutilsDeveloppement = () => {
   const outils = [
@@ -150,15 +151,14 @@ const OutilsDeveloppement = () => {
     <div className="bg-gray-50 min-h-screen">
       {/* Section Hero, inchangée, seulement classes conservées */}
       <section
-        className="relative h-[60vh] bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/outils/hero.jpg')" }}
+        className={`relative h-[60vh] bg-cover bg-center ${styles.heroBackground}`}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-purple-800 to-transparent animate__animated animate__fadeIn animate__delay-2s"></div>
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
-          <h1 className="text-4xl md:text-6xl font-bold animate__animated animate__zoomIn animate__delay-1s text-white" style={{ textShadow: '2px 2px 4px #000000' }}>
+          <h1 className={`text-4xl md:text-6xl font-bold animate__animated animate__zoomIn animate__delay-1s text-white ${styles.heroTitle}`}>
             Outils de Développement Personnel
           </h1>
-          <p className="mt-4 text-lg md:text-xl animate__animated animate__fadeInLeft animate__delay-3s text-white" style={{ textShadow: '1px 1px 2px #000000' }}>
+          <p className={`mt-4 text-lg md:text-xl animate__animated animate__fadeInLeft animate__delay-3s text-white ${styles.heroDescription}`}>
             Découvrez nos méthodes pour votre épanouissement
           </p>
           <button className="mt-8 bg-white text-purple-600 px-8 py-3 rounded-full font-bold hover:bg-purple-100 animate__animated animate__pulse animate__delay-3s">
@@ -204,12 +204,9 @@ const OutilsDeveloppement = () => {
       {methods.map((method, index) => (
         <div
           key={method.id}
-          className="w-full py-12 bg-cover bg-center bg-no-repeat"
+          className={`w-full py-12 bg-cover bg-center bg-no-repeat ${styles.methodBackground}`}
           style={{
-            backgroundImage: `url(${method.image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundBlendMode: 'overlay'
+            backgroundImage: `url(${method.image})`
           }}
           data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
           data-aos-duration="1200"
@@ -232,14 +229,12 @@ const OutilsDeveloppement = () => {
                   data-aos-easing="ease-in-out"
                 >
                   <h3
-                    className={`text-3xl font-bold tracking-tight ${method.textColor} border-b-2 border-opacity-50 pb-2`} 
-                    style={{ borderColor: colors[index % colors.length] }}
+                    className={`text-3xl font-bold tracking-tight ${method.textColor} border-b-2 border-opacity-50 pb-2 ${styles[`coloredBorder${index % colors.length}`]}`}
                   >
                     {method.title}
                   </h3>
                   <p 
-                    className="text-lg leading-relaxed font-medium text-white tracking-wide" 
-                    style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}
+                    className={`text-lg leading-relaxed font-medium text-white tracking-wide ${styles.textShadowMedium}`}
                     data-aos="fade-left"
                     data-aos-duration="800"
                     data-aos-delay="400"
@@ -247,8 +242,7 @@ const OutilsDeveloppement = () => {
                     {method.description}
                   </p>
                   <ul
-                    className={`list-disc list-inside space-y-3 ${method.bulletColor} bg-white/20 backdrop-blur-sm p-4 rounded-lg`} 
-                    style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.3)' }}
+                    className={`list-disc list-inside space-y-3 ${method.bulletColor} bg-white/20 backdrop-blur-sm p-4 rounded-lg ${styles.textShadowLight}`}
                     data-aos="fade-up"
                     data-aos-duration="800"
                     data-aos-delay="600"
@@ -311,14 +305,12 @@ const OutilsDeveloppement = () => {
                   data-aos-easing="ease-in-out"
                 >
                   <h3
-                    className={`text-3xl font-bold tracking-tight ${method.textColor} border-b-2 border-opacity-50 pb-2`} 
-                    style={{ borderColor: colors[index % colors.length] }}
+                    className={`text-3xl font-bold tracking-tight ${method.textColor} border-b-2 border-opacity-50 pb-2 ${styles[`coloredBorder${index % colors.length}`]}`}
                   >
                     {method.title}
                   </h3>
                   <p 
-                    className="text-lg leading-relaxed font-medium text-white tracking-wide" 
-                    style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}
+                    className={`text-lg leading-relaxed font-medium text-white tracking-wide ${styles.textShadowMedium}`}
                     data-aos="fade-left"
                     data-aos-duration="800"
                     data-aos-delay="400"
@@ -326,8 +318,7 @@ const OutilsDeveloppement = () => {
                     {method.description}
                   </p>
                   <ul
-                    className={`list-disc list-inside space-y-3 ${method.bulletColor} bg-white/20 backdrop-blur-sm p-4 rounded-lg`} 
-                    style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.3)' }}
+                    className={`list-disc list-inside space-y-3 ${method.bulletColor} bg-white/20 backdrop-blur-sm p-4 rounded-lg ${styles.textShadowLight}`}
                     data-aos="fade-up"
                     data-aos-duration="800"
                     data-aos-delay="600"
