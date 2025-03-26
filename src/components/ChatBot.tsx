@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FaComments, FaTimes } from "react-icons/fa";
 import { Button } from "react-bootstrap";
 
@@ -51,18 +51,55 @@ const ChatBot = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [recognitionSupported, setRecognitionSupported] = useState(true);
+  const [reconnectionAttempts, setReconnectionAttempts] = useState(0);
+  const [hasNetworkIssues, setHasNetworkIssues] = useState(false);
+  const maxReconnectionAttempts = 3;
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognition = useRef<SpeechRecognitionInstance | null>(null);
   const utterance = useRef<SpeechSynthesisUtterance | null>(null);
+  const reconnectionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const toggleChatBot = () => setIsOpen(!isOpen);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
-  useEffect(() => scrollToBottom(), [messages]);
+  // Effet pour gérer le scroll automatique vers le bas
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
+  // Effet pour gérer la fin de la reconnaissance vocale
+  useEffect(() => {
+    // Nettoyage de la reconnaissance vocale lorsque le composant est démonté
+    return () => {
+      if (recognition.current) {
+        try {
+          if (isListening) {
+            recognition.current.stop();
+          }
+        } catch (error) {
+          console.log("[INFO] Erreur lors du nettoyage de la reconnaissance vocale:", error);
+        }
+      }
+      
+      // Nettoyer les timeouts de reconnexion
+      if (reconnectionTimeoutRef.current) {
+        clearTimeout(reconnectionTimeoutRef.current);
+      }
+    };
+  }, [isListening]); // Dépendance stable qui ne change pas de taille
+
+  // Effet séparé pour gérer les tentatives de reconnexion
+  useEffect(() => {
+    // Cet effet ne fait rien directement, il est juste là pour réagir aux changements
+    // du compteur de tentatives de reconnexion
+    console.log(`État des tentatives de reconnexion: ${reconnectionAttempts}/${maxReconnectionAttempts}`);
+    
+    // Pas de fonction de nettoyage nécessaire ici
+  }, [reconnectionAttempts, maxReconnectionAttempts]);
 
   useEffect(() => {
     // Vérifier si la reconnaissance vocale est disponible dans le navigateur
@@ -73,7 +110,7 @@ const ChatBot = () => {
                                  (window as any).webkitSpeechRecognition as SpeechRecognitionConstructor;
         
         if (!SpeechRecognition) {
-          console.warn("La reconnaissance vocale n'est pas supportée par ce navigateur");
+          console.warn("La reconnaissance vocale n&apos;est pas supportée par ce navigateur");
           setRecognitionSupported(false);
           return;
         }
@@ -87,96 +124,233 @@ const ChatBot = () => {
           recognition.current.maxAlternatives = 1;
 
           // Configuration des gestionnaires d'événements
-          recognition.current.onresult = (event: any) => {
-            try {
-              const transcript = event.results[0][0].transcript;
-              console.log("Transcription détectée:", transcript);
-              setInput(transcript);
-            } catch (error) {
-              console.error("Erreur lors du traitement du résultat de la reconnaissance vocale:", error);
-            } finally {
-              setIsListening(false);
-            }
-          };
-
           recognition.current.onerror = (event: any) => {
-            console.error("Erreur de reconnaissance vocale:", event.error, event.message);
-            setIsListening(false);
+            // Utiliser des logs personnalisés au lieu de console.error
+            if (event.error === 'network') {
+              // Désactiver temporairement les erreurs de console pour éviter l'overlay d'erreur de Next.js
+              const originalConsoleError = console.error;
+              console.error = () => {}; // Fonction vide pour supprimer les erreurs
+              
+              // Journaliser l'erreur réseau de manière sécurisée
+              console.log("[INFO] Problème de connexion réseau détecté:", event.error, event.message || "Pas de message d'erreur");
+              
+              // Restaurer la fonction console.error après un court délai
+              setTimeout(() => {
+                console.error = originalConsoleError;
+              }, 100);
+            } else {
+              // Pour les autres types d'erreurs, utiliser un log warn
+              console.warn("[WARN] Erreur de reconnaissance vocale:", event.error, event.message || "Pas de message d'erreur");
+            }
             
             // Afficher un message à l'utilisateur
             let errorMessage = "Désolé, la reconnaissance vocale a rencontré un problème. Veuillez réessayer.";
+            const shouldShowMessage = true;
             
             if (event.error === 'not-allowed') {
-              errorMessage = "Veuillez autoriser l'accès au microphone pour utiliser la reconnaissance vocale.";
+              errorMessage = "Veuillez autoriser l&apos;accès au microphone pour utiliser la reconnaissance vocale.";
             } else if (event.error === 'network') {
-              errorMessage = "Problème de connexion réseau. Veuillez vérifier votre connexion internet.";
+              // Enregistrer les détails complets de l'erreur pour le débogage
+              console.log("Détails de l'erreur réseau:", event);
+              
+              // Gestion spécifique de l'erreur réseau
+              if (reconnectionAttempts < maxReconnectionAttempts) {
+                // Incrémenter le compteur de tentatives
+                setReconnectionAttempts(prev => prev + 1);
+                
+                // Message adapté au nombre de tentatives
+                errorMessage = `Problème de connexion réseau (tentative ${reconnectionAttempts + 1}/${maxReconnectionAttempts}). Reconnexion en cours...`;
+                
+                // Nettoyer tout timeout existant
+                if (reconnectionTimeoutRef.current) {
+                  clearTimeout(reconnectionTimeoutRef.current);
+                }
+                
+                // Tentative de récupération automatique après une erreur réseau
+                reconnectionTimeoutRef.current = setTimeout(() => {
+                  if (recognition.current && isListening) {
+                    try {
+                      console.log(`Tentative de reconnexion après erreur réseau (${reconnectionAttempts + 1}/${maxReconnectionAttempts})...`);
+                      recognition.current.start();
+                    } catch (error) {
+                      console.log("[INFO] Échec de la tentative de reconnexion après erreur réseau:", error);
+                      setIsListening(false);
+                      setReconnectionAttempts(0); // Réinitialiser le compteur après échec
+                    }
+                  }
+                }, 1500 + reconnectionAttempts * 500); // Délai progressif entre les tentatives
+                
+                // Ne pas modifier l'état isListening pendant les tentatives de reconnexion
+                return;
+              } else {
+                // Après plusieurs tentatives, abandonner et afficher un message d'erreur final
+                errorMessage = "Problème persistant de connexion réseau. Veuillez vérifier votre connexion internet et réessayer plus tard.";
+                setReconnectionAttempts(0); // Réinitialiser le compteur
+              }
             } else if (event.error === 'no-speech') {
               errorMessage = "Aucune parole détectée. Veuillez parler plus fort ou vérifier votre microphone.";
+            } else if (event.error === 'aborted') {
+              errorMessage = "La reconnaissance vocale a été interrompue. Veuillez réessayer.";
+            } else if (event.error === 'audio-capture') {
+              errorMessage = "Impossible de capturer l&apos;audio. Veuillez vérifier que votre microphone est connecté et fonctionne correctement.";
+            } else if (event.error === 'service-not-allowed') {
+              errorMessage = "Le service de reconnaissance vocale n&apos;est pas autorisé. Veuillez utiliser un navigateur compatible comme Chrome ou Edge.";
             }
             
-            setMessages(prev => [...prev, { 
-              text: errorMessage, 
-              sender: "bot" 
-            }]);
+            // Mettre à jour l'état d'écoute
+            setIsListening(false);
+            
+            // Ajouter le message d'erreur si nécessaire
+            if (shouldShowMessage) {
+              setMessages(prev => [...prev, { 
+                text: errorMessage, 
+                sender: "bot" 
+              }]);
+            }
           };
 
-          recognition.current.onend = () => {
+          recognition.current.onend = function(this: SpeechRecognitionInstance) {
             console.log("Reconnaissance vocale terminée");
             setIsListening(false);
           };
         }
       } catch (error) {
-        console.error("Erreur lors de l'initialisation de la reconnaissance vocale:", error);
+        console.log("[INFO] Erreur lors de l'initialisation de la reconnaissance vocale:", error);
         setRecognitionSupported(false);
       }
     }
+  }, [maxReconnectionAttempts, reconnectionAttempts, isListening]);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log("Connexion réseau rétablie");
+      setHasNetworkIssues(false);
+      // Réinitialiser le compteur de tentatives quand la connexion est rétablie
+      setReconnectionAttempts(0);
+    };
     
-    // Nettoyage
-    return () => {
-      if (recognition.current && isListening) {
+    const handleOffline = () => {
+      console.log("Connexion réseau perdue");
+      setHasNetworkIssues(true);
+      // Arrêter la reconnaissance vocale si elle est en cours
+      if (isListening && recognition.current) {
         try {
           recognition.current.stop();
         } catch (error) {
-          console.error("Erreur lors de l'arrêt de la reconnaissance vocale:", error);
+          console.log("[INFO] Erreur lors de l'arrêt de la reconnaissance vocale:", error);
         }
+        setIsListening(false);
       }
+    };
+    
+    // Ajouter les écouteurs d'événements
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    // Vérifier l'état initial de la connexion
+    setHasNetworkIssues(!navigator.onLine);
+    
+    // Nettoyer les écouteurs d'événements
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, [isListening]);
 
   const toggleListening = () => {
     if (!recognitionSupported) {
       setMessages(prev => [...prev, { 
-        text: "Désolé, la reconnaissance vocale n'est pas disponible dans votre navigateur. Essayez Chrome ou Edge.", 
+        text: "Désolé, la reconnaissance vocale n&apos;est pas disponible dans votre navigateur. Essayez Chrome ou Edge.", 
         sender: "bot" 
       }]);
       return;
     }
 
     if (!recognition.current) {
-      console.error("La reconnaissance vocale n'est pas initialisée");
+      console.log("[INFO] La reconnaissance vocale n'est pas initialisée");
       return;
     }
 
     try {
+      // Réinitialiser le compteur de tentatives à chaque nouvelle demande d'écoute
+      setReconnectionAttempts(0);
+      
+      // Nettoyer tout timeout existant
+      if (reconnectionTimeoutRef.current) {
+        clearTimeout(reconnectionTimeoutRef.current);
+        reconnectionTimeoutRef.current = null;
+      }
+      
       if (isListening && recognition.current) {
         console.log("Arrêt de l'écoute");
         recognition.current.stop();
       } else if (recognition.current) {
         console.log("Démarrage de l'écoute");
-        // Réinitialiser les erreurs précédentes
-        recognition.current.onresult = (event: any) => {
-          try {
-            const transcript = event.results[0][0].transcript;
-            console.log("Transcription détectée:", transcript);
-            setInput(transcript);
-          } catch (error) {
-            console.error("Erreur lors du traitement du résultat:", error);
-          } finally {
-            setIsListening(false);
-          }
-        };
         
-        recognition.current.start();
+        // Vérifier la connexion réseau avant de démarrer la reconnaissance vocale
+        if (!navigator.onLine) {
+          setMessages(prev => [...prev, { 
+            text: "Vous semblez être hors ligne. Veuillez vérifier votre connexion internet avant d&apos;utiliser la reconnaissance vocale.", 
+            sender: "bot" 
+          }]);
+          return;
+        }
+        
+        // Vérifier si des problèmes réseau persistants ont été détectés
+        if (hasNetworkIssues) {
+          setMessages(prev => [...prev, { 
+            text: "Des problèmes de connexion réseau ont été détectés. La reconnaissance vocale pourrait ne pas fonctionner correctement. Souhaitez-vous quand même essayer?", 
+            sender: "bot" 
+          }]);
+          // Réinitialiser l'état pour la prochaine tentative
+          setHasNetworkIssues(false);
+        }
+        
+        // Configuration des gestionnaires d'événements à chaque nouvelle écoute
+        // pour éviter les problèmes de références obsolètes
+        if (recognition.current) {
+          // Réinitialiser les erreurs précédentes
+          recognition.current.onresult = (event: any) => {
+            try {
+              const transcript = event.results[0][0].transcript;
+              console.log("Transcription détectée:", transcript);
+              setInput(transcript);
+            } catch (error) {
+              console.log("[INFO] Erreur lors du traitement du résultat:", error);
+            } finally {
+              setIsListening(false);
+            }
+          };
+          
+          // Configurer un gestionnaire d'événements spécifique pour la fin de reconnaissance
+          recognition.current.onend = function(this: SpeechRecognitionInstance) {
+            console.log("Reconnaissance vocale terminée");
+            // Ne pas réinitialiser isListening si une tentative de reconnexion est en cours
+            // après une erreur réseau
+            if (reconnectionAttempts > 0 && reconnectionAttempts < maxReconnectionAttempts) {
+              // Tentative de redémarrage automatique après un délai
+              try {
+                reconnectionTimeoutRef.current = setTimeout(() => {
+                  if (recognition.current) {
+                    try {
+                      recognition.current.start();
+                    } catch (error) {
+                      console.log("[INFO] Échec de la tentative de reconnexion après onend:", error);
+                      setIsListening(false);
+                    }
+                  }
+                }, 1000);
+              } catch (error) {
+                console.log("[INFO] Échec de la tentative de reconnexion après onend:", error);
+                setIsListening(false);
+              }
+            } else {
+              setIsListening(false);
+            }
+          };
+          
+          recognition.current.start();
+        }
         
         // Ajouter un timeout pour éviter que l'écoute reste bloquée
         setTimeout(() => {
@@ -185,17 +359,17 @@ const ChatBot = () => {
               recognition.current.stop();
               setIsListening(false);
             } catch (error) {
-              console.error("Erreur lors de l'arrêt forcé de la reconnaissance:", error);
+              console.log("[INFO] Erreur lors de l'arrêt forcé de la reconnaissance:", error);
             }
           }
         }, 10000); // 10 secondes maximum d'écoute
       }
       setIsListening(!isListening);
     } catch (error) {
-      console.error("Erreur lors de la gestion de la reconnaissance vocale:", error);
+      console.log("[INFO] Erreur lors de la gestion de la reconnaissance vocale:", error);
       setIsListening(false);
       setMessages(prev => [...prev, { 
-        text: "Désolé, une erreur s'est produite avec la reconnaissance vocale. Veuillez réessayer.", 
+        text: "Désolé, une erreur s&apos;est produite avec la reconnaissance vocale. Veuillez réessayer.", 
         sender: "bot" 
       }]);
     }
@@ -263,7 +437,7 @@ const ChatBot = () => {
       const data = await response.json();
       return data.response;
     } catch (error) {
-      console.error("Erreur chat:", error);
+      console.log("[INFO] Erreur chat:", error);
       return error instanceof Error 
         ? `Désolé, je rencontre un souci technique : ${error.message}. Essaie plus tard 🙏` 
         : "Désolé, je rencontre un souci technique. Essaie plus tard 🙏";

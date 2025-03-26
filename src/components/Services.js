@@ -6,32 +6,26 @@ function Services() {
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const [hoveredService, setHoveredService] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isIntersecting, setIsIntersecting] = useState(false);
   const sectionRef = useRef(null);
+  const imageLoadTimeoutRef = useRef(null);
 
+  // Préchargement optimisé de l'image d'arrière-plan
   useEffect(() => {
+    // Créer un observateur d'intersection pour charger l'image seulement quand la section est proche
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
-          // Utiliser le constructeur Image global du navigateur et non celui de Next.js
-          const img = new window.Image();
-          img.src = "/images/home/backgrounds/services-background.jpg?quality=75&size=1200";
-          img.onload = () => setBackgroundLoaded(true);
-          img.onerror = () => {
-            console.info("Services background image failed to load");
-            setBackgroundLoaded(true);
-          };
-          
-          const timer = setTimeout(() => {
-            setIsVisible(true);
-          }, 300);
-          
+          setIsIntersecting(true);
           observer.disconnect();
-          
-          return () => clearTimeout(timer);
         }
       },
-      { threshold: 0.1 } 
+      { 
+        threshold: 0.1,
+        // Charger l'image quand l'utilisateur est à 500px de la section
+        rootMargin: "500px" 
+      }
     );
     
     const currentSectionRef = sectionRef.current;
@@ -46,6 +40,55 @@ function Services() {
       }
     };
   }, []);
+
+  // Chargement de l'image seulement quand la section est visible ou proche
+  useEffect(() => {
+    if (!isIntersecting) return;
+
+    // Définir un délai maximum pour le chargement de l'image
+    imageLoadTimeoutRef.current = setTimeout(() => {
+      if (!backgroundLoaded) {
+        console.info("Services background image loading timed out, showing section anyway");
+        setBackgroundLoaded(true);
+        setIsVisible(true);
+      }
+    }, 3000); // 3 secondes maximum d'attente
+
+    // Utiliser requestIdleCallback pour charger l'image pendant les périodes d'inactivité
+    const loadImageWhenIdle = () => {
+      // Utiliser le constructeur Image global du navigateur et non celui de Next.js
+      const img = new window.Image();
+      img.src = "/images/home/backgrounds/services-background.jpg?quality=75&size=1200";
+      
+      img.onload = () => {
+        clearTimeout(imageLoadTimeoutRef.current);
+        setBackgroundLoaded(true);
+        
+        // Petit délai pour l'animation
+        setTimeout(() => {
+          setIsVisible(true);
+        }, 100);
+      };
+      
+      img.onerror = () => {
+        clearTimeout(imageLoadTimeoutRef.current);
+        console.info("Services background image failed to load");
+        setBackgroundLoaded(true);
+        setIsVisible(true);
+      };
+    };
+
+    // Utiliser requestIdleCallback si disponible, sinon setTimeout avec un court délai
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      window.requestIdleCallback(loadImageWhenIdle, { timeout: 1000 });
+    } else {
+      setTimeout(loadImageWhenIdle, 100);
+    }
+
+    return () => {
+      clearTimeout(imageLoadTimeoutRef.current);
+    };
+  }, [isIntersecting, backgroundLoaded]);
 
   const services = [
     {
@@ -126,7 +169,7 @@ function Services() {
     <section
       ref={sectionRef}
       className={`py-24 relative transition-opacity duration-1000 ${
-        backgroundLoaded ? "opacity-100" : "opacity-0"
+        isVisible ? "opacity-100" : "opacity-0"
       }`}
       style={{
         backgroundColor: "#0c2414", 
@@ -140,6 +183,7 @@ function Services() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundBlendMode: "multiply",
+          backgroundAttachment: window.innerWidth > 768 ? "fixed" : "scroll"
         }}
       />
 
@@ -163,9 +207,11 @@ function Services() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-white"
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center mb-6 text-white px-2 hyphens-auto"
+            style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
           >
-            Accompagnement Holistique
+            <span className="sm:hidden">Accompagnement<br />Holistique</span>
+            <span className="hidden sm:inline">Accompagnement Holistique</span>
           </motion.h2>
 
           <motion.p

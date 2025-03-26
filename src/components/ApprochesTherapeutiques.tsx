@@ -103,6 +103,9 @@ const ApprochesTherapeutiques = () => {
         >
           <motion.h1 
             className="gradient-title texth1 mb-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
           >
             Approches Thérapeutiques
           </motion.h1>
@@ -111,6 +114,7 @@ const ApprochesTherapeutiques = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
+            style={{ position: 'relative', zIndex: 10 }}
           >
             Découvrez nos méthodes holistiques pour votre bien-être physique, mental et spirituel
           </motion.p>

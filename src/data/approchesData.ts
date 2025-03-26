@@ -160,7 +160,7 @@ export const approchesData = {
       id: '6',
       title: 'Voyage Chamanique',
       description: 'Exploration des états de conscience modifiés',
-      thumbnailUrl: '/images/videos/chamanique-thumbnail.jpg',
+      thumbnailUrl: '/images/videos/chakras-thumbnail.jpg',
       videoUrl: 'https://www.youtube.com/embed/qvMj8-kNIqM',
       category: 'spiritualite'
     }

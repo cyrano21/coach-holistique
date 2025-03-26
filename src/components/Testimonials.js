@@ -57,21 +57,21 @@ function Testimonials() {
       quote: "Le coaching holistique a transformé ma vie. J&apos;ai découvert une nouvelle perspective et une profonde connexion avec moi-même.",
       role: "Entrepreneure",
       stars: 5,
-      image: "/images/testimonials/testimonial-1.jpg"
+      image: "/images/outils/meditation.jpg"
     },
     {
       name: "Thomas B.",
       quote: "Les séances de méditation guidée m&apos;ont permis de gérer mon stress et d&apos;améliorer ma concentration au quotidien.",
       role: "Cadre en entreprise",
       stars: 5,
-      image: "/images/testimonials/testimonial-2.jpg"
+      image: "/images/outils/sophrologie.jpg"
     },
     {
       name: "Sophie M.",
       quote: "Un accompagnement bienveillant et professionnel qui m&apos;a aidée à surmonter des blocages personnels que je portais depuis des années.",
       role: "Thérapeute",
       stars: 5,
-      image: "/images/testimonials/testimonial-3.jpg"
+      image: "/images/outils/eft.jpg"
     }
   ];
 
