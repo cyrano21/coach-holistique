@@ -121,21 +121,48 @@ export const approchesData = {
       title: 'Méditation Guidée',
       description: 'Technique de relaxation profonde pour réduire le stress',
       thumbnailUrl: '/images/videos/meditation-thumbnail.jpg',
-      videoUrl: 'https://www.youtube.com/embed/Tpf4iii8YSo'
+      videoUrl: 'https://www.youtube.com/embed/Tpf4iii8YSo',
+      category: 'meditation'
     },
     {
       id: '2', 
       title: 'Respiration Consciente',
       description: 'Exercices de respiration pour améliorer votre bien-être',
       thumbnailUrl: '/images/videos/respiration-thumbnail.jpg',
-      videoUrl: 'https://www.youtube.com/embed/wTUdQ0VY9OY'
+      videoUrl: 'https://www.youtube.com/embed/wTUdQ0VY9OY',
+      category: 'meditation'
     },
     {
       id: '3',
       title: 'Développement Personnel',
       description: 'Stratégies pour développer votre potentiel',
       thumbnailUrl: '/images/videos/developpement-thumbnail.jpg',
-      videoUrl: 'https://www.youtube.com/embed/qvMj8-kNIqM'
+      videoUrl: 'https://www.youtube.com/embed/qvMj8-kNIqM',
+      category: 'coaching'
+    },
+    {
+      id: '4',
+      title: 'Coaching de Vie',
+      description: 'Accompagnement personnalisé pour atteindre vos objectifs',
+      thumbnailUrl: '/images/videos/coaching-thumbnail.jpg',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      category: 'coaching'
+    },
+    {
+      id: '5',
+      title: 'Bonshommes Allumettes',
+      description: 'Technique de libération émotionnelle par le dessin',
+      thumbnailUrl: '/images/videos/bonshommes-thumbnail.jpg',
+      videoUrl: 'https://www.youtube.com/embed/xvzSXcVmEFU',
+      category: 'spiritualite'
+    },
+    {
+      id: '6',
+      title: 'Voyage Chamanique',
+      description: 'Exploration des états de conscience modifiés',
+      thumbnailUrl: '/images/videos/chamanique-thumbnail.jpg',
+      videoUrl: 'https://www.youtube.com/embed/qvMj8-kNIqM',
+      category: 'spiritualite'
     }
   ]
 };

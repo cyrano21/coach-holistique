@@ -23,7 +23,7 @@ interface Video {
   externalLink?: string;
   videoUrl?: string;
   duration?: string;
-  category: string;
+  category?: string;
 }
 
 interface VideoSectionProps {
@@ -116,8 +116,21 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
   // Utiliser les vidéos externes si elles sont fournies, sinon utiliser les démos
   const videosToUse = videos.length > 0 ? videos : demoVideos;
   
+  // Réinitialiser l'index si on change de catégorie uniquement (pas quand les vidéos changent)
+  useEffect(() => {
+    setCurrentVideoIndex(0);
+  }, [category]);
+  
   // Filtrer les vidéos par catégorie
   const filteredVideos = videosToUse.filter(video => video.category === category);
+  
+  // Ajouter du débogage pour comprendre pourquoi les boutons ne fonctionnent pas
+  useEffect(() => {
+    console.info("Catégorie actuelle:", category);
+    console.info("Nombre de vidéos filtrées:", filteredVideos.length);
+    console.info("Vidéos filtrées:", filteredVideos);
+    console.info("Index actuel:", currentVideoIndex);
+  }, [category, filteredVideos, currentVideoIndex]);
   
   // Définir la vidéo actuelle
   const currentVideo = filteredVideos[currentVideoIndex] || videosToUse[0];
@@ -137,11 +150,6 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
       });
     }
   }, [currentVideo]);
-
-  useEffect(() => {
-    // Réinitialiser l'index de la vidéo lors du changement de catégorie
-    setCurrentVideoIndex(0);
-  }, [category]);
 
   useEffect(() => {
     // Utiliser un IntersectionObserver pour détecter quand la section est visible
@@ -265,16 +273,33 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
     setShowNotification(true);
   };
 
+  // Fonction pour naviguer vers la vidéo suivante
   const nextVideo = () => {
-    setCurrentVideoIndex((prev) => 
-      prev === filteredVideos.length - 1 ? 0 : prev + 1
-    );
+    if (filteredVideos.length <= 1) return; // Ne rien faire s'il n'y a qu'une seule vidéo
+    
+    console.info("Navigation vers la vidéo suivante");
+    console.info("Index actuel avant:", currentVideoIndex);
+    console.info("Nombre de vidéos filtrées:", filteredVideos.length);
+    
+    setCurrentVideoIndex((prev) => {
+      const newIndex = prev === filteredVideos.length - 1 ? 0 : prev + 1;
+      console.info("Nouvel index:", newIndex);
+      return newIndex;
+    });
   };
 
   const prevVideo = () => {
-    setCurrentVideoIndex((prev) => 
-      prev === 0 ? filteredVideos.length - 1 : prev - 1
-    );
+    if (filteredVideos.length <= 1) return; // Ne rien faire s'il n'y a qu'une seule vidéo
+    
+    console.info("Navigation vers la vidéo précédente");
+    console.info("Index actuel avant:", currentVideoIndex);
+    console.info("Nombre de vidéos filtrées:", filteredVideos.length);
+    
+    setCurrentVideoIndex((prev) => {
+      const newIndex = prev === 0 ? filteredVideos.length - 1 : prev - 1;
+      console.info("Nouvel index:", newIndex);
+      return newIndex;
+    });
   };
 
   // Variantes d'animation pour les conteneurs

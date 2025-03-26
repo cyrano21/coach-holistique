@@ -46,6 +46,16 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background-color: #1A1A2E; 
+}
+
+.parallax-methodes-visible {
+  background-image: url('/images/approches/accompagnement-holistique.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  transition: background-image 0.5s ease-in;
 }
 
 .parallax-methodes::before {
