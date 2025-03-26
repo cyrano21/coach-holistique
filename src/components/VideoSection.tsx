@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { IconType } from "react-icons";
@@ -308,7 +310,7 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
     >
       <audio
         ref={audioRef}
-        src="/audio/ambient-background.mp3"
+        src="/sounds/jingle-soft.mp3"
         loop
         muted={muted}
         preload="none"
