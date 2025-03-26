@@ -41,7 +41,7 @@ function HeroSection() {
             </h1>
           </div>
 
-          <p className="text-lg md:text-2xl text-gray-100 leading-relaxed italic font-medium">
+          <p className="text-lg md:text-2xl text-white leading-relaxed italic font-medium px-4 py-3 rounded-lg bg-black/20 backdrop-blur-sm shadow-lg">
             Plongez dans l&apos;univers où chaque rêve devient une possibilité,
             où chaque pas vous rapproche de l&apos;extraordinaire. <br />
             Votre voyage commence ici, là où le cœur guide et l&apos;esprit crée

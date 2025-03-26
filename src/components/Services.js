@@ -218,8 +218,8 @@ function Services() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-lg md:text-xl text-center mb-12 max-w-2xl mx-auto leading-relaxed text-gray-200
-              bg-black/20 rounded-xl p-4 md:p-6 shadow-lg backdrop-blur-sm"
+            className="text-lg md:text-xl text-center mb-12 max-w-2xl mx-auto leading-relaxed text-white
+              bg-black/30 rounded-xl p-4 md:p-6 shadow-lg backdrop-blur-sm"
           >
             Des approches complémentaires pour votre développement personnel, professionnel et spirituel.
           </motion.p>
@@ -254,7 +254,7 @@ function Services() {
                   {service.title}
                 </h3>
                 
-                <p className="text-gray-300 mb-6 leading-relaxed">
+                <p className="text-white mb-6 leading-relaxed bg-black/20 p-3 rounded-lg backdrop-blur-sm">
                   {service.description}
                 </p>
                 
@@ -273,7 +273,7 @@ function Services() {
                       <span className={`${service.color} mt-1`}>
                         <FaLeaf />
                       </span>
-                      <span className="text-gray-200">{feature}</span>
+                      <span className="text-white">{feature}</span>
                     </motion.li>
                   ))}
                 </ul>

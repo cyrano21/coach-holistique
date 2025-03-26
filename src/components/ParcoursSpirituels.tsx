@@ -651,7 +651,7 @@ const EmotionalExploration = ({ onResponse }: EmotionalExplorationProps) => {
     <div className="space-y-6">
       {questions.length > 0 && currentQuestion < questions.length ? (
         <>
-          <h3 className="text-xl font-semibold mb-4">
+          <h3 className="text-xl font-semibold mb-4 text-white">
             {questions[currentQuestion]}
           </h3>
           <div className="form-group">
@@ -662,7 +662,7 @@ const EmotionalExploration = ({ onResponse }: EmotionalExplorationProps) => {
               id="emotional-answer"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              className="w-full p-3 rounded-lg bg-white/10 text-white placeholder-gray-300"
+              className="w-full p-3 rounded-lg bg-white/20 text-white placeholder-gray-200 border border-white/30"
               rows={4}
               placeholder="Écrivez votre réponse ici..."
               aria-label="Réponse à la question émotionnelle"
@@ -670,15 +670,15 @@ const EmotionalExploration = ({ onResponse }: EmotionalExplorationProps) => {
           </div>
           <button
             onClick={handleSubmit}
-            className="px-6 py-2 rounded-lg bg-white/10 hover:bg-white/20"
+            className="px-6 py-2 rounded-lg bg-white/20 hover:bg-white/30 text-white font-medium"
           >
             Suivant
           </button>
         </>
       ) : (
         <div className="text-center">
-          <h3 className="text-2xl font-bold mb-4">Merci pour vos réponses</h3>
-          <p className="text-lg">Vos réflexions ont été enregistrées.</p>
+          <h3 className="text-2xl font-bold mb-4 text-white">Merci pour vos réponses</h3>
+          <p className="text-lg text-white">Vos réflexions ont été enregistrées.</p>
         </div>
       )}
     </div>

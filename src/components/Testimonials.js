@@ -152,8 +152,8 @@ function Testimonials() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="text-lg md:text-xl text-center mb-12 max-w-2xl mx-auto leading-relaxed text-gray-200
-              bg-black/50 rounded-xl p-4 md:p-6 shadow-lg backdrop-blur-sm"
+            className="text-lg md:text-xl text-center mb-12 max-w-2xl mx-auto leading-relaxed text-white
+              bg-black/40 rounded-xl p-4 md:p-6 shadow-lg backdrop-blur-sm"
           >
             Découvrez comment le coaching holistique a transformé la vie de mes clients.
           </motion.p>
@@ -212,7 +212,7 @@ function Testimonials() {
                 </div>
               </div>
               
-              <p className="text-gray-300 mb-6 italic">
+              <p className="text-white mb-6 italic bg-black/20 p-3 rounded-lg backdrop-blur-sm">
                 &ldquo;{testimonial.quote}&rdquo;
               </p>
               
