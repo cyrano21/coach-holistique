@@ -1,18 +1,15 @@
-"use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { IconType } from "react-icons";
 import {
   FaYoutube,
   FaExternalLinkAlt,
-  FaVideo,
-  FaBookOpen,
-  FaChalkboardTeacher,
-  FaVolumeUp,
   FaVolumeMute,
+  FaVolumeUp,
   FaChevronLeft,
   FaChevronRight,
-  FaPlay
+  FaPlay,
+  FaInfoCircle
 } from "react-icons/fa";
 
 interface Video {
@@ -20,11 +17,11 @@ interface Video {
   title: string;
   description: string;
   thumbnailUrl: string;
-  videoUrl?: string;
   youtubeId?: string;
   externalLink?: string;
+  videoUrl?: string;
   duration?: string;
-  category?: "personal" | "professional" | "spiritual";
+  category: string;
 }
 
 interface VideoSectionProps {
@@ -32,519 +29,501 @@ interface VideoSectionProps {
 }
 
 function VideoSection({ videos = [] }: VideoSectionProps) {
-  const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(1200);
-  const [muted, setMuted] = useState(false); // Son activé par défaut
-  const [showNotification, setShowNotification] = useState(true);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const [category, setCategory] = useState("coaching");
+  const [isVisible, setIsVisible] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  // Définition des vidéos de démonstration
+  const demoVideos: Video[] = [
+    {
+      id: "demo1",
+      title: "Découvrez le coaching holistique",
+      description: "Une approche complète pour harmoniser corps, esprit et âme. Le coaching holistique vous accompagne dans un voyage de transformation personnelle.",
+      thumbnailUrl: "/images/videos/coaching-thumbnail.jpg",
+      youtubeId: "dQw4w9WgXcQ", // Exemple d'ID YouTube
+      duration: "12:34",
+      category: "coaching"
+    },
+    {
+      id: "demo2",
+      title: "Méditation guidée pour débutants",
+      description: "Une séance de méditation douce pour vous initier à la pleine conscience et à la relaxation profonde.",
+      thumbnailUrl: "/images/videos/meditation-thumbnail.jpg",
+      externalLink: "https://example.com/meditation-video",
+      duration: "8:15",
+      category: "meditation"
+    },
+    {
+      id: "demo3",
+      title: "Atelier sur les chakras",
+      description: "Découvrez les sept centres d'énergie du corps et comment les équilibrer pour améliorer votre bien-être général.",
+      thumbnailUrl: "/images/videos/chakras-thumbnail.jpg",
+      duration: "15:42",
+      category: "spiritualite"
+    },
+    {
+      id: "demo4",
+      title: "Techniques de respiration pour la gestion du stress",
+      description: "Apprenez des techniques de respiration efficaces pour réduire l'anxiété et améliorer votre concentration au quotidien.",
+      thumbnailUrl: "/images/videos/respiration-thumbnail.jpg",
+      youtubeId: "xvzSXcVmEFU",
+      duration: "10:28",
+      category: "coaching"
+    },
+    {
+      id: "demo5",
+      title: "Yoga pour l'équilibre émotionnel",
+      description: "Une séance de yoga douce conçue pour harmoniser vos émotions et cultiver la paix intérieure.",
+      thumbnailUrl: "/images/videos/yoga-thumbnail.jpg",
+      duration: "22:15",
+      category: "meditation"
+    },
+    {
+      id: "demo6",
+      title: "Introduction aux bonshommes allumettes",
+      description: "Découvrez cette technique puissante pour libérer les blocages émotionnels et transformer votre relation avec votre passé.",
+      thumbnailUrl: "/images/videos/bonshommes-thumbnail.jpg",
+      duration: "18:30",
+      category: "spiritualite"
+    }
+  ];
+
+  // Définition des catégories avec type sécurisé
+  type CategoryKey = 'coaching' | 'meditation' | 'spiritualite';
+  
+  const categoryConfig: Record<CategoryKey, { label: string; icon: IconType }> = {
+    coaching: {
+      label: "Coaching Holistique",
+      icon: FaPlay
+    },
+    meditation: {
+      label: "Méditation",
+      icon: FaPlay
+    },
+    spiritualite: {
+      label: "Parcours Spirituels",
+      icon: FaPlay
+    }
+  };
+
+  // Utiliser les vidéos externes si elles sont fournies, sinon utiliser les démos
+  const videosToUse = videos.length > 0 ? videos : demoVideos;
+  
+  // Filtrer les vidéos par catégorie
+  const filteredVideos = videosToUse.filter(video => video.category === category);
+  
+  // Définir la vidéo actuelle
+  const currentVideo = filteredVideos[currentVideoIndex] || videosToUse[0];
+  
+  // Définir l'icône de catégorie en utilisant une assertion de type pour garantir la sécurité
+  const safeCategory = (category in categoryConfig ? category : 'coaching') as CategoryKey;
+  const CategoryIcon = categoryConfig[safeCategory].icon;
 
   useEffect(() => {
-    const img = new Image();
-    img.src = "/images/home/backgrounds/video-background.jpg";
-    img.onload = () => setBackgroundLoaded(true);
-    img.onerror = () => {
-      console.info("Image d&apos;arrière-plan non chargée");
-      setBackgroundLoaded(true);
-    };
-  }, []);
+    // Vérifier si la vidéo actuelle a des liens valides et afficher des informations de débogage
+    if (currentVideo) {
+      console.info("Données de la vidéo actuelle:", {
+        title: currentVideo.title,
+        youtubeId: currentVideo.youtubeId || "Non défini",
+        externalLink: currentVideo.externalLink || "Non défini",
+        videoUrl: currentVideo.videoUrl || "Non défini"
+      });
+    }
+  }, [currentVideo]);
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+    // Réinitialiser l'index de la vidéo lors du changement de catégorie
+    setCurrentVideoIndex(0);
+  }, [category]);
 
-    setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Jingle sonore à l'arrivée sur la section
   useEffect(() => {
+    // Utiliser un IntersectionObserver pour détecter quand la section est visible
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting && audioRef.current) {
-          // Jouer le jingle seulement si le son n'est pas coupé
-          if (!muted) {
-            // Réinitialiser le jingle pour pouvoir le rejouer
-            audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(() => {
-              console.info("Lecture du jingle impossible - interaction utilisateur requise");
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          
+          // Jouer le son d'ambiance si le son n'est pas coupé
+          if (!muted && audioRef.current) {
+            audioRef.current.play().catch(error => {
+              console.error("Erreur lors de la lecture audio:", error);
             });
-            setShowNotification(true);
           }
+          
+          observer.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 } // Déclencher lorsque 20% de la section est visible
     );
-
-    // Stocker la référence actuelle pour éviter les problèmes de cleanup
+    
+    // Stocker la référence actuelle dans une variable locale
     const currentSectionRef = sectionRef.current;
-
+    
     if (currentSectionRef) {
       observer.observe(currentSectionRef);
     }
-
+    
     return () => {
+      // Utiliser la variable locale dans la fonction de nettoyage
       if (currentSectionRef) {
         observer.unobserve(currentSectionRef);
       }
     };
   }, [muted]);
 
-  // Masquer la notification après 5 secondes
   useEffect(() => {
+    // Masquer la notification après 3 secondes
     if (showNotification) {
       const timer = setTimeout(() => {
         setShowNotification(false);
-      }, 5000);
+      }, 3000);
+      
       return () => clearTimeout(timer);
     }
   }, [showNotification]);
 
-  // Vidéos de démonstration avec des liens YouTube (plus fiables que les fichiers vidéo directs)
-  const demoVideos: Video[] = [
-    {
-      id: "demo1",
-      title: "Méditation guidée pour débutants",
-      description: "Une séance de méditation pour apaiser l'esprit et se recentrer",
-      thumbnailUrl: "https://img.youtube.com/vi/inpok4MKVLM/maxresdefault.jpg",
-      youtubeId: "inpok4MKVLM",
-      duration: "5:31",
-      category: "spiritual"
-    },
-    {
-      id: "demo2",
-      title: "Développement personnel - Confiance en soi",
-      description: "Techniques pour améliorer votre confiance au quotidien",
-      thumbnailUrl: "https://img.youtube.com/vi/KFwaEUAWBYY/maxresdefault.jpg",
-      youtubeId: "KFwaEUAWBYY",
-      duration: "8:12",
-      category: "personal"
-    },
-    {
-      id: "demo3",
-      title: "Leadership et communication",
-      description: "Stratégies pour améliorer votre impact professionnel",
-      thumbnailUrl: "https://img.youtube.com/vi/HAnw168huqA/maxresdefault.jpg",
-      youtubeId: "HAnw168huqA",
-      duration: "7:45",
-      category: "professional"
-    },
-    {
-      id: "demo4",
-      title: "Méditation pleine conscience",
-      description: "Pratique de la pleine conscience au quotidien",
-      thumbnailUrl: "https://img.youtube.com/vi/O-6f5wQXSu8/maxresdefault.jpg",
-      youtubeId: "O-6f5wQXSu8",
-      duration: "10:15",
-      category: "spiritual"
-    },
-    {
-      id: "demo5",
-      title: "Gestion du stress",
-      description: "Techniques efficaces pour gérer le stress",
-      thumbnailUrl: "https://img.youtube.com/vi/ztTexqGQ0VI/maxresdefault.jpg",
-      youtubeId: "ztTexqGQ0VI",
-      duration: "6:20",
-      category: "personal"
+  useEffect(() => {
+    // Précharger les images des miniatures pour une meilleure expérience utilisateur
+    if (isVisible && filteredVideos.length > 0) {
+      filteredVideos.forEach(video => {
+        if (video.thumbnailUrl) {
+          // Utiliser window.Image pour éviter les conflits avec Next.js
+          const img = new window.Image();
+          img.src = video.thumbnailUrl;
+          img.decoding = 'async';
+          
+          img.onload = () => {
+            console.info(`Image préchargée: ${video.thumbnailUrl}`);
+          };
+          
+          img.onerror = () => {
+            console.warn(`Erreur lors du préchargement de l'image: ${video.thumbnailUrl}`);
+          };
+        }
+      });
     }
-  ];
+  }, [isVisible, filteredVideos]);
 
-  const categoryConfig = {
-    personal: {
-      icon: FaBookOpen,
-      color: "text-rose-500",
-      gradient: "from-rose-400 to-rose-600",
-      description: "Explorations personnelles",
-      label: "Personnel",
-    },
-    professional: {
-      icon: FaChalkboardTeacher,
-      color: "text-sky-500",
-      gradient: "from-sky-400 to-sky-600",
-      description: "Stratégies professionnelles",
-      label: "Professionnel",
-    },
-    spiritual: {
-      icon: FaVideo,
-      color: "text-purple-500",
-      gradient: "from-purple-400 to-purple-600",
-      description: "Voyages intérieurs",
-      label: "Spirituel",
-    },
-  };
-
-  const handleVideoChange = (index: number) => {
-    setCurrentVideoIndex(index);
+  const openVideoLink = () => {
+    let url = "";
+    let notificationMessage = "";
+    
+    if (currentVideo.youtubeId) {
+      url = `https://www.youtube.com/watch?v=${currentVideo.youtubeId}`;
+      console.info("Ouverture du lien YouTube:", url);
+    } else if (currentVideo.externalLink) {
+      url = currentVideo.externalLink;
+      console.info("Ouverture du lien externe:", url);
+    } else if (currentVideo.videoUrl) {
+      // Si l'URL commence par 'http', c'est un lien externe
+      if (currentVideo.videoUrl.startsWith('http')) {
+        url = currentVideo.videoUrl;
+        console.info("Ouverture de l'URL vidéo:", url);
+      } else {
+        // C'est une vidéo locale
+        notificationMessage = "Cette vidéo est disponible uniquement en local";
+        console.info("Vidéo locale détectée:", currentVideo.videoUrl);
+      }
+    } else {
+      // Aucun lien disponible
+      notificationMessage = "Aucun lien externe disponible pour cette vidéo";
+      console.warn("Aucun lien disponible pour cette vidéo");
+    }
+    
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      // Utiliser le message de notification spécifique
+      setShowNotification(true);
+      // Stocker le message dans un état pour l'afficher dans le composant de notification
+      setNotificationMessage(notificationMessage);
+      setTimeout(() => setShowNotification(false), 3000);
+    }
   };
 
   const toggleMute = () => {
     setMuted(!muted);
     if (audioRef.current) {
       audioRef.current.muted = !muted;
-      // Si on active le son, on joue le jingle
       if (muted && audioRef.current) {
-        // Réinitialiser le jingle pour pouvoir le rejouer
         audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(() => {
-          console.info("Lecture du jingle impossible - interaction utilisateur requise");
+        audioRef.current.play().catch(error => {
+          console.error("Erreur lors de la lecture audio:", error);
         });
-        setShowNotification(true);
       }
     }
+    
+    setNotificationMessage(muted ? "Son activé" : "Son désactivé");
+    setShowNotification(true);
   };
 
-  const scrollCarousel = (direction: 'left' | 'right') => {
-    if (carouselRef.current) {
-      const scrollAmount = 300; // Ajuster selon besoin
-      const currentScroll = carouselRef.current.scrollLeft;
-      
-      carouselRef.current.scrollTo({
-        left: direction === 'left' 
-          ? currentScroll - scrollAmount 
-          : currentScroll + scrollAmount,
-        behavior: 'smooth'
-      });
-    }
+  const nextVideo = () => {
+    setCurrentVideoIndex((prev) => 
+      prev === filteredVideos.length - 1 ? 0 : prev + 1
+    );
   };
 
-  // Utiliser les vidéos de démonstration si aucune n'est fournie
-  const videosToUse = videos.length > 0 ? videos : demoVideos;
-  const currentVideo = videosToUse[currentVideoIndex] || demoVideos[0];
-  const safeCategory = currentVideo.category || "spiritual";
-  const CategoryIcon = categoryConfig[safeCategory].icon;
+  const prevVideo = () => {
+    setCurrentVideoIndex((prev) => 
+      prev === 0 ? filteredVideos.length - 1 : prev - 1
+    );
+  };
 
-  // Fonction pour ouvrir la vidéo YouTube ou le lien externe
-  const openVideoLink = () => {
-    let url = "";
-    
-    if (currentVideo.youtubeId) {
-      url = `https://www.youtube.com/watch?v=${currentVideo.youtubeId}`;
-    } else if (currentVideo.externalLink) {
-      url = currentVideo.externalLink;
-    } else if (currentVideo.videoUrl) {
-      // Si c'est une URL vidéo locale, on ne fait rien (la vidéo est déjà affichée)
-      return;
-    }
-    
-    if (url) {
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
+  // Variantes d'animation pour les conteneurs
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  // Variantes d'animation pour les éléments
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
   };
 
   return (
     <section
       ref={sectionRef}
-      className={`py-24 relative transition-opacity duration-1000 ${
-        backgroundLoaded ? "opacity-100" : "opacity-0"
-      }`}
-      style={{
-        backgroundImage: `url('/images/home/backgrounds/video-background.jpg')`,
-        backgroundColor: "rgba(12, 36, 20, 0.8)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundBlendMode: "multiply",
-        transition: "opacity 0.5s ease-in-out",
-      }}
+      className="py-24 relative bg-gradient-to-b from-black to-purple-900"
+      id="videos"
     >
-      {/* Jingle audio */}
-      <audio 
-        ref={audioRef} 
-        src="/sounds/jingle-soft.mp3" 
-        preload="auto" 
+      <audio
+        ref={audioRef}
+        src="/audio/ambient-background.mp3"
+        loop
         muted={muted}
+        preload="none"
       />
-
-      {/* Bouton de volume */}
-      <div className="absolute top-6 right-6 z-50 flex gap-2">
-        <button 
-          onClick={() => {
-            if (audioRef.current) {
-              audioRef.current.currentTime = 0;
-              audioRef.current.play().catch(() => {
-                console.info("Lecture du jingle impossible - interaction utilisateur requise");
-              });
-              setShowNotification(true);
-            }
-          }}
-          className="bg-indigo-600 hover:bg-indigo-700 p-4 rounded-full transition-all duration-300 shadow-lg"
-          aria-label="Rejouer le jingle"
-          title="Rejouer le jingle"
-        >
-          <FaPlay className="text-white text-xl" />
-        </button>
-        <button 
+      
+      <motion.div
+        className="absolute top-6 right-6 z-20"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 0.5 }}
+      >
+        <motion.button
           onClick={toggleMute}
-          className="bg-purple-600 hover:bg-purple-700 p-4 rounded-full transition-all duration-300 shadow-lg"
-          aria-label={muted ? "Activer le son" : "Désactiver le son"}
-          title={muted ? "Activer le son" : "Désactiver le son"}
+          className="bg-purple-600/80 hover:bg-purple-700/80 p-3 rounded-full backdrop-blur-sm"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
         >
           {muted ? (
             <FaVolumeMute className="text-white text-2xl" />
           ) : (
             <FaVolumeUp className="text-white text-2xl" />
           )}
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
-      {/* Notification temporaire */}
       {showNotification && (
         <motion.div 
+          key="notification"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4 }}
           className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-purple-600 px-6 py-3 rounded-lg shadow-lg flex items-center gap-3"
         >
-          <FaVolumeUp className="text-white text-xl" />
-          <p className="text-white text-sm md:text-base font-medium">Jingle sonore activé - Cliquez sur <FaVolumeUp className="inline text-white mx-1" /> pour désactiver</p>
+          <FaInfoCircle className="text-white text-xl" />
+          <p className="text-white text-sm md:text-base font-medium">
+            {muted 
+              ? "Son désactivé - Cliquez sur l'icône pour activer" 
+              : notificationMessage || "Aucun lien externe disponible pour cette vidéo"}
+          </p>
         </motion.div>
       )}
 
-      <div className="w-full relative z-10 px-4">
-        <motion.h2
-          initial={{ opacity: 0, y: -50 }}
+      <div className="w-full relative z-10 px-4 max-w-7xl mx-auto">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl font-extrabold text-center mb-8 text-white"
+          transition={{ duration: 0.8 }}
         >
-          Bibliothèque Vidéo
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-lg md:text-xl text-center mb-12 max-w-2xl mx-auto leading-relaxed text-gray-200
-            bg-black/20 rounded-xl p-4 md:p-6 shadow-lg backdrop-blur-sm"
-        >
-          Des ressources vidéo pour éclairer votre parcours de transformation.
-        </motion.p>
-
-        {/* Carrousel horizontal pour les vidéos d'intro */}
-        <div className="relative mb-12">
-          <div 
-            ref={carouselRef}
-            className="flex overflow-x-auto pb-6 gap-4 hide-scrollbar snap-x snap-mandatory"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          <motion.span 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-sm rounded-full text-emerald-300 text-sm font-medium mb-4"
           >
-            {videosToUse.map((video, index) => (
-              <div 
-                key={`carousel-${video.id}`} 
-                className={`flex-shrink-0 w-72 md:w-80 snap-center ${index === currentVideoIndex ? 'ring-4 ring-purple-500' : ''}`}
-                onClick={() => handleVideoChange(index)}
+            Vidéos & Ressources
+          </motion.span>
+          
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-white"
+          >
+            Explorez nos contenus
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="text-lg md:text-xl text-center mb-12 max-w-2xl mx-auto leading-relaxed text-gray-200"
+          >
+            Découvrez nos vidéos, méditations guidées et ressources pour approfondir votre pratique et enrichir votre parcours.
+          </motion.p>
+          
+          <motion.div
+            className="flex flex-wrap justify-center gap-4 mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+          >
+            {Object.entries(categoryConfig).map(([key, value]) => (
+              <motion.button
+                key={key}
+                onClick={() => setCategory(key)}
+                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                  category === key 
+                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30' 
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <div className="relative overflow-hidden rounded-lg group cursor-pointer">
-                  <div 
-                    className="w-full h-44 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                    style={{ backgroundImage: `url('${video.thumbnailUrl}')` }}
-                  >
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300"></div>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/60 backdrop-blur-sm">
-                    <h4 className="text-white font-medium text-sm truncate">{video.title}</h4>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-xs text-gray-300">{video.duration}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded ${categoryConfig[video.category || "spiritual"].color} bg-white/10`}>
-                        {categoryConfig[video.category || "spiritual"].label}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                {value.label}
+              </motion.button>
             ))}
-          </div>
+          </motion.div>
+        </motion.div>
 
-          {/* Boutons de navigation du carrousel */}
-          <button 
-            onClick={() => scrollCarousel('left')}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 bg-black/50 hover:bg-black/70 text-white p-3 rounded-r-lg shadow-lg transition-all duration-300"
-            aria-label="Vidéos précédentes"
-          >
-            <FaChevronLeft />
-          </button>
-          <button 
-            onClick={() => scrollCarousel('right')}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1 bg-black/50 hover:bg-black/70 text-white p-3 rounded-l-lg shadow-lg transition-all duration-300"
-            aria-label="Vidéos suivantes"
-          >
-            <FaChevronRight />
-          </button>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-6 md:gap-8">
-          <div className="w-full md:w-2/3 bg-black/30 rounded-2xl overflow-hidden shadow-2xl">
-            <div className="relative aspect-video group">
-              {/* Afficher la miniature avec un bouton de lecture */}
-              <div 
-                className="w-full h-full bg-cover bg-center cursor-pointer transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url('${currentVideo.thumbnailUrl}')` }}
-                onClick={openVideoLink}
-              >
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all duration-300"></div>
-                
-                {/* Bouton de lecture YouTube ou lien externe */}
-                {(currentVideo.youtubeId || currentVideo.externalLink) && (
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <button 
-                      className="bg-red-600 hover:bg-red-700 text-white rounded-full w-20 h-20 md:w-24 md:h-24 flex items-center justify-center transition-all duration-300 group-hover:scale-125 shadow-xl border-4 border-white/30"
-                      aria-label="Regarder la vidéo"
-                    >
-                      {currentVideo.youtubeId ? (
-                        <FaYoutube className="text-3xl md:text-4xl" />
-                      ) : (
-                        <FaExternalLinkAlt className="text-2xl md:text-3xl" />
-                      )}
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-sm p-3 md:p-4">
-                <motion.h3
-                  className="text-base md:text-xl font-semibold text-white mb-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
+        <motion.div 
+          className="grid md:grid-cols-2 gap-8 items-center bg-black/30 rounded-2xl p-6 md:p-8 backdrop-blur-sm border border-white/10"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
+        >
+          <div className="relative overflow-hidden rounded-xl group">
+            <div 
+              className="w-full aspect-video bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+              style={{ backgroundImage: `url('${currentVideo.thumbnailUrl}')` }}
+            >
+              {/* Fallback en cas d'échec de chargement de l'image */}
+              <noscript>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img 
+                  src={currentVideo.thumbnailUrl} 
+                  alt={currentVideo.title}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </noscript>
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                <motion.button
+                  onClick={openVideoLink}
+                  className="bg-purple-600/90 hover:bg-purple-700 p-5 rounded-full transition-all duration-300 transform group-hover:scale-110"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {currentVideo.title}
-                </motion.h3>
-
-                <div className="flex items-center space-x-2 mb-2 text-sm md:text-base text-gray-300">
-                  <CategoryIcon className="w-4 h-4 md:w-5 md:h-5" />
-                  <span>{categoryConfig[safeCategory].label}</span>
-                </div>
-
-                <div className={`inline-block px-2 py-1 rounded-full text-xs uppercase ${categoryConfig[safeCategory].color} bg-white/10`}>
-                  {categoryConfig[safeCategory].description}
-                </div>
+                  {currentVideo.youtubeId ? (
+                    <FaYoutube className="text-white text-4xl" />
+                  ) : (
+                    <FaExternalLinkAlt className="text-white text-3xl" />
+                  )}
+                </motion.button>
               </div>
             </div>
-          </div>
-
-          <div className="w-full md:w-1/3 relative h-[400px] md:h-[500px] bg-black/20 rounded-2xl overflow-hidden">
-            <div className="w-full h-full flex items-center justify-center p-4">
-              <div className="relative w-full h-full flex items-center justify-center">
-                {videosToUse.map((video, index) => {
-                  const VideoIcon = categoryConfig[video.category || "spiritual"].icon;
-                  return (
-                    <motion.div
-                      key={video.id}
-                      className="absolute w-[230px] md:w-[280px] cursor-pointer bg-gradient-to-br from-black/60 to-purple-900/40 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-white/10"
-                      style={{
-                        transformOrigin: 'center center',
-                        rotate:
-                          (((index - currentVideoIndex) * (2 * Math.PI)) /
-                            videosToUse.length) *
-                          (180 / Math.PI),
-                        x:
-                          (Math.min(windowWidth * 0.2, 300) / 3) *
-                          Math.cos(
-                            ((index - currentVideoIndex) * (2 * Math.PI)) /
-                              videosToUse.length
-                          ),
-                        y:
-                          (Math.min(windowWidth * 0.25, 350) / 3) *
-                          Math.sin(
-                            ((index - currentVideoIndex) * (2 * Math.PI)) /
-                              videosToUse.length
-                          ),
-                        scale: index === currentVideoIndex ? 1 : 0.7,
-                        opacity: index === currentVideoIndex ? 1 : 0.7,
-                      }}
-                      animate={{
-                        rotate:
-                          (((index - currentVideoIndex) * (2 * Math.PI)) /
-                            videosToUse.length) *
-                          (180 / Math.PI),
-                        x:
-                          (Math.min(windowWidth * 0.2, 300) / 3) *
-                          Math.cos(
-                            ((index - currentVideoIndex) * (2 * Math.PI)) /
-                              videosToUse.length
-                          ),
-                        y:
-                          (Math.min(windowWidth * 0.25, 350) / 3) *
-                          Math.sin(
-                            ((index - currentVideoIndex) * (2 * Math.PI)) /
-                              videosToUse.length
-                          ),
-                        scale: index === currentVideoIndex ? 1 : 0.7,
-                        opacity: index === currentVideoIndex ? 1 : 0.7,
-                      }}
-                      onClick={() => handleVideoChange(index)}
-                      whileHover={{
-                        scale: index === currentVideoIndex ? 1.1 : 0.8,
-                        transition: { duration: 0.2 }
-                      }}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div
-                          className={`
-                          w-16 h-16 md:w-20 md:h-20
-                          flex-shrink-0
-                          rounded-xl
-                          flex 
-                          items-center 
-                          justify-center 
-                          bg-gradient-to-br 
-                          shadow-lg
-                          ${
-                            categoryConfig[video.category || "spiritual"].gradient
-                          }
-                          ${index === currentVideoIndex ? 'ring-2 ring-purple-400 ring-offset-2 ring-offset-black/50' : ''}
-                        `}
-                        >
-                          <VideoIcon className="text-2xl md:text-3xl text-white" />
-                        </div>
-
-                        <div className="flex-grow">
-                          <h4 className="text-sm md:text-base font-bold text-white mb-2">
-                            {video.title}
-                          </h4>
-                          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-300">
-                            <span className="bg-white/20 px-2 py-0.5 rounded text-white">
-                              {video.duration || "00:00"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
+            
+            <div className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600/90 to-indigo-600/90 backdrop-blur-sm flex items-center gap-2">
+              <CategoryIcon className="text-white text-sm" />
+              <span className="text-white text-xs font-medium">
+                {categoryConfig[safeCategory].label}
+              </span>
             </div>
+            
+            {currentVideo.duration && (
+              <div className="absolute bottom-4 right-4 px-2 py-1 rounded-md bg-black/70 backdrop-blur-sm">
+                <span className="text-white text-xs font-medium">
+                  {currentVideo.duration}
+                </span>
+              </div>
+            )}
           </div>
-        </div>
-
-        {/* Boutons de navigation stylisés */}
-        <div className="flex justify-center mt-8 gap-4">
-          <button
-            onClick={() => handleVideoChange((currentVideoIndex - 1 + videosToUse.length) % videosToUse.length)}
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-full flex items-center gap-2 transform transition-transform duration-300 hover:scale-105 shadow-lg"
-          >
-            <FaChevronLeft />
-            <span>Précédent</span>
-          </button>
-          <button
-            onClick={() => handleVideoChange((currentVideoIndex + 1) % videosToUse.length)}
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-full flex items-center gap-2 transform transition-transform duration-300 hover:scale-105 shadow-lg"
-          >
-            <span>Suivant</span>
-            <FaChevronRight />
-          </button>
-        </div>
+          
+          <div className="flex flex-col h-full justify-center">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate={isVisible ? "visible" : "hidden"}
+            >
+              <motion.h3 
+                className="text-2xl md:text-3xl font-bold text-white mb-4"
+                variants={itemVariants}
+              >
+                {currentVideo.title}
+              </motion.h3>
+              
+              <motion.p 
+                className="text-gray-300 mb-6 leading-relaxed"
+                variants={itemVariants}
+              >
+                {currentVideo.description}
+              </motion.p>
+              
+              <motion.div 
+                className="flex items-center gap-4"
+                variants={itemVariants}
+              >
+                <motion.button
+                  onClick={openVideoLink}
+                  className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg flex items-center gap-2 transition-colors duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {currentVideo.youtubeId ? "Voir sur YouTube" : "Voir la vidéo"}
+                  <FaExternalLinkAlt className="text-white text-sm" />
+                </motion.button>
+                
+                <div className="flex items-center gap-2">
+                  <motion.button
+                    onClick={prevVideo}
+                    className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    disabled={filteredVideos.length <= 1}
+                  >
+                    <FaChevronLeft className="text-white text-sm" />
+                  </motion.button>
+                  
+                  <motion.button
+                    onClick={nextVideo}
+                    className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    disabled={filteredVideos.length <= 1}
+                  >
+                    <FaChevronRight className="text-white text-sm" />
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </motion.div>
       </div>
-
-      {/* Styles CSS pour masquer la scrollbar tout en gardant la fonctionnalité */}
-      <style jsx>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
   );
 }
