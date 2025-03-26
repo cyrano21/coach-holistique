@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -6,7 +8,7 @@ import {
   FaPaintBrush,
   FaLightbulb,
   FaArrowRight,
-  FaArrowLeft
+  FaArrowLeft,
 } from "react-icons/fa";
 
 function Testimonials() {
@@ -25,10 +27,10 @@ function Testimonials() {
       name: "Marie L.",
       role: "Entrepreneure",
       quote:
-        "Le coaching holistique a transformé ma vie. Je me sens plus équilibrée et en harmonie avec moi-même.",
+        "Le coaching holistique a transformé ma vie. Je me sens plus équilibré(e) et en harmonie avec moi-même.",
       icon: FaLightbulb,
       color: "text-amber-500",
-      gradient: "from-amber-400 to-amber-600"
+      gradient: "from-amber-400 to-amber-600",
     },
     {
       name: "Pierre M.",
@@ -37,17 +39,16 @@ function Testimonials() {
         "Une expérience extraordinaire qui m'a permis de découvrir mon véritable potentiel.",
       icon: FaUserTie,
       color: "text-sky-500",
-      gradient: "from-sky-400 to-sky-600"
+      gradient: "from-sky-400 to-sky-600",
     },
     {
       name: "Sophie D.",
       role: "Artiste",
-      quote:
-        "Un accompagnement personnalisé qui a dépassé mes attentes.",
+      quote: "Un accompagnement personnalisé qui a dépassé mes attentes.",
       icon: FaPaintBrush,
       color: "text-emerald-500",
-      gradient: "from-emerald-400 to-emerald-600"
-    }
+      gradient: "from-emerald-400 to-emerald-600",
+    },
   ];
 
   const nextTestimonial = () => {
@@ -69,12 +70,11 @@ function Testimonials() {
         backgroundLoaded ? "opacity-100" : "opacity-0"
       }`}
       style={{
-        backgroundImage:
-          "url('/images/home/backgrounds/testimonials-background.jpg')",
+        backgroundImage: `url('/images/home/backgrounds/testimonials-background.jpg')`,
         backgroundColor: "rgba(50, 20, 30, 0.8)",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundBlendMode: "multiply"
+        backgroundBlendMode: "multiply",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 relative z-10">
@@ -82,31 +82,40 @@ function Testimonials() {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center mb-12 text-white break-words whitespace-normal tracking-tight bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 bg-clip-text text-transparent animate-pulse"
+          className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600"
         >
-          Voix de la Transformation
+          VOIX DE LA <br className="sm:hidden" /> TRANSFORMATION
         </motion.h2>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-lg sm:text-xl text-center mb-10 max-w-3xl mx-auto leading-relaxed text-white/90 bg-black/30 rounded-xl p-6 shadow-lg backdrop-blur-sm"
+          className="text-center mb-10 max-w-3xl mx-auto"
         >
-          Des histoires authentiques qui célèbrent le pouvoir du changement personnel.
-        </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="text-xl sm:text-2xl text-white text-center max-w-4xl mx-auto px-6 py-5 mb-10 rounded-2xl shadow-lg bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-sm border border-white/10 tracking-wide leading-relaxed"
+          >
+            Des histoires authentiques qui célèbrent le pouvoir du changement
+            personnel.
+          </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="text-base sm:text-lg text-center mb-16 max-w-3xl mx-auto leading-relaxed text-white/80 bg-black/20 rounded-xl p-6 shadow-md backdrop-blur-sm"
-        >
-          Découvrez les expériences de nos clients qui ont trouvé la transformation qu&apos;ils cherchaient.
-        </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="text-lg sm:text-xl text-white text-center max-w-4xl mx-auto px-6 py-5 rounded-2xl shadow-lg bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-sm border border-white/10 tracking-wide leading-relaxed"
+          >
+            Découvrez les expériences de nos clients qui ont trouvé la
+            transformation qu&apos;ils cherchaient.
+          </motion.p>
+        </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="md:col-span-2 bg-white/5 rounded-2xl overflow-hidden shadow-2xl relative">
+          <div className="md:col-span-2 bg-black/30 rounded-2xl overflow-hidden shadow-2xl relative">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentTestimonial.name}
@@ -114,20 +123,29 @@ function Testimonials() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.5 }}
-                className="p-12 flex flex-col justify-between h-full"
+                className="p-8 sm:p-12 flex flex-col justify-between h-full"
               >
-                <FaQuoteLeft className="text-5xl opacity-10 text-white mb-6" />
-                <p className="text-xl italic text-white mb-8">
+                <FaQuoteLeft className="text-5xl opacity-20 text-white mb-6" />
+                <motion.p
+                  key={currentTestimonial.quote}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.4 }}
+                  className="text-xl sm:text-2xl italic text-slate-100 text-center mb-6 px-4"
+                >
                   “{currentTestimonial.quote}”
-                </p>
-                <div className="flex items-center">
+                </motion.p>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <div
-                    className={`w-20 h-20 rounded-full flex items-center justify-center mr-6 bg-gradient-to-br ${currentTestimonial.gradient}`}
+                    className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center bg-gradient-to-br ${currentTestimonial.gradient}`}
                   >
-                    <TestimonialIcon className="text-3xl text-white" />
+                    <TestimonialIcon className="text-3xl sm:text-4xl text-white" />
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-white">
+
+                  <div className="text-center sm:text-left">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">
                       {currentTestimonial.name}
                     </h3>
                     <p
@@ -158,7 +176,7 @@ function Testimonials() {
 
           <div className="md:col-span-1 space-y-4">
             {testimonials.map((testimonial, index) => {
-              const PreviewIcon = testimonial.icon;
+              const TestimonialPreviewIcon = testimonial.icon;
               return (
                 <motion.div
                   key={testimonial.name}
@@ -173,12 +191,13 @@ function Testimonials() {
                   }`}
                 >
                   <div
-                    className={`w-16 h-16 rounded-full flex items-center justify-center mr-4 bg-gradient-to-br ${testimonial.gradient}`}
+                    className={`w-14 h-14 rounded-full flex items-center justify-center mr-4 bg-gradient-to-br ${testimonial.gradient}`}
                   >
-                    <PreviewIcon className="text-2xl text-white" />
+                    <TestimonialPreviewIcon className="text-xl text-white" />
                   </div>
+
                   <div className="flex-grow">
-                    <h4 className="text-lg font-semibold text-white">
+                    <h4 className="text-md font-semibold text-white">
                       {testimonial.name}
                     </h4>
                     <p

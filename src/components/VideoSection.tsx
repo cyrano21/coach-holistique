@@ -2,15 +2,17 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import AnimatePresence from './AnimatePresence';
-
 import {
-  FaPlay,
-  FaPause,
+  FaYoutube,
+  FaExternalLinkAlt,
   FaVideo,
   FaBookOpen,
   FaChalkboardTeacher,
-  FaClock,
+  FaVolumeUp,
+  FaVolumeMute,
+  FaChevronLeft,
+  FaChevronRight,
+  FaPlay
 } from "react-icons/fa";
 
 interface Video {
@@ -18,7 +20,9 @@ interface Video {
   title: string;
   description: string;
   thumbnailUrl: string;
-  videoUrl: string;
+  videoUrl?: string;
+  youtubeId?: string;
+  externalLink?: string;
   duration?: string;
   category?: "personal" | "professional" | "spiritual";
 }
@@ -30,16 +34,19 @@ interface VideoSectionProps {
 function VideoSection({ videos = [] }: VideoSectionProps) {
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(1200); // valeur par défaut
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [windowWidth, setWindowWidth] = useState(1200);
+  const [muted, setMuted] = useState(false); // Son activé par défaut
+  const [showNotification, setShowNotification] = useState(true);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const img = new Image();
     img.src = "/images/home/backgrounds/video-background.jpg";
     img.onload = () => setBackgroundLoaded(true);
     img.onerror = () => {
-      console.error("Video section background image failed to load");
+      console.info("Image d&apos;arrière-plan non chargée");
       setBackgroundLoaded(true);
     };
   }, []);
@@ -49,15 +56,103 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
       setWindowWidth(window.innerWidth);
     };
 
-    // Set initial width
     setWindowWidth(window.innerWidth);
-
-    // Add event listener
     window.addEventListener('resize', handleResize);
-
-    // Cleanup
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Jingle sonore à l'arrivée sur la section
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && audioRef.current) {
+          // Jouer le jingle seulement si le son n'est pas coupé
+          if (!muted) {
+            // Réinitialiser le jingle pour pouvoir le rejouer
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(() => {
+              console.info("Lecture du jingle impossible - interaction utilisateur requise");
+            });
+            setShowNotification(true);
+          }
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    // Stocker la référence actuelle pour éviter les problèmes de cleanup
+    const currentSectionRef = sectionRef.current;
+
+    if (currentSectionRef) {
+      observer.observe(currentSectionRef);
+    }
+
+    return () => {
+      if (currentSectionRef) {
+        observer.unobserve(currentSectionRef);
+      }
+    };
+  }, [muted]);
+
+  // Masquer la notification après 5 secondes
+  useEffect(() => {
+    if (showNotification) {
+      const timer = setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showNotification]);
+
+  // Vidéos de démonstration avec des liens YouTube (plus fiables que les fichiers vidéo directs)
+  const demoVideos: Video[] = [
+    {
+      id: "demo1",
+      title: "Méditation guidée pour débutants",
+      description: "Une séance de méditation pour apaiser l'esprit et se recentrer",
+      thumbnailUrl: "https://img.youtube.com/vi/inpok4MKVLM/maxresdefault.jpg",
+      youtubeId: "inpok4MKVLM",
+      duration: "5:31",
+      category: "spiritual"
+    },
+    {
+      id: "demo2",
+      title: "Développement personnel - Confiance en soi",
+      description: "Techniques pour améliorer votre confiance au quotidien",
+      thumbnailUrl: "https://img.youtube.com/vi/KFwaEUAWBYY/maxresdefault.jpg",
+      youtubeId: "KFwaEUAWBYY",
+      duration: "8:12",
+      category: "personal"
+    },
+    {
+      id: "demo3",
+      title: "Leadership et communication",
+      description: "Stratégies pour améliorer votre impact professionnel",
+      thumbnailUrl: "https://img.youtube.com/vi/HAnw168huqA/maxresdefault.jpg",
+      youtubeId: "HAnw168huqA",
+      duration: "7:45",
+      category: "professional"
+    },
+    {
+      id: "demo4",
+      title: "Méditation pleine conscience",
+      description: "Pratique de la pleine conscience au quotidien",
+      thumbnailUrl: "https://img.youtube.com/vi/O-6f5wQXSu8/maxresdefault.jpg",
+      youtubeId: "O-6f5wQXSu8",
+      duration: "10:15",
+      category: "spiritual"
+    },
+    {
+      id: "demo5",
+      title: "Gestion du stress",
+      description: "Techniques efficaces pour gérer le stress",
+      thumbnailUrl: "https://img.youtube.com/vi/ztTexqGQ0VI/maxresdefault.jpg",
+      youtubeId: "ztTexqGQ0VI",
+      duration: "6:20",
+      category: "personal"
+    }
+  ];
 
   const categoryConfig = {
     personal: {
@@ -85,40 +180,65 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
 
   const handleVideoChange = (index: number) => {
     setCurrentVideoIndex(index);
-    setIsPlaying(false);
-
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
   };
 
-  const togglePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
+  const toggleMute = () => {
+    setMuted(!muted);
+    if (audioRef.current) {
+      audioRef.current.muted = !muted;
+      // Si on active le son, on joue le jingle
+      if (muted && audioRef.current) {
+        // Réinitialiser le jingle pour pouvoir le rejouer
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {
+          console.info("Lecture du jingle impossible - interaction utilisateur requise");
+        });
+        setShowNotification(true);
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
-  const currentVideo = videos[currentVideoIndex] || {
-    id: "default",
-    title: "Aucune vidéo disponible",
-    description: "Restez à l'écoute pour de nouveaux contenus.",
-    thumbnailUrl: "",
-    videoUrl: "",
-    duration: "00:00",
-    category: "spiritual" as const,
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const scrollAmount = 300; // Ajuster selon besoin
+      const currentScroll = carouselRef.current.scrollLeft;
+      
+      carouselRef.current.scrollTo({
+        left: direction === 'left' 
+          ? currentScroll - scrollAmount 
+          : currentScroll + scrollAmount,
+        behavior: 'smooth'
+      });
+    }
   };
 
+  // Utiliser les vidéos de démonstration si aucune n'est fournie
+  const videosToUse = videos.length > 0 ? videos : demoVideos;
+  const currentVideo = videosToUse[currentVideoIndex] || demoVideos[0];
   const safeCategory = currentVideo.category || "spiritual";
   const CategoryIcon = categoryConfig[safeCategory].icon;
 
+  // Fonction pour ouvrir la vidéo YouTube ou le lien externe
+  const openVideoLink = () => {
+    let url = "";
+    
+    if (currentVideo.youtubeId) {
+      url = `https://www.youtube.com/watch?v=${currentVideo.youtubeId}`;
+    } else if (currentVideo.externalLink) {
+      url = currentVideo.externalLink;
+    } else if (currentVideo.videoUrl) {
+      // Si c'est une URL vidéo locale, on ne fait rien (la vidéo est déjà affichée)
+      return;
+    }
+    
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <section
+      ref={sectionRef}
       className={`py-24 relative transition-opacity duration-1000 ${
         backgroundLoaded ? "opacity-100" : "opacity-0"
       }`}
@@ -131,6 +251,59 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
         transition: "opacity 0.5s ease-in-out",
       }}
     >
+      {/* Jingle audio */}
+      <audio 
+        ref={audioRef} 
+        src="/sounds/jingle-soft.mp3" 
+        preload="auto" 
+        muted={muted}
+      />
+
+      {/* Bouton de volume */}
+      <div className="absolute top-6 right-6 z-50 flex gap-2">
+        <button 
+          onClick={() => {
+            if (audioRef.current) {
+              audioRef.current.currentTime = 0;
+              audioRef.current.play().catch(() => {
+                console.info("Lecture du jingle impossible - interaction utilisateur requise");
+              });
+              setShowNotification(true);
+            }
+          }}
+          className="bg-indigo-600 hover:bg-indigo-700 p-4 rounded-full transition-all duration-300 shadow-lg"
+          aria-label="Rejouer le jingle"
+          title="Rejouer le jingle"
+        >
+          <FaPlay className="text-white text-xl" />
+        </button>
+        <button 
+          onClick={toggleMute}
+          className="bg-purple-600 hover:bg-purple-700 p-4 rounded-full transition-all duration-300 shadow-lg"
+          aria-label={muted ? "Activer le son" : "Désactiver le son"}
+          title={muted ? "Activer le son" : "Désactiver le son"}
+        >
+          {muted ? (
+            <FaVolumeMute className="text-white text-2xl" />
+          ) : (
+            <FaVolumeUp className="text-white text-2xl" />
+          )}
+        </button>
+      </div>
+
+      {/* Notification temporaire */}
+      {showNotification && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-purple-600 px-6 py-3 rounded-lg shadow-lg flex items-center gap-3"
+        >
+          <FaVolumeUp className="text-white text-xl" />
+          <p className="text-white text-sm md:text-base font-medium">Jingle sonore activé - Cliquez sur <FaVolumeUp className="inline text-white mx-1" /> pour désactiver</p>
+        </motion.div>
+      )}
+
       <div className="w-full relative z-10 px-4">
         <motion.h2
           initial={{ opacity: 0, y: -50 }}
@@ -151,34 +324,84 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
           Des ressources vidéo pour éclairer votre parcours de transformation.
         </motion.p>
 
+        {/* Carrousel horizontal pour les vidéos d'intro */}
+        <div className="relative mb-12">
+          <div 
+            ref={carouselRef}
+            className="flex overflow-x-auto pb-6 gap-4 hide-scrollbar snap-x snap-mandatory"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {videosToUse.map((video, index) => (
+              <div 
+                key={`carousel-${video.id}`} 
+                className={`flex-shrink-0 w-72 md:w-80 snap-center ${index === currentVideoIndex ? 'ring-4 ring-purple-500' : ''}`}
+                onClick={() => handleVideoChange(index)}
+              >
+                <div className="relative overflow-hidden rounded-lg group cursor-pointer">
+                  <div 
+                    className="w-full h-44 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                    style={{ backgroundImage: `url('${video.thumbnailUrl}')` }}
+                  >
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300"></div>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/60 backdrop-blur-sm">
+                    <h4 className="text-white font-medium text-sm truncate">{video.title}</h4>
+                    <div className="flex items-center justify-between mt-1">
+                      <span className="text-xs text-gray-300">{video.duration}</span>
+                      <span className={`text-xs px-2 py-0.5 rounded ${categoryConfig[video.category || "spiritual"].color} bg-white/10`}>
+                        {categoryConfig[video.category || "spiritual"].label}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Boutons de navigation du carrousel */}
+          <button 
+            onClick={() => scrollCarousel('left')}
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 bg-black/50 hover:bg-black/70 text-white p-3 rounded-r-lg shadow-lg transition-all duration-300"
+            aria-label="Vidéos précédentes"
+          >
+            <FaChevronLeft />
+          </button>
+          <button 
+            onClick={() => scrollCarousel('right')}
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1 bg-black/50 hover:bg-black/70 text-white p-3 rounded-l-lg shadow-lg transition-all duration-300"
+            aria-label="Vidéos suivantes"
+          >
+            <FaChevronRight />
+          </button>
+        </div>
+
         <div className="flex flex-col md:flex-row gap-6 md:gap-8">
           <div className="w-full md:w-2/3 bg-black/30 rounded-2xl overflow-hidden shadow-2xl">
-            <div className="relative aspect-video">
-              {currentVideo.videoUrl ? (
-                <video
-                  ref={videoRef}
-                  src={currentVideo.videoUrl}
-                  poster={currentVideo.thumbnailUrl}
-                  className="w-full h-full object-cover"
-                  onClick={togglePlayPause}
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-800 opacity-50" />
-              )}
-
-              {currentVideo.videoUrl && (
-                <button
-                  onClick={togglePlayPause}
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-                    bg-white/30 hover:bg-white/50 rounded-full p-3 md:p-4 backdrop-blur-sm transition-all"
-                >
-                  {isPlaying ? (
-                    <FaPause className="text-2xl md:text-3xl text-white" />
-                  ) : (
-                    <FaPlay className="text-2xl md:text-3xl text-white" />
-                  )}
-                </button>
-              )}
+            <div className="relative aspect-video group">
+              {/* Afficher la miniature avec un bouton de lecture */}
+              <div 
+                className="w-full h-full bg-cover bg-center cursor-pointer transition-transform duration-700 group-hover:scale-110"
+                style={{ backgroundImage: `url('${currentVideo.thumbnailUrl}')` }}
+                onClick={openVideoLink}
+              >
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all duration-300"></div>
+                
+                {/* Bouton de lecture YouTube ou lien externe */}
+                {(currentVideo.youtubeId || currentVideo.externalLink) && (
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <button 
+                      className="bg-red-600 hover:bg-red-700 text-white rounded-full w-20 h-20 md:w-24 md:h-24 flex items-center justify-center transition-all duration-300 group-hover:scale-125 shadow-xl border-4 border-white/30"
+                      aria-label="Regarder la vidéo"
+                    >
+                      {currentVideo.youtubeId ? (
+                        <FaYoutube className="text-3xl md:text-4xl" />
+                      ) : (
+                        <FaExternalLinkAlt className="text-2xl md:text-3xl" />
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <div className="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-sm p-3 md:p-4">
                 <motion.h3
@@ -202,66 +425,59 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
             </div>
           </div>
 
-          <div className="w-full md:w-1/3 relative h-[400px] md:h-[500px] bg-black/20 rounded-2xl">
+          <div className="w-full md:w-1/3 relative h-[400px] md:h-[500px] bg-black/20 rounded-2xl overflow-hidden">
             <div className="w-full h-full flex items-center justify-center p-4">
-              <div className="relative w-full h-full">
-                <AnimatePresence mode="wait" initial={false}>
-                  {videos.map((video, index) => (
+              <div className="relative w-full h-full flex items-center justify-center">
+                {videosToUse.map((video, index) => {
+                  const VideoIcon = categoryConfig[video.category || "spiritual"].icon;
+                  return (
                     <motion.div
                       key={video.id}
-                      className="absolute w-[250px] md:w-[300px] cursor-pointer bg-gradient-to-br from-black/60 to-purple-900/40 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-white/10"
+                      className="absolute w-[230px] md:w-[280px] cursor-pointer bg-gradient-to-br from-black/60 to-purple-900/40 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-white/10"
                       style={{
-                        left: '50%',
-                        top: '50%',
                         transformOrigin: 'center center',
-                      }}
-                      initial={{
                         rotate:
                           (((index - currentVideoIndex) * (2 * Math.PI)) /
-                            videos.length) *
+                            videosToUse.length) *
                           (180 / Math.PI),
                         x:
-                          (Math.min(windowWidth * 0.3, 400) / 3) *
+                          (Math.min(windowWidth * 0.2, 300) / 3) *
                           Math.cos(
                             ((index - currentVideoIndex) * (2 * Math.PI)) /
-                              videos.length
-                          ) - 125,
+                              videosToUse.length
+                          ),
                         y:
-                          (Math.min(windowWidth * 0.4, 500) / 3) *
+                          (Math.min(windowWidth * 0.25, 350) / 3) *
                           Math.sin(
                             ((index - currentVideoIndex) * (2 * Math.PI)) /
-                              videos.length
-                          ) - 125,
+                              videosToUse.length
+                          ),
                         scale: index === currentVideoIndex ? 1 : 0.7,
                         opacity: index === currentVideoIndex ? 1 : 0.7,
                       }}
                       animate={{
                         rotate:
                           (((index - currentVideoIndex) * (2 * Math.PI)) /
-                            videos.length) *
+                            videosToUse.length) *
                           (180 / Math.PI),
                         x:
-                          (Math.min(windowWidth * 0.3, 400) / 3) *
+                          (Math.min(windowWidth * 0.2, 300) / 3) *
                           Math.cos(
                             ((index - currentVideoIndex) * (2 * Math.PI)) /
-                              videos.length
-                          ) - 125,
+                              videosToUse.length
+                          ),
                         y:
-                          (Math.min(windowWidth * 0.4, 500) / 3) *
+                          (Math.min(windowWidth * 0.25, 350) / 3) *
                           Math.sin(
                             ((index - currentVideoIndex) * (2 * Math.PI)) /
-                              videos.length
-                          ) - 125,
+                              videosToUse.length
+                          ),
                         scale: index === currentVideoIndex ? 1 : 0.7,
                         opacity: index === currentVideoIndex ? 1 : 0.7,
                       }}
-                      exit={{
-                        scale: 0,
-                        opacity: 0,
-                      }}
                       onClick={() => handleVideoChange(index)}
                       whileHover={{
-                        scale: index === currentVideoIndex ? 1.05 : 0.75,
+                        scale: index === currentVideoIndex ? 1.1 : 0.8,
                         transition: { duration: 0.2 }
                       }}
                     >
@@ -282,7 +498,7 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
                           ${index === currentVideoIndex ? 'ring-2 ring-purple-400 ring-offset-2 ring-offset-black/50' : ''}
                         `}
                         >
-                          <CategoryIcon className="text-2xl md:text-3xl text-white" />
+                          <VideoIcon className="text-2xl md:text-3xl text-white" />
                         </div>
 
                         <div className="flex-grow">
@@ -290,19 +506,45 @@ function VideoSection({ videos = [] }: VideoSectionProps) {
                             {video.title}
                           </h4>
                           <div className="flex items-center gap-2 text-xs md:text-sm text-gray-300">
-                            <FaClock className="text-purple-400 flex-shrink-0" />
-                            <span>{video.duration || "00:00"}</span>
+                            <span className="bg-white/20 px-2 py-0.5 rounded text-white">
+                              {video.duration || "00:00"}
+                            </span>
                           </div>
                         </div>
                       </div>
                     </motion.div>
-                  ))}
-                </AnimatePresence>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
+
+        {/* Boutons de navigation stylisés */}
+        <div className="flex justify-center mt-8 gap-4">
+          <button
+            onClick={() => handleVideoChange((currentVideoIndex - 1 + videosToUse.length) % videosToUse.length)}
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-full flex items-center gap-2 transform transition-transform duration-300 hover:scale-105 shadow-lg"
+          >
+            <FaChevronLeft />
+            <span>Précédent</span>
+          </button>
+          <button
+            onClick={() => handleVideoChange((currentVideoIndex + 1) % videosToUse.length)}
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-full flex items-center gap-2 transform transition-transform duration-300 hover:scale-105 shadow-lg"
+          >
+            <span>Suivant</span>
+            <FaChevronRight />
+          </button>
+        </div>
       </div>
+
+      {/* Styles CSS pour masquer la scrollbar tout en gardant la fonctionnalité */}
+      <style jsx>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </section>
   );
 }
